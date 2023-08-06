@@ -1,0 +1,24 @@
+output DP-0
+off
+output DP-1
+off
+output DP-2
+off
+output eDP-1-2
+crtc 4
+mode 1920x1080
+pos 0x0
+rate 120.21
+x-prop-max_bpc 16
+x-prop-non_desktop 0
+x-prop-scaling_mode None
+x-prop-underscan off
+x-prop-underscan_hborder 0
+x-prop-underscan_vborder 0
+output HDMI-0
+crtc 0
+mode 3440x1440
+pos 1920x0
+primary
+rate 59.97
+x-prop-non_desktop 0

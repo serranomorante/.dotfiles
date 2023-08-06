@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#i3-msg "restart"
+
+#notify-send "Monitor profile $1 loaded"
+
+~/.fehbg
+
