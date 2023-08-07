@@ -34,10 +34,10 @@ return {
 				hooks = {
 					on_leave = function()
 						require("bufresize").register()
-						vim.notify("Smart Splits: RESIZE MODE OFF")
+						vim.notify("Smart Splits: RESIZE MODE OFF", vim.log.levels.INFO)
 					end,
 					on_enter = function()
-						vim.notify("Smart Splits: RESIZE MODE ON")
+						vim.notify("Smart Splits: RESIZE MODE ON", vim.log.levels.WARN)
 					end,
 				},
 			},

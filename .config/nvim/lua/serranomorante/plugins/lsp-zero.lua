@@ -13,13 +13,34 @@ return {
 		config = true,
 	},
 
+	{
+		"L3MON4D3/LuaSnip",
+		event = "InsertEnter",
+		build = vim.fn.has("win32") == 0
+				and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build\n'; make install_jsregexp"
+			or nil,
+		opts = {
+			update_events = { "TextChanged", "TextChangedI" },
+		},
+		config = function(_, opts)
+			if opts then
+				require("luasnip").config.setup(opts)
+			end
+			require("luasnip.loaders.from_lua").lazy_load({
+				paths = { vim.fn.stdpath("config") .. "/lua/serranomorante/snippets" },
+			})
+			-- vim.tbl_map(function(type)
+			-- 	require("luasnip.loaders.from_" .. type).lazy_load()
+			-- end, { "vscode", "snipmate", "lua" })
+		end,
+	},
 	-- Autocompletion
 	{
 		"hrsh7th/nvim-cmp",
 		event = "InsertEnter",
 		dependencies = {
-			{ "L3MON4D3/LuaSnip" },
 			{ "zbirenbaum/copilot.lua" },
+			{ "saadparwaiz1/cmp_luasnip" },
 		},
 		config = function()
 			-- Here is where you configure the autocompletion settings.
@@ -28,6 +49,12 @@ return {
 			-- And you can configure cmp even more, if you want to.
 			local cmp = require("cmp")
 			local cmp_action = require("lsp-zero").cmp_action()
+
+			-- Thanks Astro!
+			local border_opts = {
+				border = "rounded",
+				winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+			}
 
 			local has_words_before = function()
 				if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
@@ -39,11 +66,20 @@ return {
 			end
 
 			cmp.setup({
+				-- Make the first item on the list preselected
+				-- https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/autocomplete.md#preselect-first-item
+				preselect = "item",
+				completion = {
+					completeopt = "menu,menuone,noinsert",
+				},
 				sources = {
 					{ name = "copilot" },
+					{ name = "luasnip" },
 					{ name = "nvim_lsp" },
 				},
 				mapping = {
+					-- Do not implement luasnip supertab because
+					-- we need this on copilot
 					["<Tab>"] = vim.schedule_wrap(function(fallback)
 						if cmp.visible() and has_words_before() then
 							cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
@@ -51,6 +87,7 @@ return {
 							fallback()
 						end
 					end),
+					["<S-Tab>"] = cmp_action.select_prev_or_fallback(),
 					["<CR>"] = cmp.mapping.confirm({
 						behavior = cmp.ConfirmBehavior.Replace,
 						select = false,
@@ -58,9 +95,10 @@ return {
 					["<C-Space>"] = cmp.mapping.complete(),
 					["<C-f>"] = cmp_action.luasnip_jump_forward(),
 					["<C-b>"] = cmp_action.luasnip_jump_backward(),
-					-- https://github.com/VonHeikemen/lsp-zero.nvim/blob/v2.x/doc/md/autocomplete.md#enable-super-tab
-					-- ["<Tab>"] = cmp_action.luasnip_supertab(),
-					["<S-Tab>"] = cmp_action.luasnip_shift_supertab(),
+				},
+				window = {
+					completion = cmp.config.window.bordered(border_opts),
+					documentation = cmp.config.window.bordered(border_opts),
 				},
 			})
 		end,
