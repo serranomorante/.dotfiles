@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Everything you write here will be executed by the display manager when setting up the login screen in "nvidia" mode.
+# (but before optimus-manager sets up PRIME with xrandr commands).
+
+internal=$(xrandr | grep "DP.* connected" | cut -d " " -f 1)
+external=$(xrandr | grep "HDMI.* connected" | cut -d " " -f 1)
+
+if [[ $external != "" ]]; then
+    xrandr --output $internal --off
+    xrandr --output $external --primary --mode 3440x1440 --dpi 96 --pos 0x0 --rotate normal
+fi
+
