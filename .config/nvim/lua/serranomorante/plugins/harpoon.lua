@@ -1,3 +1,5 @@
+local default_width = vim.api.nvim_win_get_width(0) - 50
+
 return {
 	"ThePrimeagen/harpoon",
 	dependencies = {
@@ -22,7 +24,7 @@ return {
 			excluded_filetypes = { "harpoon", "neo-tree", "NvimTree" },
 		},
 		menu = {
-			width = vim.api.nvim_win_get_width(0) - 50,
+			width = default_width > 100 and default_width or 100,
 		},
 	},
 }

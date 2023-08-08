@@ -123,7 +123,12 @@ return {
 		config = function()
 			local lsp = require("lsp-zero").preset({})
 
-			lsp.on_attach(function(_, bufnr)
+			lsp.on_attach(function(client, bufnr)
+				-- Fix issue with multiple offset encondings
+				-- if client.name == "clangd" then
+				-- 	client.config.capabilities.offsetEncoding = { "utf-16" }
+				-- end
+
 				lsp.default_keymaps({ buffer = bufnr, omit = { "<F2>", "<F3>", "<F4>" } })
 
 				vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<cr>", { buffer = true })
@@ -147,6 +152,7 @@ return {
 					client.server_capabilities.semanticTokensProvider = nil
 				end,
 				capabilities = {
+					-- offsetEncoding = "utf-16",
 					textDocument = {
 						foldingRange = {
 							dynamicRegistration = false,
@@ -210,7 +216,13 @@ return {
 						})
 					end,
 					clangd = function()
-						require("clangd_extensions").setup()
+						require("clangd_extensions").setup({
+							server = {
+								capabilities = {
+									offsetEncoding = { "utf-16" },
+								},
+							},
+						})
 					end,
 					jsonls = function()
 						local schemastore_avail, schemastore = pcall(require, "schemastore")
