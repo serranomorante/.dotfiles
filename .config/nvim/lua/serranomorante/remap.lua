@@ -1,11 +1,6 @@
 -- Open vim explorer [replaced by neo-tree]
 -- vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
--- Disable default keymap <C-w>- and <C-w>+ here
--- and also on bufresize plugin because is annoying
-vim.keymap.set("n", "<C-w>-", "")
-vim.keymap.set("n", "<C-w>+", "")
-
 -- Toggle wrap
 vim.keymap.set("n", "<leader>uw", function()
 	vim.wo.wrap = not vim.wo.wrap

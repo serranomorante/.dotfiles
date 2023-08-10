@@ -2,14 +2,6 @@ return {
 	"mrjones2014/smart-splits.nvim",
 	dependencies = {
 		"kwkarlwang/bufresize.nvim",
-		opts = {
-			register = {
-				keys = {
-					{ "n", "<C-w>+", "", { noremap = true, silent = true } },
-					{ "n", "<C-w>-", "", { noremap = true, silent = true } },
-				},
-			},
-		},
 	},
 	keys = {
 		{
