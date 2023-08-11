@@ -24,7 +24,7 @@ return {
 							local real_prev = rec[REAL_PREV_WIN_INDEX]
 							vim.fn.win_gotoid(real_prev)
 						else
-							-- At least, get out of neo-tree going to the
+							-- At least, get out of neo-tree by going to the
 							-- window to the right.
 							vim.cmd.wincmd("l")
 						end

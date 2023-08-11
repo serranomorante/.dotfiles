@@ -12,6 +12,11 @@ end
 
 -- Spawn a fish shell in login mode
 config.default_prog = { "/usr/bin/fish", "-l" }
+config.default_cursor_style = "BlinkingBlock"
+config.cursor_blink_rate = 500
+config.animation_fps = 1
+config.cursor_blink_ease_in = "Constant"
+config.cursor_blink_ease_out = "Constant"
 
 -- Set background to same color as neovim
 -- config.colors = {}
