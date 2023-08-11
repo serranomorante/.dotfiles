@@ -255,7 +255,7 @@ for_window [class="plasmashell" window_type="notification"] border none, move po
 no_focus [class="plasmashell" window_type="notification"]
 
 # Fix google meet popup window
-for_window [title="meet.google.com is sharing your screen."] move scratchpad
+for_window [title=".* is sharing your screen."] move scratchpad
 
 # exec --no-startup-id feh --bg-scale /usr/share/wallpapers/SafeLanding/contents/images/5120x2880.jpg 
 exec --no-startup-id feh --bg-scale --randomize ~/.wallpapers/*
