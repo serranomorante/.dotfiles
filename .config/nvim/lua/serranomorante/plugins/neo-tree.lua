@@ -11,7 +11,26 @@ return {
 			"<leader>o",
 			function()
 				if vim.bo.filetype == "neo-tree" then
-					vim.cmd.wincmd("p")
+					local REAL_PREV_WIN_INDEX = 3
+					local rec = vim.t.winid_rec
+					local current, prev = rec[#rec], rec[#rec - 1]
+
+					-- When you create a new file in neo-tree and then
+					-- try to execute this keymap, it won't go back
+					-- because the previous window is the same as the current.
+					if current == prev then
+						-- We need to go further back to get the real previous window
+						if #rec >= REAL_PREV_WIN_INDEX then
+							local real_prev = rec[REAL_PREV_WIN_INDEX]
+							vim.fn.win_gotoid(real_prev)
+						else
+							-- At least, get out of neo-tree going to the
+							-- window to the right.
+							vim.cmd.wincmd("l")
+						end
+					else
+						vim.cmd.wincmd("p")
+					end
 				else
 					vim.cmd.Neotree("focus")
 				end

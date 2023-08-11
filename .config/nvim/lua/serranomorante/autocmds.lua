@@ -4,6 +4,7 @@ local namespace = vim.api.nvim_create_namespace
 local utils = require("serranomorante.utils")
 
 local is_available = utils.is_available
+local MAX_WIN_HISTORY_LENGTH = 4
 
 -- Highlight when yanking
 autocmd("TextYankPost", {
@@ -107,7 +108,7 @@ if is_available("neo-tree.nvim") then
 end
 
 --- Add syntax highlighting to zellij .dump temp files
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+autocmd({ "BufEnter", "BufWinEnter" }, {
 	pattern = { "*.dump" },
 	callback = function(_)
 		vim.bo.filetype = "bash"
@@ -115,7 +116,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 })
 
 --- Add syntax highlighting to .conf files
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+autocmd({ "BufEnter", "BufWinEnter" }, {
 	pattern = { "*.conf" },
 	callback = function(_)
 		vim.bo.filetype = "dosini"
@@ -129,3 +130,29 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 -- 		vim.cmd([[highlight HarpoonWindow guibg=#313132]])
 -- 	end,
 -- })
+
+-- Save win ids in history. This helps to fix issue with neo-tree
+-- not going back to previous window with <leader>o
+-- Thanks!
+-- https://www.reddit.com/r/neovim/comments/szjysg/comment/hyli78a/?utm_source=share&utm_medium=web2x&context=3
+autocmd({ "WinEnter", "VimEnter" }, {
+	callback = function(_)
+		-- Exclude floating windows
+		if "" ~= vim.api.nvim_win_get_config(0).relative then
+			return
+		end
+
+		if vim.t.winid_rec == nil then
+			vim.t.winid_rec = { vim.fn.win_getid() }
+		end
+
+		local history = vim.t.winid_rec
+
+		if #vim.t.winid_rec >= MAX_WIN_HISTORY_LENGTH then
+			table.remove(history, 1)
+		end
+
+		table.insert(history, vim.fn.win_getid())
+		vim.t.winid_rec = history
+	end,
+})
