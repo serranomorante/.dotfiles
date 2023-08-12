@@ -142,17 +142,30 @@ autocmd({ "WinEnter", "VimEnter" }, {
 			return
 		end
 
-		if vim.t.winid_rec == nil then
-			vim.t.winid_rec = { vim.fn.win_getid() }
+		local bufnr = vim.api.nvim_win_get_buf(vim.fn.win_getid())
+		local filetype = vim.bo[bufnr].filetype
+
+		-- Exclude windows from dressing.nvim
+		if filetype == "DressingInput" then
+			return
 		end
 
-		local history = vim.t.winid_rec
-
-		if #vim.t.winid_rec >= MAX_WIN_HISTORY_LENGTH then
-			table.remove(history, 1)
+		-- Exclude windows from neo-tree.nvim
+		if filetype == "neo-tree" then
+			return
 		end
 
-		table.insert(history, vim.fn.win_getid())
-		vim.t.winid_rec = history
+		if vim.t.win_history == nil then
+			vim.t.win_history = { vim.fn.win_getid() }
+		end
+
+		local history = vim.t.win_history
+
+		if #vim.t.win_history >= MAX_WIN_HISTORY_LENGTH then
+			table.remove(history)
+		end
+
+		table.insert(history, 1, vim.fn.win_getid())
+		vim.t.win_history = history
 	end,
 })
