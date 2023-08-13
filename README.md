@@ -34,3 +34,9 @@ In my current workflow, I only use fish from inside my terminal (wezterm), leavi
 
 As I don't want to duplicate the same env variables and aliases from my `.bashrc` file into my `config.fish`, I decided to use fish [bass](https://github.com/edc/bass) plugin. With this plugin I just need to source my `~/.bashrc` file from inside fish and it will try its best to transpile bash syntax into fish.
 
+## Plans
+
+- **Add zellij's config files**. I still don't add them because at the moment zellij doens't support path variable expansion so I will wait until then.
+- **Add wireplumber's config files**. Still in progress
+- **Add pipewire's config files**. Still in progress
+- **Add m2i's config files**. Still in progress
