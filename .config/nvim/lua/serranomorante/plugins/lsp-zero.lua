@@ -206,6 +206,8 @@ return {
 					"rust_analyzer",
 					-- c/c++
 					"clangd",
+					-- markdown
+					"marksman",
 				},
 				handlers = {
 					lsp.default_setup,
