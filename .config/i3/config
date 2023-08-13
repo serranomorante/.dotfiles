@@ -262,7 +262,6 @@ for_window [title="[^.]+\.[^.]+\.[^.]+ is sharing your screen."] move scratchpad
 # exec --no-startup-id feh --bg-scale /usr/share/wallpapers/SafeLanding/contents/images/5120x2880.jpg 
 exec --no-startup-id feh --bg-scale --randomize ~/.wallpapers/*
 
-# Important! Remember to also change this value in autorandr postswitch script 
 gaps horizontal $my_hor_gap 
 smart_gaps inverse_outer
 
