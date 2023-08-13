@@ -1,13 +1,8 @@
 if status is-interactive
+    bass source ~/.bashrc
+
     # Commands to run in interactive sessions can go here
     set fish_greeting ""
-
-    set -gx SYSTEMD_PAGER ""
-
-    # Alias vim and nvim
-    alias vim nvim
-
-    alias config "/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 
     # Set vi key bindings
     set fish_key_bindings fish_vi_key_bindings
@@ -35,10 +30,6 @@ if status is-interactive
     # function fish_user_key_bindings
     #   bind -M default / reverse_history_search
     # end
-
-    # Add ~/.local/bin to PATH
-    # This fixes poetry not being found
-    set -gx PATH ~/.local/bin $PATH
 
     # Add ruby gems
     rbenv init - fish | source
