@@ -7,9 +7,21 @@ return {
 		priority = 1000, -- make sure to load this before all the other start plugins
 		opts = {
 			lualine_bold = true,
+			transparent = true,
+			styles = {
+				sidebars = "transparent",
+				floats = "transparent",
+			},
 			on_colors = function(colors)
 				-- Makes relative line numbers more visible
 				colors.fg_gutter = "#5a6482"
+			end,
+			on_highlights = function(hl, c)
+				-- fix dressing.nvim float title letters hardly visible
+				local black = "#0a0a0a"
+				local white = "#f2f2f2"
+				hl.FloatBorder = { fg = c.border_highlight, bg = black }
+				hl.NormalFloat = { fg = white, bg = c.bg_dark }
 			end,
 		},
 		config = function(_, opts)

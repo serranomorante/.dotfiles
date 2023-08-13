@@ -18,6 +18,15 @@ config.animation_fps = 1
 config.cursor_blink_ease_in = "Constant"
 config.cursor_blink_ease_out = "Constant"
 
+config.background = {
+	{
+		source = {
+			File = ".wallpapers/anime/aot_mikasa.png",
+		},
+		opacity = 0.01,
+	},
+}
+
 -- Set background to same color as neovim
 -- config.colors = {}
 -- config.colors.background = "#15161e"
