@@ -1,5 +1,7 @@
 # .dotfiles
 
+This are my personal config files that might only make sense for my particular workflow.
+
 Main technologies:
 
 - [wezterm](https://wezfurlong.org/wezterm/index.html). Terminal emulator
