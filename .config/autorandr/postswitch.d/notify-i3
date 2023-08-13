@@ -1,8 +1,19 @@
 #!/bin/bash
 
-#i3-msg "restart"
-
-#notify-send "Monitor profile $1 loaded"
-
 ~/.fehbg
+
+sleep 0.3
+
+# Switch to second screen workspace and set the gaps
+# My second screen is rather small that's why I need to play with the gaps
+workspace="8: :"
+outputs=$(i3-msg -t get_outputs)
+second_screen=$(echo $outputs | jq -r --arg WORKSPACE "${workspace}" '.[] | select(.current_workspace==$WORKSPACE) | .active')
+
+if [ "$second_screen" = true ] ; then
+  i3-msg "workspace $workspace; gaps horizontal current set 0"
+else
+  my_hor_gap=$(xgetres i3wm.Gaps.my_hor_gap)
+  i3-msg "workspace $workspace; gaps horizontal current set $my_hor_gap"
+fi
 

@@ -9,6 +9,8 @@
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
+set_from_resource $my_hor_gap i3wm.Gaps.my_hor_gap 550px
+
 set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -260,7 +262,8 @@ for_window [title="[^.]+\.[^.]+\.[^.]+ is sharing your screen."] move scratchpad
 # exec --no-startup-id feh --bg-scale /usr/share/wallpapers/SafeLanding/contents/images/5120x2880.jpg 
 exec --no-startup-id feh --bg-scale --randomize ~/.wallpapers/*
 
-gaps horizontal 550px
+# Important! Remember to also change this value in autorandr postswitch script 
+gaps horizontal $my_hor_gap 
 smart_gaps inverse_outer
 
 # https://github.com/Airblader/i3/wiki/Example-Configuration
@@ -277,10 +280,10 @@ mode "$mode_gaps" {
 
 mode "$mode_gaps_horiz" {
         bindsym 0     gaps horizontal current set 0
-        bindsym equal     gaps horizontal current set 550px
+        bindsym equal     gaps horizontal current set $my_hor_gap
 
         bindsym Shift+0     gaps horizontal all set 0
-        bindsym Shift+equal     gaps horizontal all set 550px
+        bindsym Shift+equal     gaps horizontal all set $my_hor_gap
 
         bindsym Return mode "$mode_gaps"
         bindsym Escape mode "default"

@@ -6,7 +6,9 @@ return {
 			[[
 	  <FormDataConsumer>
 	    {{({{ {} }}) => (
-          <pre>{{JSON.stringify({}, null, 2)}}</pre>
+          <pre>
+            <code>{{JSON.stringify({}, null, 2)}}</code>
+          </pre>
         )
       }}
 	  </FormDataConsumer>
