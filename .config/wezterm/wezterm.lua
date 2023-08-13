@@ -21,7 +21,7 @@ config.cursor_blink_ease_out = "Constant"
 config.background = {
 	{
 		source = {
-			File = ".wallpapers/anime/aot_mikasa.png",
+			File = ".terminal_wallpapers/anime/aot_mikasa.png",
 		},
 		opacity = 0.01,
 	},
