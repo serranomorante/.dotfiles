@@ -120,6 +120,12 @@ bindsym $mod+space focus mode_toggle
 # focus the parent container
 bindsym $mod+a focus parent
 
+
+# Max size for a floating window
+floating_maximum_size 0 x 1200
+
+hide_edge_borders both
+
 # focus the child container
 #bindsym $mod+d focus child
 
