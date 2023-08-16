@@ -208,6 +208,8 @@ return {
 					"clangd",
 					-- markdown
 					"marksman",
+					-- bash
+					"bashls",
 				},
 				handlers = {
 					lsp.default_setup,
