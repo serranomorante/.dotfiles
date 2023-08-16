@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Everything you write here will be executed by the display manager when setting up the login screen in "integrated" mode.
+
+# This fixes issue with bluetooth keyboard not connecting on login screen
+hhkb_keyboard=$(bluetoothctl devices Trusted | grep ".* HHKB" | cut -d " " -f 2)
+
+if [[ $hhkb_keyboard != "" ]]; then
+    bluetoothctl connect $hhkb_keyboard > /dev/null &
+fi
+

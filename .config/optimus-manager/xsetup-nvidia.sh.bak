@@ -11,3 +11,10 @@ if [[ $external != "" ]]; then
     xrandr --output $external --primary --mode 3440x1440 --dpi 96 --pos 0x0 --rotate normal
 fi
 
+# This fixes issue with bluetooth keyboard not connecting on login screen
+hhkb_keyboard=$(bluetoothctl devices Trusted | grep ".* HHKB" | cut -d " " -f 2)
+
+if [[ $hhkb_keyboard != "" ]]; then
+    bluetoothctl connect $hhkb_keyboard > /dev/null &
+fi
+
