@@ -5,4 +5,4 @@ Description=m2i service
 ExecStart=/usr/bin/m2i
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=xdg-desktop-autostart.target
