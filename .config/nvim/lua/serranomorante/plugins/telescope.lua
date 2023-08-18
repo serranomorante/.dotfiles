@@ -11,6 +11,11 @@ return {
 			build = "make",
 		},
 		{ "debugloop/telescope-undo.nvim" },
+		-- https://github.com/ThePrimeagen/git-worktree.nvim/pull/106
+		{
+			"brandoncc/git-worktree.nvim",
+			branch = "catch-and-handle-telescope-related-error",
+		},
 	},
 	lazy = false,
 	keys = {
@@ -66,6 +71,18 @@ return {
 				require("telescope").extensions.undo.undo()
 			end,
 		},
+		{
+			"<leader>gw",
+			function()
+				require("telescope").extensions.git_worktree.git_worktrees()
+			end,
+		},
+		{
+			"<leader>gW",
+			function()
+				require("telescope").extensions.git_worktree.create_git_worktree()
+			end,
+		},
 	},
 	opts = function()
 		local actions = require("telescope.actions")
@@ -110,5 +127,7 @@ return {
 		-- https://github.com/nvim-telescope/telescope-live-grep-args.nvim
 		conditional_func(telescope.load_extension, utils.is_available("live_grep_args"))
 		conditional_func(telescope.load_extension, utils.is_available("telescope-undo.nvim"), "undo")
+		-- https://github.com/ThePrimeagen/git-worktree.nvim
+		conditional_func(telescope.load_extension, utils.is_available("git-worktree.nvim"), "git_worktree")
 	end,
 }

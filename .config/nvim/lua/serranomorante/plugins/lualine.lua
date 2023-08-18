@@ -1,3 +1,7 @@
+local utils = require("serranomorante.utils")
+
+local BRANCH_MAX_LENGTH = 20
+
 return {
 	"nvim-lualine/lualine.nvim",
 	event = "VeryLazy",
@@ -5,7 +9,16 @@ return {
 	opts = {
 		sections = {
 			lualine_a = { "mode" },
-			lualine_b = { "b:gitsigns_status", "diagnostics" },
+			lualine_b = {
+				{
+					"branch",
+					fmt = function(str)
+						return utils.shorten(str, BRANCH_MAX_LENGTH, true)
+					end,
+				},
+				"b:gitsigns_status",
+				"diagnostics",
+			},
 			lualine_c = { "filename" },
 			lualine_x = {},
 			lualine_y = { "progress" },
