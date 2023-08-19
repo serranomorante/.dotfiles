@@ -18,6 +18,16 @@ return {
 				if op == Worktree.Operations.Switch then
 					local pane_name = utils.shorten(metadata.path, 20, true)
 
+					if vim.t.zellij_worktree_switch_history == nil then
+						vim.t.zellij_worktree_switch_history = {}
+					end
+
+					-- Stop further execution if there's already a floating pane
+					-- for this worktree
+					if vim.tbl_contains(vim.t.zellij_worktree_switch_history, metadata.path) then
+						return
+					end
+
 					local function toggle_zellij_floating_window()
 						Job:new({
 							command = "zellij",
@@ -49,7 +59,13 @@ return {
 								"--",
 								"fish",
 							},
-							on_exit = rename_zellij_pane,
+							on_exit = function()
+								local history = vim.t.zellij_worktree_switch_history
+								table.insert(history, 1, metadata.path)
+								vim.t.zellij_worktree_switch_history = history
+
+								rename_zellij_pane()
+							end,
 						}):start()
 					end
 
