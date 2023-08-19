@@ -2,6 +2,7 @@ local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 local namespace = vim.api.nvim_create_namespace
 local utils = require("serranomorante.utils")
+local events = require("serranomorante.events")
 
 local is_available = utils.is_available
 local MAX_WIN_HISTORY_LENGTH = 4
@@ -167,5 +168,23 @@ autocmd({ "WinEnter", "VimEnter" }, {
 
 		table.insert(history, 1, vim.fn.win_getid())
 		vim.t.win_history = history
+	end,
+})
+
+--- This adds support for worktrees in gitsigns.nvim
+--- Thanks AstroNvim!!
+autocmd({ "BufReadPost", "BufNewFile", "BufWritePost" }, {
+	group = augroup("file_user_events", { clear = true }),
+	callback = function(args)
+		local current_file = vim.fn.resolve(vim.fn.expand("%"))
+
+		if not (current_file == "" or vim.api.nvim_get_option_value("buftype", { buf = args.buf }) == "nofile") then
+			local worktree = utils.file_worktree()
+
+			if worktree or utils.cmd({ "git", "-C", vim.fn.fnamemodify(current_file, ":p:h"), "rev-parse" }, false) then
+				events.event("GitFile")
+				vim.api.nvim_del_augroup_by_name("file_user_events")
+			end
+		end
 	end,
 })

@@ -115,4 +115,60 @@ function M.shorten(s, w, tail)
 	return s
 end
 
+--- Run a shell command and capture the output and if the command succeeded or failed
+---
+--- Thanks AstroNvim!!
+---
+---@param cmd string|string[] The terminal command to execute
+---@param show_error? boolean Whether or not to show an unsuccessful command as an error to the user
+---@return string|nil # The result of a successfully executed command or nil
+function M.cmd(cmd, show_error)
+	if type(cmd) == "string" then
+		cmd = { cmd }
+	end
+	if vim.fn.has("win32") == 1 then
+		cmd = vim.list_extend({ "cmd.exe", "/C" }, cmd)
+	end
+	local result = vim.fn.system(cmd)
+	local success = vim.api.nvim_get_vvar("shell_error") == 0
+	if not success and (show_error == nil or show_error) then
+		vim.api.nvim_err_writeln(
+			("Error running command %s\nError message:\n%s"):format(table.concat(cmd, " "), result)
+		)
+	end
+	return success and result:gsub("[\27\155][][()#;?%d]*[A-PRZcf-ntqry=><~]", "") or nil
+end
+
+--- Get the first worktree that a file belongs to
+---
+--- Thanks AstroNvim!!
+--- https://astronvim.com/Recipes/detached_git_worktrees
+---
+---@param file string? the file to check, defaults to the current file
+---@param worktrees table<string, string>[]? an array like table of worktrees with entries `toplevel` and `gitdir`, default retrieves from `vim.g.git_worktrees`
+---@return table<string, string>|nil # a table specifying the `toplevel` and `gitdir` of a worktree or nil if not found
+function M.file_worktree(file, worktrees)
+	worktrees = worktrees or vim.g.git_worktrees
+	if not worktrees then
+		return
+	end
+	file = file or vim.fn.expand("%")
+	for _, worktree in ipairs(worktrees) do
+		if
+			M.cmd({
+				"git",
+				"--work-tree",
+				worktree.toplevel,
+				"--git-dir",
+				worktree.gitdir,
+				"ls-files",
+				"--error-unmatch",
+				file,
+			}, false)
+		then
+			return worktree
+		end
+	end
+end
+
 return M

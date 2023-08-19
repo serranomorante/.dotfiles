@@ -1,8 +1,11 @@
 return {
 	"lewis6991/gitsigns.nvim",
 	enabled = vim.fn.executable("git") == 1,
-	event = "VeryLazy",
-	config = true,
+	-- Inspired by AstroNvim, added worktrees support
+	event = "User CustomGitFile",
+	opts = {
+		worktrees = vim.g.git_worktrees,
+	},
 	keys = {
 		{
 			"<leader>gl",
