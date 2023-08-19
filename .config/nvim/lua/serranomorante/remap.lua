@@ -1,3 +1,5 @@
+local utils = require("serranomorante.utils")
+
 -- Open vim explorer [replaced by neo-tree]
 -- vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
@@ -42,3 +44,35 @@ vim.keymap.set("n", "<C-q>", "<C-w>q")
 vim.keymap.set("n", "te", ":tabedit<Return>")
 vim.keymap.set("n", "H", ":tabprevious<Return>")
 vim.keymap.set("n", "L", ":tabnext<Return>")
+
+-- Keymap to open lazygit in zellij floating pane
+-- This should be compatible with worktrees
+if vim.env.ZELLIJ == "0" and vim.fn.executable("lazygit") == 1 then
+	vim.keymap.set("n", "<leader>gg", function()
+		local Job = require("plenary.job")
+
+		local function open_lazygit_in_zellij_floating_page()
+			local worktree = utils.file_worktree()
+			local args = {
+				"run",
+				"-f",
+				"--name",
+				"lazygit",
+				"--",
+				"lazygit",
+			}
+
+			if worktree then
+				table.insert(args, ("--work-tree=%s"):format(worktree.toplevel))
+				table.insert(args, ("--git-dir=%s"):format(worktree.gitdir))
+			end
+
+			Job:new({
+				command = "zellij",
+				args = args,
+			}):start()
+		end
+
+		open_lazygit_in_zellij_floating_page()
+	end)
+end
