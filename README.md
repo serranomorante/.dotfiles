@@ -41,3 +41,8 @@ As I don't want to duplicate the same env variables and aliases from my `.bashrc
 - **Add wireplumber's config files**. Still in progress
 - **Add pipewire's config files**. Still in progress
 - **Add m2i's config files**. Still in progress
+
+## Some guides to my self
+
+- [Python development setup with Neovim](./docs/python-dev-setup.md)
+
