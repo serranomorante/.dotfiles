@@ -123,7 +123,7 @@ return {
 		config = function()
 			local lsp = require("lsp-zero").preset({})
 
-			lsp.on_attach(function(client, bufnr)
+			lsp.on_attach(function(_, bufnr)
 				-- Fix issue with multiple offset encondings
 				-- if client.name == "clangd" then
 				-- 	client.config.capabilities.offsetEncoding = { "utf-16" }
@@ -177,6 +177,7 @@ return {
 						"javascriptreact",
 						"typescriptreact",
 						"typescript.tsx",
+						"python",
 					},
 				},
 			})
@@ -243,6 +244,17 @@ return {
 					lua_ls = function()
 						require("lspconfig").lua_ls.setup(lsp.nvim_lua_ls())
 					end,
+					ruff_lsp = function()
+						-- https://github.com/astral-sh/ruff-lsp
+						local on_attach = function(client, _)
+							-- Disable hover in favor of Pyright
+							client.server_capabilities.hoverProvider = false
+						end
+
+						require("lspconfig").ruff_lsp.setup({
+							on_attach = on_attach,
+						})
+					end,
 				},
 			})
 
@@ -254,6 +266,7 @@ return {
 					"prettierd",
 					"eslint_d",
 					-- python
+					"mypy",
 					"isort",
 					"black",
 					"pylint",
@@ -269,8 +282,16 @@ return {
 				automatic_installation = false,
 				handlers = {
 					taplo = function() end,
+					-- Prevent the automatic setup of mason-null-ls and do
+					-- the setup manually in the null-ls block below.
+					pylint = function() end,
+					-- mypy = function() end,
 				},
 			})
+
+      -- TODO: remove fixed python path
+			local venv_path =
+				'import sys; sys.path.append("/usr/lib/python3.11/site-packages"); import pylint_venv; pylint_venv.inithook(force_venv_activation=True, quiet=True)'
 
 			local null_ls = require("null-ls")
 			null_ls.setup({
@@ -278,6 +299,12 @@ return {
 					-- https://github.com/lewis6991/gitsigns.nvim#null-ls
 					null_ls.builtins.code_actions.gitsigns,
 					null_ls.builtins.diagnostics.fish,
+					null_ls.builtins.diagnostics.pylint.with({
+						extra_args = { "--init-hook", venv_path },
+					}),
+					-- null_ls.builtins.diagnostics.mypy.with({
+					-- 	extra_args = { "--python-executable", ".venv/bin/python" },
+					-- }),
 					-- https://github.com/jose-elias-alvarez/typescript.nvim#code-action-setup
 					require("typescript.extensions.null-ls.code-actions"),
 				},
