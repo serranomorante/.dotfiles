@@ -15,6 +15,8 @@ return {
 			on_colors = function(colors)
 				-- Makes relative line numbers more visible
 				colors.fg_gutter = "#5a6482"
+				-- Add more explicit border to splits
+				colors.border = "#474e70"
 			end,
 			on_highlights = function(hl, c)
 				-- fix dressing.nvim float title letters hardly visible

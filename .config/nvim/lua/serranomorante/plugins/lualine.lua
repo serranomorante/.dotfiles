@@ -53,6 +53,7 @@ return {
 		},
 		options = {
 			disabled_filetypes = { "NvimTree", "neo-tree" },
+			globalstatus = true,
 		},
 	},
 }
