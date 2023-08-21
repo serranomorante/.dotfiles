@@ -27,6 +27,8 @@ local function gitsigns_status()
 	return sign
 end
 
+local harpoon_extension = { sections = { lualine_a = { "mode" } }, filetypes = { "harpoon" } }
+
 return {
 	"nvim-lualine/lualine.nvim",
 	event = "VeryLazy",
@@ -52,8 +54,8 @@ return {
 			lualine_z = { "location" },
 		},
 		options = {
-			disabled_filetypes = { "NvimTree", "neo-tree" },
 			globalstatus = true,
 		},
+		extensions = { "lazy", "neo-tree", "fugitive", harpoon_extension },
 	},
 }
