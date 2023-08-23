@@ -68,10 +68,10 @@ return {
 			cmp.setup({
 				-- Make the first item on the list preselected
 				-- https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/autocomplete.md#preselect-first-item
-				preselect = "item",
-				completion = {
-					completeopt = "menu,menuone,noinsert",
-				},
+				-- preselect = "item",
+				-- completion = {
+				-- 	completeopt = "menu,menuone,noinsert",
+				-- },
 				sources = {
 					{ name = "copilot" },
 					{ name = "luasnip" },
