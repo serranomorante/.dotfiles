@@ -89,8 +89,8 @@ autocmd("BufWinEnter", {
 	end,
 })
 
--- Thanks AstroNvim!
 if is_available("neo-tree.nvim") then
+	-- Thanks AstroNvim!
 	autocmd("BufEnter", {
 		desc = "Open Neo-Tree on startup with directory",
 		group = augroup("neotree_start", { clear = true }),
@@ -102,6 +102,35 @@ if is_available("neo-tree.nvim") then
 				if stats and stats.type == "directory" then
 					vim.api.nvim_del_augroup_by_name("neotree_start")
 					require("neo-tree")
+				end
+			end
+		end,
+	})
+
+	-- Fix the neo-tree width even when vim window is resized
+	autocmd("VimResized", {
+		callback = function()
+			local winid = vim.fn.win_getid()
+			local filetype = utils.buf_filetype_from_winid(winid)
+
+			-- Rapidly find if current window's buffer is neo-tree
+			if filetype == "neo-tree" then
+				vim.schedule(function()
+					vim.api.nvim_win_set_width(winid, vim.g.neo_tree_width)
+				end)
+				return
+			end
+
+			-- If current window's buffer is not neo-tree
+			-- iterate through all buffers and find if neo-tree is open
+			-- to set the right width
+			for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+				local buf_filetype = vim.bo[bufnr].filetype
+
+				if buf_filetype == "neo-tree" then
+					vim.schedule(function()
+						vim.api.nvim_win_set_width(vim.fn.bufwinid(bufnr), vim.g.neo_tree_width)
+					end)
 				end
 			end
 		end,

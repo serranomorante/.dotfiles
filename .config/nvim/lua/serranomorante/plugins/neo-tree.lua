@@ -40,7 +40,7 @@ return {
 		close_if_last_window = true,
 		enable_normal_mode_for_inputs = true,
 		window = {
-			width = 30,
+			width = vim.g.neo_tree_width,
 		},
 		default_component_configs = {
 			git_status = {

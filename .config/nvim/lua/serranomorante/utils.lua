@@ -171,4 +171,13 @@ function M.file_worktree(file, worktrees)
 	end
 end
 
+--- Get the focused buffer filetype from a window id
+--- @param winid number # The window id to get the filetype from
+--- @return string filetype # The filetype of the focused buffer
+function M.buf_filetype_from_winid(winid)
+	local bufnr = vim.api.nvim_win_get_buf(winid)
+	local filetype = vim.bo[bufnr].filetype
+	return filetype
+end
+
 return M

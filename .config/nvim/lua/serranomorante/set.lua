@@ -53,6 +53,9 @@ vim.g.mapleader = " "
 
 vim.g.markdown_fenced_languages = { "html", "javascript", "typescript", "css", "scss", "vim", "lua", "json", "yaml" }
 
+-- Global variable to neo-tree window width
+vim.g.neo_tree_width = 30
+
 vim.opt.foldcolumn = "0"
 vim.opt.foldlevel = 99 -- set high foldlevel for nvim-ufo
 vim.opt.foldlevelstart = 99 -- start with all code unfolded
