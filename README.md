@@ -4,7 +4,7 @@ This are my personal config files that might only make sense for my particular w
 
 Main technologies:
 
-- [wezterm](https://wezfurlong.org/wezterm/index.html). Terminal emulator
+- [kitty](https://github.com/kovidgoyal/kitty). Terminal emulator
 - [neovim](https://neovim.io/). Text editor
 - [fish](https://fishshell.com/docs/current/tutorial.html). Shell
 - [zellij](https://github.com/zellij-org/zellij). Terminal multiplexer
@@ -19,6 +19,7 @@ Main technologies:
 
 Necesary dependencies for my workflow
 
+- [JetBrains Mono](https://github.com/ryanoasis/nerd-fonts#patched-fonts)
 - [feh](https://wiki.archlinux.org/title/feh). Set your system wallpaper programatically
 - [bass](https://github.com/edc/bass). To re-use .bashrc entries in fish. You must clone the repo and execute `make install`
 - [jq](https://man.archlinux.org/man/jq.1.en). Command-line JSON processor
@@ -45,4 +46,8 @@ As I don't want to duplicate the same env variables and aliases from my `.bashrc
 ## Some guides to my self
 
 - [Python development setup with Neovim](./docs/python-dev-setup.md)
+
+## Past technologies
+
+- [wezterm](https://wezfurlong.org/wezterm/index.html). Terminal emulator. I stopped using it due to CPU performance consumption.
 
