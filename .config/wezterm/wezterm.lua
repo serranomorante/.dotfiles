@@ -43,8 +43,9 @@ config.window_padding = {
 	bottom = 0,
 }
 config.hide_tab_bar_if_only_one_tab = true
-config.initial_rows = 50
-config.initial_cols = 160
+-- config.initial_rows = 50
+-- config.initial_cols = 160
+
 -- When using disable_default_key_bindings, it is recommended that you assign
 -- ShowDebugOverlay to something to aid in potential future troubleshooting.
 -- Likewise, you may wish to assign ActivateCommandPalette.
