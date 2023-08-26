@@ -11,9 +11,9 @@ outputs=$(i3-msg -t get_outputs)
 second_screen=$(echo $outputs | jq -r --arg WORKSPACE "${workspace}" '.[] | select(.current_workspace==$WORKSPACE) | .active')
 
 if [ "$second_screen" = true ] ; then
-  i3-msg "workspace $workspace; gaps horizontal current set 0; layout tabbed"
+  i3-msg "workspace $workspace; gaps horizontal current set 0"
 else
   my_hor_gap=$(xgetres i3wm.Gaps.my_hor_gap)
-  i3-msg "workspace $workspace; gaps horizontal current set $my_hor_gap; layout splith"
+  i3-msg "workspace $workspace; gaps horizontal current set $my_hor_gap"
 fi
 
