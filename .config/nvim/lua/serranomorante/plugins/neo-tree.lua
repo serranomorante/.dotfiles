@@ -68,6 +68,31 @@ return {
 					vim.g.neo_tree_git_branch = branch_name
 				end,
 			},
+			-- See https://github.com/kwkarlwang/bufresize.nvim/pull/8
+			{
+				event = "neo_tree_window_before_open",
+				handler = function()
+					require("bufresize").block_register()
+				end,
+			},
+			{
+				event = "neo_tree_window_after_open",
+				handler = function()
+					require("bufresize").resize_open()
+				end,
+			},
+			{
+				event = "neo_tree_window_before_close",
+				handler = function()
+					require("bufresize").block_register()
+				end,
+			},
+			{
+				event = "neo_tree_window_after_close",
+				handler = function()
+					require("bufresize").resize_close()
+				end,
+			},
 		},
 	},
 }
