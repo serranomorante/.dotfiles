@@ -46,6 +46,7 @@ As I don't want to duplicate the same env variables and aliases from my `.bashrc
 ## Some guides to my self
 
 - [Python development setup with Neovim](./docs/python-dev-setup.md)
+- [keyd special chars setup](./docs/keyd-setup.md)
 
 ## Past technologies
 
