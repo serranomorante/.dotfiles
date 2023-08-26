@@ -1,3 +1,5 @@
+local utils = require("serranomorante.utils")
+
 return {
 	"nvim-neo-tree/neo-tree.nvim",
 	branch = "v3.x",
@@ -55,6 +57,16 @@ return {
 					staged = "",
 					conflict = "",
 				},
+			},
+		},
+		event_handlers = {
+			{
+				event = "before_render",
+				handler = function()
+					local worktree = utils.file_worktree()
+					local branch_name = utils.branch_name(worktree)
+					vim.g.neo_tree_git_branch = branch_name
+				end,
 			},
 		},
 	},

@@ -152,7 +152,13 @@ function M.file_worktree(file, worktrees)
 	if not worktrees then
 		return
 	end
-	file = file or vim.fn.expand("%")
+	file = file or vim.fn.resolve(vim.fn.expand("%"))
+
+	if string.find(file, "neo-tree", 1, true) then
+		-- Not valid file, use a directory
+		file = vim.fn.fnamemodify(file, ":p:h")
+	end
+
 	for _, worktree in ipairs(worktrees) do
 		if
 			M.cmd({
@@ -178,6 +184,30 @@ function M.buf_filetype_from_winid(winid)
 	local bufnr = vim.api.nvim_win_get_buf(winid)
 	local filetype = vim.bo[bufnr].filetype
 	return filetype
+end
+
+--- Get the branch name with git-dir and worktree support
+--- @param worktree table<string, string>|nil # a table specifying the `toplevel` and `gitdir` of a worktree
+--- @return string branch # The branch name
+function M.branch_name(worktree)
+	local branch
+
+	if worktree then
+		branch = vim.fn.system(
+			("git --git-dir=%s --work-tree=%s branch --show-current 2> /dev/null | tr -d '\n'"):format(
+				worktree.gitdir,
+				worktree.toplevel
+			)
+		)
+	else
+		branch = vim.fn.system("git branch --show-current 2> /dev/null | tr -d '\n'")
+	end
+
+	if branch ~= "" then
+		return branch
+	else
+		return ""
+	end
 end
 
 return M
