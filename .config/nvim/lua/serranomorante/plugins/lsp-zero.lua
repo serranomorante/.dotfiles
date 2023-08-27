@@ -221,12 +221,14 @@ return {
 						})
 					end,
 					clangd = function()
-						require("clangd_extensions").setup({
-							server = {
-								capabilities = {
-									offsetEncoding = { "utf-16" },
-								},
-							},
+						require("lspconfig").clangd.setup({
+							capabilities = { offsetEncoding = "utf-16" },
+							on_attach = function()
+								-- https://github.com/p00f/clangd_extensions.nvim#inlay-hints
+								-- TODO: change to `vim.lsp.inlay_hint(bufnr, true)` on nvim 0.10
+								require("clangd_extensions.inlay_hints").setup_autocmd()
+								require("clangd_extensions.inlay_hints").set_inlay_hints()
+							end,
 						})
 					end,
 					jsonls = function()
@@ -289,7 +291,7 @@ return {
 				},
 			})
 
-      -- TODO: remove fixed python path
+			-- TODO: remove fixed python path
 			local venv_path =
 				'import sys; sys.path.append("/usr/lib/python3.11/site-packages"); import pylint_venv; pylint_venv.inithook(force_venv_activation=True, quiet=True)'
 
