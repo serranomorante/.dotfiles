@@ -50,6 +50,10 @@ vim.keymap.set("n", "te", ":tabedit<Return>")
 vim.keymap.set("n", "H", ":tabprevious<Return>")
 vim.keymap.set("n", "L", ":tabnext<Return>")
 
+-- Tabs move
+vim.keymap.set("n", "<t", ":tabmove -1<Return>")
+vim.keymap.set("n", ">t", ":tabmove +1<Return>")
+
 -- Keymap to open lazygit in zellij floating pane
 -- This should be compatible with worktrees
 if vim.env.ZELLIJ == "0" and vim.fn.executable("lazygit") == 1 then
