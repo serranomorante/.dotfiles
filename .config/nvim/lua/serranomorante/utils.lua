@@ -3,6 +3,27 @@ local path_sep = uv.os_uname().version:match("Windows") and "\\" or "/"
 
 local M = {}
 
+M.Direction = {
+	left = "left",
+	right = "right",
+	up = "up",
+	down = "down",
+}
+
+M.DirectionKeys = {
+	left = "h",
+	right = "l",
+	up = "k",
+	down = "j",
+}
+
+M.DirectionKeysOpposite = {
+	left = "l",
+	right = "h",
+	up = "j",
+	down = "k",
+}
+
 --- assert that the given argument is in fact of the correct type.
 ---
 --- Thanks!!
@@ -208,6 +229,19 @@ function M.branch_name(worktree)
 	else
 		return ""
 	end
+end
+
+---@param direction string # The direction key to check
+---@return boolean
+function M.win_at_edge(direction)
+	return vim.fn.winnr() == vim.fn.winnr(M.DirectionKeys[direction])
+end
+
+--- Get the extreme opposite window id of the direction you pass
+---@param direction string # The direction key to check
+---@return number
+function M.win_wrap_id(direction)
+	return vim.fn.win_getid(vim.fn.winnr(string.format("%s%s", "99999", M.DirectionKeysOpposite[direction])))
 end
 
 return M

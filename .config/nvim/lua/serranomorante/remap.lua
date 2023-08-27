@@ -8,6 +8,9 @@ vim.keymap.set("n", "<leader>uw", function()
 	vim.wo.wrap = not vim.wo.wrap
 end)
 
+-- New file
+vim.keymap.set("n", "<leader>n", "<cmd>enew<cr>")
+
 -- Move selected lines around
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
