@@ -113,6 +113,10 @@ if is_available("neo-tree.nvim") then
 			local winid = vim.fn.win_getid()
 			local filetype = utils.buf_filetype_from_winid(winid)
 
+			if vim.g.neo_tree_width < 0 then
+				return
+			end
+
 			-- Rapidly find if current window's buffer is neo-tree
 			if filetype == "neo-tree" then
 				vim.schedule(function()
