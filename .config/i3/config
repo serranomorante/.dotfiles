@@ -269,6 +269,7 @@ no_focus [class="plasmashell" window_type="notification"]
 for_window [class="flameshot" title="^Configuration$"] floating enable
 for_window [class="org.cryptomator.launcher.Cryptomator.MainApp" title="^Unlock.*"] floating enable
 for_window [class="org.cryptomator.launcher.Cryptomator.MainApp" title="^Preferences$"] floating enable
+for_window [title="^DevTools" window_role="pop-up"] floating disable
 
 # Fix google meet popup window
 for_window [title="[^.]+\.[^.]+\.[^.]+ is sharing your screen."] move scratchpad
