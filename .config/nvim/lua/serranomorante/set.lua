@@ -18,6 +18,7 @@ end
 vim.opt.nu = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true
+-- vim.opt.cursorcolumn = true
 vim.opt.linebreak = true
 
 vim.opt.tabstop = 2

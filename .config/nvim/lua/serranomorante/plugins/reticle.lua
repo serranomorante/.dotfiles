@@ -1,5 +1,14 @@
 return {
 	"tummetott/reticle.nvim",
 	event = "VeryLazy", -- lazyload the plugin if you like
-	config = true,
+	opts = {
+		follow = {
+			cursorcolumn = false,
+		},
+		always = {
+			cursorline = {
+				"neo-tree",
+			},
+		},
+	},
 }

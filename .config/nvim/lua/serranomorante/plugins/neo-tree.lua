@@ -44,6 +44,18 @@ return {
 		window = {
 			width = vim.g.neo_tree_width,
 		},
+		filesystem = {
+			window = {
+				fuzzy_finder_mappings = {
+					["<C-j>"] = "move_cursor_down",
+					["<C-k>"] = "move_cursor_up",
+					["<down>"] = "noop",
+					["<up>"] = "noop",
+					["<C-n>"] = "noop",
+					["<C-p>"] = "noop",
+				},
+			},
+		},
 		default_component_configs = {
 			git_status = {
 				symbols = {
