@@ -234,6 +234,8 @@ bar {
 
 focus_wrapping no
 
+for_window [all] title_window_icon padding 3px
+
 # https://www.reddit.com/r/i3wm/comments/768yg5/comment/docjvxm/?utm_source=share&utm_medium=web2x&context=3
 for_window [class=.*] border normal 1
 
