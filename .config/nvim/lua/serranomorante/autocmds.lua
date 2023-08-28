@@ -110,30 +110,17 @@ if is_available("neo-tree.nvim") then
 	-- Fix the neo-tree width even when vim window is resized
 	autocmd("VimResized", {
 		callback = function()
-			local winid = vim.fn.win_getid()
-			local filetype = utils.buf_filetype_from_winid(winid)
+			local tabpages = vim.api.nvim_list_tabpages()
 
-			if vim.g.neo_tree_width < 0 then
-				return
-			end
+			for _, tabpage in ipairs(tabpages) do
+				local winnr = vim.fn.tabpagewinnr(tabpage, "99999h")
+				local winid = vim.fn.win_getid(winnr)
+				local filetype = utils.buf_filetype_from_winid(winid)
 
-			-- Rapidly find if current window's buffer is neo-tree
-			if filetype == "neo-tree" then
-				vim.schedule(function()
-					vim.api.nvim_win_set_width(winid, vim.g.neo_tree_width)
-				end)
-				return
-			end
-
-			-- If current window's buffer is not neo-tree
-			-- iterate through all buffers and find if neo-tree is open
-			-- to set the right width
-			for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-				local buf_filetype = vim.bo[bufnr].filetype
-
-				if buf_filetype == "neo-tree" then
+				if filetype == "neo-tree" then
 					vim.schedule(function()
-						vim.api.nvim_win_set_width(vim.fn.bufwinid(bufnr), vim.g.neo_tree_width)
+						vim.api.nvim_win_set_width(winid, vim.g.neo_tree_width)
+						vim.cmd.wincmd("=")
 					end)
 				end
 			end
