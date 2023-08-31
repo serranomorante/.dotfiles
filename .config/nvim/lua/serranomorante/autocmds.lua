@@ -7,6 +7,8 @@ local events = require("serranomorante.events")
 local is_available = utils.is_available
 local MAX_WIN_HISTORY_LENGTH = 4
 
+local general = augroup("General Settings", { clear = true })
+
 -- Highlight when yanking
 autocmd("TextYankPost", {
 	desc = "Highlight yanked text",
@@ -207,4 +209,13 @@ autocmd({ "BufReadPost", "BufNewFile", "BufWritePost" }, {
 			end
 		end
 	end,
+})
+
+--- Disable automatic comment on next line
+autocmd("BufEnter", {
+	callback = function()
+		vim.opt.formatoptions:remove({ "c", "r", "o" })
+	end,
+	group = general,
+	desc = "Disable New Line Comment",
 })

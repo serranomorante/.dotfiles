@@ -1,5 +1,16 @@
 return {
 	{
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+		opts = {
+			suggestion = { enabled = false },
+			panel = { enabled = false },
+			copilot_node_command = vim.fn.expand("$HOME") .. "/.volta/tools/image/node/18.16.0/bin/node",
+		},
+	},
+
+	{
 		"VonHeikemen/lsp-zero.nvim",
 		branch = "dev-v3",
 		lazy = true,
@@ -29,24 +40,33 @@ return {
 			require("luasnip.loaders.from_lua").lazy_load({
 				paths = { vim.fn.stdpath("config") .. "/lua/serranomorante/snippets" },
 			})
-			-- vim.tbl_map(function(type)
-			-- 	require("luasnip.loaders.from_" .. type).lazy_load()
-			-- end, { "vscode", "snipmate", "lua" })
 		end,
 	},
+
 	-- Autocompletion
 	{
 		"hrsh7th/nvim-cmp",
 		event = "InsertEnter",
 		dependencies = {
+			{ "L3MON4D3/LuaSnip" },
 			{ "zbirenbaum/copilot.lua" },
+			{
+				"zbirenbaum/copilot-cmp",
+				-- The following config helps to improve start times
+				-- https://github.com/zbirenbaum/copilot-cmp#copilot-cmp-1
+				opts = {
+					{
+						event = { "InsertEnter", "LspAttach" },
+						fix_pairs = true,
+					},
+				},
+			},
 			{ "saadparwaiz1/cmp_luasnip" },
+			{ "hrsh7th/cmp-nvim-lua" },
 		},
 		config = function()
-			-- Here is where you configure the autocompletion settings.
 			require("lsp-zero").extend_cmp()
 
-			-- And you can configure cmp even more, if you want to.
 			local cmp = require("cmp")
 			local cmp_action = require("lsp-zero").cmp_action()
 
@@ -56,6 +76,7 @@ return {
 				winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
 			}
 
+			-- https://github.com/zbirenbaum/copilot-cmp#tab-completion-configuration-highly-recommended
 			local has_words_before = function()
 				if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
 					return false
@@ -66,16 +87,11 @@ return {
 			end
 
 			cmp.setup({
-				-- Make the first item on the list preselected
-				-- https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/autocomplete.md#preselect-first-item
-				-- preselect = "item",
-				-- completion = {
-				-- 	completeopt = "menu,menuone,noinsert",
-				-- },
 				sources = {
 					{ name = "copilot" },
 					{ name = "luasnip" },
 					{ name = "nvim_lsp" },
+					{ name = "nvim_lua" },
 				},
 				mapping = {
 					-- Do not implement luasnip supertab because

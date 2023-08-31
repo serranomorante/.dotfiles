@@ -6,6 +6,7 @@
   "bufresize.nvim": { "branch": "master", "commit": "3b19527ab936d6910484dcc20fb59bdb12322d8b" },
   "clangd_extensions.nvim": { "branch": "main", "commit": "323b00de2ee18cad1ac45eb95e680386c4ff4366" },
   "cmp-nvim-lsp": { "branch": "main", "commit": "44b16d11215dce86f253ce0c30949813c0a90765" },
+  "cmp-nvim-lua": { "branch": "main", "commit": "f12408bdb54c39c23e67cab726264c10db33ada8" },
   "cmp_luasnip": { "branch": "master", "commit": "18095520391186d634a0045dacaa346291096566" },
   "copilot-cmp": { "branch": "master", "commit": "11eb015fbf9f07ad1c72dbdc9d830ebac610b5cd" },
   "copilot.lua": { "branch": "master", "commit": "0fa30d6846aae1af1c94a9ead93fa7dcf8affbe6" },
