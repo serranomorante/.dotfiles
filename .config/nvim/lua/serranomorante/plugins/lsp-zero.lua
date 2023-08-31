@@ -118,7 +118,8 @@ return {
 			{ "kevinhwang91/nvim-ufo" },
 			{ "p00f/clangd_extensions.nvim" },
 			{ "b0o/SchemaStore.nvim" },
-			{ "jose-elias-alvarez/typescript.nvim" },
+			-- { "jose-elias-alvarez/typescript.nvim" },
+			{ "pmizio/typescript-tools.nvim" },
 		},
 		config = function()
 			local lsp = require("lsp-zero").preset({})
@@ -215,10 +216,15 @@ return {
 				handlers = {
 					lsp.default_setup,
 					tsserver = function()
-						require("typescript").setup({
-							-- See https://github.com/VonHeikemen/lsp-zero.nvim/discussions/39#discussioncomment-3311521
-							server = lsp.build_options("tsserver", {}),
-						})
+						-- require("typescript").setup({
+						-- See https://github.com/VonHeikemen/lsp-zero.nvim/discussions/39#discussioncomment-3311521
+						-- server = lsp.build_options("tsserver", {}),
+						-- })
+
+						-- See https://github.com/VonHeikemen/lsp-zero.nvim/discussions/39#discussioncomment-3311521
+						require("typescript-tools").setup(
+							vim.tbl_deep_extend("force", lsp.build_options("tsserver", {}), {})
+						)
 					end,
 					clangd = function()
 						require("lspconfig").clangd.setup({
@@ -308,7 +314,7 @@ return {
 					-- 	extra_args = { "--python-executable", ".venv/bin/python" },
 					-- }),
 					-- https://github.com/jose-elias-alvarez/typescript.nvim#code-action-setup
-					require("typescript.extensions.null-ls.code-actions"),
+					-- require("typescript.extensions.null-ls.code-actions"),
 				},
 			})
 		end,
