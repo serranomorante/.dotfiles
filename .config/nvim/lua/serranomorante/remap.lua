@@ -8,6 +8,14 @@ vim.keymap.set("n", "<leader>uw", function()
 	vim.wo.wrap = not vim.wo.wrap
 end)
 
+-- Navigate display lines
+vim.keymap.set({ "n", "x" }, "j", function()
+	return vim.v.count > 0 and "j" or "gj"
+end, { noremap = true, expr = true })
+vim.keymap.set({ "n", "x" }, "k", function()
+	return vim.v.count > 0 and "k" or "gk"
+end, { noremap = true, expr = true })
+
 -- New file
 vim.keymap.set("n", "<leader>n", "<cmd>enew<cr>")
 
