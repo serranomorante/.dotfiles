@@ -158,7 +158,6 @@ return {
 			local actions = require("telescope.actions")
 			return {
 				defaults = {
-          initial_mode = 'normal',
 					path_display = { "truncate" },
 					sorting_strategy = "ascending",
 					layout_config = {
