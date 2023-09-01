@@ -1,10 +1,24 @@
 local utils = require("serranomorante.utils")
+local autocmd = vim.api.nvim_create_autocmd
 
 return {
 	{
 		"kwkarlwang/bufresize.nvim",
 		event = "VeryLazy",
 		config = true,
+		init = function()
+			-- Fix issue with bufresize and neotree in which toggling
+			-- neo-tree (hidding it), then openinng the command line history
+			-- window (q:), then closing it, then opening neo-tree again with
+			-- `ctrl+o` will resize the cmd window height
+			autocmd("CmdwinLeave", {
+				callback = function()
+					vim.schedule(function()
+						require("bufresize").resize_close()
+					end)
+				end,
+			})
+		end,
 	},
 
 	{

@@ -13,17 +13,27 @@ return {
 			"<leader>o",
 			function()
 				if vim.bo.filetype == "neo-tree" then
+					-- The next code is heavily dependant on the
+					-- window id history autocmd
 					local win_history = vim.t.win_history
 					local prev_win = win_history[1]
 
-					-- Go to the window to the right as a fallback
+					-- If the previous window is a neo-tree window, then
+					-- look for the window before that one.
+					if utils.buf_filetype_from_winid(prev_win) == "neo-tree" then
+						prev_win = win_history[2]
+					end
+
 					if vim.fn.win_getid() == prev_win then
+						-- Go to the window to the right as a fallback
 						vim.cmd.wincmd("l")
-					-- Go to the previous window
 					else
+						-- Go to the previous window
 						vim.fn.win_gotoid(prev_win)
 					end
 				else
+					-- Is a mistery to me why executing `vim.cmd.Neotree("focus")`
+					-- is appending an unexpected additional window id.
 					vim.cmd.Neotree("focus")
 				end
 			end,
@@ -49,7 +59,7 @@ return {
 				["z"] = "noop", -- disable close all nodes
 			},
 		},
-	  -- Thanks AstroNvim!
+		-- Thanks AstroNvim!
 		commands = {
 			parent_or_close = function(state)
 				local node = state.tree:get_node()

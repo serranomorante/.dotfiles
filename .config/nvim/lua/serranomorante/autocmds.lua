@@ -165,8 +165,12 @@ autocmd({ "WinEnter", "VimEnter" }, {
 			return
 		end
 
-		local bufnr = vim.api.nvim_win_get_buf(vim.fn.win_getid())
-		local filetype = vim.bo[bufnr].filetype
+		local filetype = vim.bo.filetype
+		local buftype = vim.bo.buftype
+
+		if buftype == "nofile" then
+			return
+		end
 
 		-- Exclude windows from dressing.nvim
 		if filetype == "DressingInput" then
@@ -175,6 +179,11 @@ autocmd({ "WinEnter", "VimEnter" }, {
 
 		-- Exclude windows from neo-tree.nvim
 		if filetype == "neo-tree" then
+			return
+		end
+
+		-- Exclude windows from quickfix
+		if filetype == "quickfix" then
 			return
 		end
 
@@ -188,7 +197,16 @@ autocmd({ "WinEnter", "VimEnter" }, {
 			table.remove(history)
 		end
 
-		table.insert(history, 1, vim.fn.win_getid())
+		local current_win_id = vim.fn.win_getid()
+
+		-- `history[1]` will be our previous window, we don't want to
+		-- duplicate it in our history at the 1 position
+		if vim.tbl_contains(history, current_win_id) and history[1] == current_win_id then
+			return
+		end
+
+		table.insert(history, 1, current_win_id)
+
 		vim.t.win_history = history
 	end,
 })

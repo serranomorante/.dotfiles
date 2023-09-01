@@ -232,11 +232,6 @@ return {
 				handlers = {
 					lsp.default_setup,
 					tsserver = function()
-						-- require("typescript").setup({
-						-- See https://github.com/VonHeikemen/lsp-zero.nvim/discussions/39#discussioncomment-3311521
-						-- server = lsp.build_options("tsserver", {}),
-						-- })
-
 						-- See https://github.com/VonHeikemen/lsp-zero.nvim/discussions/39#discussioncomment-3311521
 						require("typescript-tools").setup(
 							vim.tbl_deep_extend("force", lsp.build_options("tsserver", {}), {})
