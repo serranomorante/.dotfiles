@@ -57,7 +57,7 @@ return {
 				opts = {
 					{
 						event = { "InsertEnter", "LspAttach" },
-						fix_pairs = true,
+						fix_pairs = false,
 					},
 				},
 			},

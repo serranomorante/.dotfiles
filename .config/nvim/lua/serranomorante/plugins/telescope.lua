@@ -77,7 +77,7 @@ return {
 
 	{
 		"nvim-telescope/telescope.nvim",
-		tag = "0.1.1",
+		tag = "0.1.2",
 		dependencies = {
 			{ "nvim-telescope/telescope-live-grep-args.nvim" },
 			{
@@ -158,6 +158,7 @@ return {
 			local actions = require("telescope.actions")
 			return {
 				defaults = {
+          initial_mode = 'normal',
 					path_display = { "truncate" },
 					sorting_strategy = "ascending",
 					layout_config = {
