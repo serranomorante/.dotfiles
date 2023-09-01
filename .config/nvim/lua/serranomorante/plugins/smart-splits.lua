@@ -9,14 +9,33 @@ return {
 
 	{
 		"mrjones2014/smart-splits.nvim",
-		-- enabled = false,
 		keys = {
+			-- Resize splits keymaps
 			{
-				"<leader>rs",
+				"<A-h>",
 				function()
-					require("smart-splits").start_resize_mode()
+					require("smart-splits").resize_left()
 				end,
 			},
+			{
+				"<A-j>",
+				function()
+					require("smart-splits").resize_down()
+				end,
+			},
+			{
+				"<A-k>",
+				function()
+					require("smart-splits").resize_up()
+				end,
+			},
+			{
+				"<A-l>",
+				function()
+					require("smart-splits").resize_right()
+				end,
+			},
+			-- Swap splits keymaps
 			{
 				"<leader><leader>h",
 				function()
@@ -70,27 +89,6 @@ return {
 					"neo-tree",
 					"harpoon",
 					"NvimTree",
-				},
-				resize_mode = {
-					silent = true,
-					hooks = {
-						on_leave = function()
-							require("bufresize").register()
-							vim.notify("Smart Splits: RESIZE MODE OFF", vim.log.levels.INFO)
-
-							-- Navigate display lines
-							-- TODO: delete this after smart-splits fix the bug
-							vim.keymap.set({ "n", "x" }, "j", function()
-								return vim.v.count > 0 and "j" or "gj"
-							end, { noremap = true, expr = true })
-							vim.keymap.set({ "n", "x" }, "k", function()
-								return vim.v.count > 0 and "k" or "gk"
-							end, { noremap = true, expr = true })
-						end,
-						on_enter = function()
-							vim.notify("Smart Splits: RESIZE MODE ON", vim.log.levels.WARN)
-						end,
-					},
 				},
 			}
 		end,
