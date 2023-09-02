@@ -1,6 +1,7 @@
 local utils = require("serranomorante.utils")
 
 local undodir = utils.join_paths(vim.call("stdpath", "cache"), "undodir")
+local shadadir = utils.join_paths(vim.call("stdpath", "cache"), "shadadir")
 
 if not utils.is_directory(undodir) then
 	vim.fn.mkdir(undodir, "p")
@@ -37,6 +38,19 @@ vim.opt.wrap = false
 
 vim.opt.swapfile = false
 vim.opt.backup = false
+
+--  ! - Save and restore global variables (their names should be without lowercase letter).
+--  ' - Specify the maximum number of marked files remembered. It also saves the jump list and the change list.
+--  < - Maximum of lines saved for each register. All the lines are saved if this is not included, <0 to disable pessistent registers.
+--  % - Save and restore the buffer list. You can specify the maximum number of buffer stored with a number.
+--  / or : - Number of search patterns and entries from the command-line history saved. vim.o.history is used if it’s not specified.
+--  f - Store file (uppercase) marks, use 'f0' to disable.
+--  s - Specify the maximum size of an item’s content in KiB (kilobyte).
+--      For the viminfo file, it only applies to register.
+--      For the shada file, it applies to all items except for the buffer list and header.
+--  h - Disable the effect of 'hlsearch' when loading the shada file.
+vim.opt.shada = "'0,<0,%0,:100,/100,s500,h"
+vim.opt.shadafile = shadadir
 vim.opt.undodir = undodir
 vim.opt.undofile = true
 
