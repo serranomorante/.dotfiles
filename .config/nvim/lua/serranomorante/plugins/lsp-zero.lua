@@ -141,15 +141,25 @@ return {
 			local lsp = require("lsp-zero").preset({})
 
 			lsp.on_attach(function(_, bufnr)
-				-- Fix issue with multiple offset encondings
-				-- if client.name == "clangd" then
-				-- 	client.config.capabilities.offsetEncoding = { "utf-16" }
-				-- end
+				-- Disable some keybindings
+				-- See: https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/lsp.md#disable-keybindings
+				lsp.default_keymaps({ buffer = bufnr, exclude = { "<F2>", "<F3>", "<F4>" } })
 
-				lsp.default_keymaps({ buffer = bufnr, omit = { "<F2>", "<F3>", "<F4>" } })
+				-- Add new keybindings
+				-- See: https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/lsp.md#creating-new-keybindings
+				vim.keymap.set("n", "gr", function()
+					require("telescope.builtin").lsp_references()
+				end, { buffer = true })
 
-				vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<cr>", { buffer = true })
-				vim.keymap.set("n", "<leader>lR", function()
+				vim.keymap.set("n", "gd", function()
+					require("telescope.builtin").lsp_definitions()
+				end, { buffer = true })
+
+				vim.keymap.set("n", "<leader>ld", function()
+					require("telescope.builtin").diagnostics()
+				end)
+
+				vim.keymap.set("n", "<leader>lr", function()
 					vim.lsp.buf.rename()
 				end, { buffer = true })
 
@@ -169,7 +179,6 @@ return {
 					client.server_capabilities.semanticTokensProvider = nil
 				end,
 				capabilities = {
-					-- offsetEncoding = "utf-16",
 					textDocument = {
 						foldingRange = {
 							dynamicRegistration = false,

@@ -98,7 +98,6 @@ return {
 				cursor_follows_swapped_bufs = true,
 				ignored_filetypes = {
 					"nofile",
-					"quickfix",
 					"prompt",
 					"neo-tree",
 					"harpoon",

@@ -87,6 +87,6 @@ return {
 		options = {
 			globalstatus = true,
 		},
-		extensions = { "lazy", "fugitive", harpoon_extension, neo_tree_extension },
+		extensions = { "lazy", "fugitive", "quickfix", harpoon_extension, neo_tree_extension },
 	},
 }

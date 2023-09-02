@@ -96,6 +96,36 @@ return {
 				end,
 			},
 			{
+				"<leader>fb",
+				function()
+					require("telescope.builtin").buffers()
+				end,
+			},
+			{
+				"<leader>fh",
+				function()
+					require("telescope.builtin").help_tags()
+				end,
+			},
+			{
+				"<leader>fk",
+				function()
+					require("telescope.builtin").keymaps()
+				end,
+			},
+			{
+				"<leader>fm",
+				function()
+					require("telescope.builtin").man_pages()
+				end,
+			},
+			{
+				"<leader>fr",
+				function()
+					require("telescope.builtin").registers()
+				end,
+			},
+			{
 				"<leader>fc",
 				function()
 					require("telescope.builtin").grep_string()
@@ -104,13 +134,17 @@ return {
 			{
 				"<leader>ff",
 				function()
-					require("telescope.builtin").find_files()
+					require("telescope.builtin").find_files({ path_display = { "truncate" } })
 				end,
 			},
 			{
 				"<leader>fF",
 				function()
-					require("telescope.builtin").find_files({ hidden = true, no_ignore = true })
+					require("telescope.builtin").find_files({
+						hidden = true,
+						no_ignore = true,
+						path_display = { "truncate" },
+					})
 				end,
 			},
 			{
@@ -158,7 +192,7 @@ return {
 			local actions = require("telescope.actions")
 			return {
 				defaults = {
-					path_display = { "truncate" },
+					path_display = { "shorten" },
 					sorting_strategy = "ascending",
 					layout_config = {
 						horizontal = {
