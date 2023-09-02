@@ -146,18 +146,10 @@ autocmd({ "BufEnter", "BufWinEnter" }, {
 	end,
 })
 
--- vim.api.nvim_create_autocmd({ "filetype" }, {
--- 	pattern = "harpoon",
--- 	callback = function()
--- 		vim.cmd([[highlight HarpoonBorder guibg=#313132]])
--- 		vim.cmd([[highlight HarpoonWindow guibg=#313132]])
--- 	end,
--- })
-
--- Save win ids in history. This helps to fix issue with neo-tree
--- not going back to previous window with <leader>o
--- Thanks!
--- https://www.reddit.com/r/neovim/comments/szjysg/comment/hyli78a/?utm_source=share&utm_medium=web2x&context=3
+--- Keep track of valid window ids in a variable.
+---
+--- Thanks!
+--- https://www.reddit.com/r/neovim/comments/szjysg/comment/hyli78a/?utm_source=share&utm_medium=web2x&context=3
 autocmd({ "WinEnter", "VimEnter" }, {
 	callback = function(_)
 		-- Exclude floating windows
@@ -165,46 +157,46 @@ autocmd({ "WinEnter", "VimEnter" }, {
 			return
 		end
 
-		local filetype = vim.bo.filetype
-		local buftype = vim.bo.buftype
+		local ignored_filetypes = { "DressingInput", "neo-tree" }
+		local ignored_buftypes = { "nofile" }
 
-		if buftype == "nofile" then
+		if vim.tbl_contains(ignored_filetypes, vim.bo.filetype) then
 			return
 		end
 
-		-- Exclude windows from dressing.nvim
-		if filetype == "DressingInput" then
+		if vim.tbl_contains(ignored_buftypes, vim.bo.buftype) then
 			return
-		end
-
-		-- Exclude windows from neo-tree.nvim
-		if filetype == "neo-tree" then
-			return
-		end
-
-		-- Exclude windows from quickfix
-		if filetype == "quickfix" then
-			return
-		end
-
-		if vim.t.win_history == nil then
-			vim.t.win_history = { vim.fn.win_getid() }
-		end
-
-		local history = vim.t.win_history
-
-		if #vim.t.win_history >= MAX_WIN_HISTORY_LENGTH then
-			table.remove(history)
 		end
 
 		local current_win_id = vim.fn.win_getid()
 
+		-- Initialize if not present
+		if vim.t.win_history == nil then
+			vim.t.win_history = { current_win_id }
+		end
+
+		local history = vim.t.win_history
+
 		-- `history[1]` will be our previous window, we don't want to
 		-- duplicate it in our history at the 1 position
-		if vim.tbl_contains(history, current_win_id) and history[1] == current_win_id then
+		if history[1] == current_win_id then
 			return
 		end
 
+		-- Restrict lenght of history
+		if #vim.t.win_history >= MAX_WIN_HISTORY_LENGTH then
+			table.remove(history)
+		end
+
+		-- Remove any invalid window id
+		for _, history_win_id in ipairs(history) do
+			if not vim.api.nvim_win_is_valid(history_win_id) then
+				table.remove(history)
+				break
+			end
+		end
+
+		-- Insert new window id to the beginning of the history
 		table.insert(history, 1, current_win_id)
 
 		vim.t.win_history = history
