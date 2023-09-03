@@ -1,3 +1,11 @@
+local function notify_restore()
+	vim.notify("Session restored", vim.log.levels.INFO)
+end
+
+local function notify_save()
+	vim.notify("Session saved", vim.log.levels.INFO)
+end
+
 return {
 	"rmagatti/auto-session",
 	opts = {
@@ -9,8 +17,13 @@ return {
 		auto_restore_enabled = false,
 		auto_session_suppress_dirs = { os.getenv("HOME") },
 		auto_session_use_git_branch = nil,
+		session_lens = {
+			path_display = { "shorten" },
+		},
+		post_restore_cmds = { notify_restore },
+		post_save_cmds = { notify_save },
 	},
-	event = "BufReadPre",
+	event = "VeryLazy",
 	keys = {
 		{
 			"<leader>xr",
