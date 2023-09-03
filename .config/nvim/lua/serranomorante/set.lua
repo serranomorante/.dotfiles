@@ -7,6 +7,10 @@ if not utils.is_directory(undodir) then
 	vim.fn.mkdir(undodir, "p")
 end
 
+if not utils.is_directory(shadadir) then
+	vim.fn.mkdir(shadadir, "p")
+end
+
 vim.opt.viewoptions:remove("curdir")
 
 vim.opt.guicursor =
@@ -50,7 +54,7 @@ vim.opt.backup = false
 --      For the shada file, it applies to all items except for the buffer list and header.
 --  h - Disable the effect of 'hlsearch' when loading the shada file.
 vim.opt.shada = "'0,<0,%0,:100,/100,s500,h"
-vim.opt.shadafile = shadadir
+vim.opt.shadafile = utils.join_paths(shadadir, "nvim.shada")
 vim.opt.undodir = undodir
 vim.opt.undofile = true
 
