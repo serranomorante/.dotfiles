@@ -132,6 +132,7 @@ return {
 		if utils.is_available("auto-session") then
 			table.insert(custom_opts.sections.lualine_x, {
 				require("auto-session.lib").current_session_name,
+				icon = ""
 			})
 		end
 

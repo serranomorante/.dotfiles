@@ -41,8 +41,8 @@ vim.keymap.set("x", "<leader>p", '"_dP')
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 -- Horizontal and vertical splits
-vim.keymap.set("n", "ss", ":split<Return><C-w>w")
-vim.keymap.set("n", "sv", ":vsplit<Return><C-w>w")
+vim.keymap.set("n", "ss", "<cmd>split<CR><C-w>w")
+vim.keymap.set("n", "sv", "<cmd>vsplit<CR><C-w>w")
 
 -- Navigate between nvim splits
 vim.keymap.set("n", "<C-h>", "<C-w>h")
@@ -54,13 +54,13 @@ vim.keymap.set("n", "<C-l>", "<C-w>l")
 vim.keymap.set("n", "<C-q>", "<C-w>q")
 
 -- Tabs navigation
-vim.keymap.set("n", "te", ":tabedit<Return>")
-vim.keymap.set("n", "H", ":tabprevious<Return>")
-vim.keymap.set("n", "L", ":tabnext<Return>")
+vim.keymap.set("n", "te", "<cmd>tabedit<CR>")
+vim.keymap.set("n", "H", "<cmd>tabprevious<CR>")
+vim.keymap.set("n", "L", "<cmd>tabnext<CR>")
 
 -- Tabs move
-vim.keymap.set("n", "<t", ":tabmove -1<Return>")
-vim.keymap.set("n", ">t", ":tabmove +1<Return>")
+vim.keymap.set("n", "<t", "<cmd>tabmove -1<CR>")
+vim.keymap.set("n", ">t", "<cmd>tabmove +1<CR>")
 
 vim.keymap.set("n", "<leader>qf", function()
 	utils.toggle_qf("q")
