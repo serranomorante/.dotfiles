@@ -11,4 +11,14 @@ return {
 		auto_session_use_git_branch = nil,
 	},
 	event = "BufReadPre",
+	keys = {
+		{
+			"<leader>xr",
+			"<cmd>SessionRestore<CR>",
+		},
+		{
+			"<leader>xs",
+			"<cmd>SessionSave<CR>",
+		},
+	},
 }

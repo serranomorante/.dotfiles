@@ -50,6 +50,7 @@ local neo_tree_extension = {
 }
 
 local function update_status()
+	local excluded_clients = { "copilot", "gitsigns" }
 	local buf_clients = vim.lsp.buf_get_clients()
 	local null_ls_installed, null_ls = pcall(require, "null-ls")
 	local buf_client_names = {}
@@ -57,13 +58,19 @@ local function update_status()
 		if client.name == "null-ls" then
 			if null_ls_installed then
 				for _, source in ipairs(null_ls.get_source({ filetype = vim.bo.filetype })) do
-					if not vim.tbl_contains(buf_client_names, source.name) then
-						table.insert(buf_client_names, source.name)
+					-- Exclude some clients
+					if not vim.tbl_contains(excluded_clients, source.name) then
+						-- Exclude duplicated clients
+						if not vim.tbl_contains(buf_client_names, source.name) then
+							table.insert(buf_client_names, source.name)
+						end
 					end
 				end
 			end
 		else
-			table.insert(buf_client_names, client.name)
+			if not vim.tbl_contains(excluded_clients, client.name) then
+				table.insert(buf_client_names, client.name)
+			end
 		end
 	end
 	return table.concat(buf_client_names, ",")
@@ -73,48 +80,62 @@ return {
 	"nvim-lualine/lualine.nvim",
 	event = "VeryLazy",
 	-- Removed gitsigns.nvim as a dependency to fix the git worktrees
-	opts = {
-		sections = {
-			-- left
-			lualine_a = { "mode" },
-			lualine_b = {
-				{
-					"b:gitsigns_head",
-					fmt = function(str)
-						return utils.shorten(str, BRANCH_MAX_LENGTH, true)
-					end,
-					icon = "",
-					color = { fg = CONTRAST_COLOR },
+	opts = function(_, opts)
+		local custom_opts = {
+			sections = {
+				-- left
+				lualine_a = { "mode" },
+				lualine_b = {
+					{
+						"b:gitsigns_head",
+						fmt = function(str)
+							return utils.shorten(str, BRANCH_MAX_LENGTH, true)
+						end,
+						icon = "",
+						color = { fg = CONTRAST_COLOR },
+					},
+					{
+						"diff",
+						source = diff_source,
+						diff_color = {
+							added = { fg = "#42f5c8" },
+							modified = { fg = "#f5d742" },
+							removed = { fg = "#f56f42" },
+						},
+					},
+					"diagnostics",
 				},
-				{
-					"diff",
-					source = diff_source,
-					diff_color = {
-						added = { fg = "#42f5c8" },
-						modified = { fg = "#f5d742" },
-						removed = { fg = "#f56f42" },
+				lualine_c = { "filename" },
+
+				-- right
+				lualine_x = {
+					{
+						update_status,
+						fmt = function(str)
+							return "[" .. str .. "]"
+						end,
+						icon = "",
 					},
 				},
-				"diagnostics",
-			},
-			lualine_c = { "filename" },
-
-			-- right
-			lualine_x = {
-				{
-					update_status,
-					fmt = function(str)
-						return "[" .. str .. "]"
-					end,
-					icon = "",
+				lualine_y = {
+					{ "progress", color = { fg = CONTRAST_COLOR } },
 				},
+				lualine_z = { "location" },
 			},
-			lualine_y = { { "progress", color = { fg = CONTRAST_COLOR } } },
-			lualine_z = { "location" },
-		},
-		options = {
-			globalstatus = true,
-		},
-		extensions = { "lazy", "fugitive", "quickfix", harpoon_extension, neo_tree_extension },
-	},
+			options = {
+				globalstatus = true,
+			},
+			extensions = { "lazy", "fugitive", "quickfix", harpoon_extension, neo_tree_extension },
+		}
+
+		-- Add session name to the statusline
+		if utils.is_available("auto-session") then
+			table.insert(custom_opts.sections.lualine_x, {
+				require("auto-session.lib").current_session_name,
+			})
+		end
+
+		opts = vim.tbl_deep_extend("force", opts, custom_opts)
+		return opts
+	end,
 }
