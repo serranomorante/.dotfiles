@@ -212,7 +212,13 @@ return {
 							["<C-l>"] = actions.cycle_history_next,
 							["<C-h>"] = actions.cycle_history_prev,
 						},
-						n = { ["q"] = actions.close },
+						n = {
+							["q"] = actions.close,
+
+							["ss"] = actions.select_horizontal, -- default: ["<C-x>"]
+							["sv"] = actions.select_vertical, -- default: ["<C-v>"]
+							["te"] = actions.select_tab, -- default: ["<C-t>"]
+						},
 					},
 				},
 				extensions = {

@@ -244,4 +244,68 @@ function M.win_wrap_id(direction)
 	return vim.fn.win_getid(vim.fn.winnr(string.format("%s%s", "99999", M.DirectionKeysOpposite[direction])))
 end
 
+-- Thanks! https://gitlab.com/ranjithshegde/dotbare/-/blob/master/.config/nvim/lua/r/extensions/qf.lua?ref_type=heads
+-- 'q': find the quickfix window
+-- 'l': find all loclist windows
+local function find_qf(type)
+	local wininfo = vim.fn.getwininfo()
+	local win_tbl = {}
+	for _, win in pairs(wininfo) do
+		local found = false
+		if type == "l" and win["loclist"] == 1 then
+			found = true
+		end
+		-- loclist window has 'quickfix' set, eliminate those
+		if type == "q" and win["quickfix"] == 1 and win["loclist"] == 0 then
+			found = true
+		end
+		if found then
+			table.insert(win_tbl, { winid = win["winid"], bufnr = win["bufnr"] })
+		end
+	end
+	return win_tbl
+end
+
+-- Thanks! https://gitlab.com/ranjithshegde/dotbare/-/blob/master/.config/nvim/lua/r/extensions/qf.lua?ref_type=heads
+-- open quickfix if not empty
+local function open_qf()
+	if not vim.tbl_isempty(vim.fn.getqflist()) then
+		vim.cmd("botright copen")
+		vim.cmd.wincmd("J")
+	else
+		vim.notify("qflist is empty")
+	end
+end
+
+-- Thanks! https://gitlab.com/ranjithshegde/dotbare/-/blob/master/.config/nvim/lua/r/extensions/qf.lua?ref_type=heads
+-- loclist on current window where not empty
+local function open_loclist()
+	if not vim.tbl_isempty(vim.fn.getloclist(0)) then
+		vim.cmd("botright lopen")
+	else
+		vim.notify("loclist is empty")
+	end
+end
+
+--- Thanks! https://gitlab.com/ranjithshegde/dotbare/-/blob/master/.config/nvim/lua/r/extensions/qf.lua?ref_type=heads
+--- type='*': qf toggle and send to bottom
+--- type='l': loclist toggle (all windows)
+--- map to ":lua require'utils'.toggle_qf('l')"
+function M.toggle_qf(type)
+	local windows = find_qf(type)
+	if not vim.tbl_isempty(windows) then
+		-- hide all visible windows
+		for _, win in pairs(windows) do
+			vim.api.nvim_win_hide(win.winid)
+		end
+	else
+		-- no windows are visible, attempt to open
+		if type == "l" then
+			open_loclist()
+		else
+			open_qf()
+		end
+	end
+end
+
 return M

@@ -57,7 +57,7 @@ vim.opt.undofile = true
 vim.opt.termguicolors = true
 
 vim.opt.scrolloff = 8
-vim.opt.signcolumn = "yes"
+vim.opt.signcolumn = "auto:1-2"
 vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 50
