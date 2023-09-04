@@ -24,7 +24,6 @@ return {
 		post_restore_cmds = { notify_restore },
 		post_save_cmds = { notify_save },
 	},
-	event = "VeryLazy",
 	keys = {
 		{
 			"<leader>xr",

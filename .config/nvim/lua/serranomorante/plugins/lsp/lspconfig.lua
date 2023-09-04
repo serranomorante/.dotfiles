@@ -10,6 +10,18 @@ return {
 		"b0o/SchemaStore.nvim",
 		"pmizio/typescript-tools.nvim",
 	},
+	init = function()
+		-- Thanks Lsp-Zero!
+		-- See: https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/guides/under-the-hood.md
+		vim.diagnostic.config({
+			float = { border = "rounded" },
+		})
+
+		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+
+		vim.lsp.handlers["textDocument/signatureHelp"] =
+			vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
+	end,
 	config = function()
 		local lspconfig = require("lspconfig")
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
