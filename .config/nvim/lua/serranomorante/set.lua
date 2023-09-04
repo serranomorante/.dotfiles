@@ -80,7 +80,7 @@ vim.opt.foldlevel = 99 -- set high foldlevel for nvim-ufo
 vim.opt.foldlevelstart = 99 -- start with all code unfolded
 vim.opt.foldenable = true -- enable fold for nvim-ufo
 
-vim.o.sessionoptions = "buffers,curdir,folds,globals,tabpages,winpos,winsize"
+vim.o.sessionoptions = "blank,buffers,curdir,folds,globals,tabpages,winpos,winsize"
 
 -- This is specific to my setup in order to add git worktrees support
 -- to gitsigns.nvim
