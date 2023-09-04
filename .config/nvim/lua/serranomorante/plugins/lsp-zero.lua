@@ -15,6 +15,11 @@ return {
 		branch = "dev-v3",
 		lazy = true,
 		config = false,
+		init = function()
+			-- Disable automatic setup, we are doing it manually
+			vim.g.lsp_zero_extend_cmp = 0
+			vim.g.lsp_zero_extend_lspconfig = 0
+		end,
 	},
 
 	{
@@ -23,6 +28,8 @@ return {
 		lazy = true,
 		config = true,
 	},
+
+	{ "williamboman/mason-lspconfig.nvim", lazy = true },
 
 	{
 		"L3MON4D3/LuaSnip",
@@ -122,7 +129,8 @@ return {
 
 	-- LSP
 	{
-		"williamboman/mason-lspconfig.nvim",
+		"neovim/nvim-lspconfig",
+		lazy = false,
 		cmd = { "LspInfo", "LspInstall", "LspStart" },
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
@@ -134,16 +142,16 @@ return {
 			{ "kevinhwang91/nvim-ufo" },
 			{ "p00f/clangd_extensions.nvim" },
 			{ "b0o/SchemaStore.nvim" },
-			-- { "jose-elias-alvarez/typescript.nvim" },
 			{ "pmizio/typescript-tools.nvim" },
 		},
 		config = function()
-			local lsp = require("lsp-zero").preset({})
+			local lsp = require("lsp-zero")
+			lsp.extend_lspconfig()
 
 			lsp.on_attach(function(_, bufnr)
 				-- Disable some keybindings
 				-- See: https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/lsp.md#disable-keybindings
-				lsp.default_keymaps({ buffer = bufnr, exclude = { "<F2>", "<F3>", "<F4>" } })
+				lsp.default_keymaps({ buffer = bufnr, exclude = { "<F2>", "<F3>" } })
 
 				-- Add new keybindings
 				-- See: https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/lsp.md#creating-new-keybindings
@@ -163,12 +171,16 @@ return {
 					vim.lsp.buf.rename()
 				end, { buffer = true })
 
+				vim.keymap.set("n", "<leader>la", function()
+					vim.lsp.buf.code_action()
+				end, { buffer = true })
+
 				if vim.lsp.buf.range_code_action then
-					vim.keymap.set("n", "<leader>la", function()
+					vim.keymap.set("x", "<leader>la", function()
 						vim.lsp.buf.range_code_action()
 					end, { buffer = true })
 				else
-					vim.keymap.set("n", "<leader>la", function()
+					vim.keymap.set("x", "<leader>la", function()
 						vim.lsp.buf.code_action()
 					end, { buffer = true })
 				end
