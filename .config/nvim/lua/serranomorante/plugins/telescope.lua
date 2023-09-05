@@ -225,6 +225,7 @@ return {
 							["ss"] = actions.select_horizontal, -- default: ["<C-x>"]
 							["sv"] = actions.select_vertical, -- default: ["<C-v>"]
 							["te"] = actions.select_tab, -- default: ["<C-t>"]
+							["Q"] = actions.send_selected_to_qflist + actions.open_qflist, -- default: ["<M-q>"]
 						},
 					},
 				},

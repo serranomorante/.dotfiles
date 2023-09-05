@@ -57,6 +57,8 @@ return {
 				["h"] = "parent_or_close",
 				["l"] = "child_or_open",
 				["z"] = "noop", -- disable close all nodes
+				["H"] = "noop", -- disable toggle_hidden
+				["."] = "toggle_hidden", -- replace set_root with toggle_hidden
 			},
 		},
 		-- Thanks AstroNvim!

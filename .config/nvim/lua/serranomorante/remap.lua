@@ -18,6 +18,7 @@ end, { noremap = true, expr = true })
 
 -- New file
 vim.keymap.set("n", "<leader>n", "<cmd>enew<cr>")
+vim.keymap.set("n", "<leader>c", "<cmd>bd<cr>")
 
 -- Move selected lines around
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
