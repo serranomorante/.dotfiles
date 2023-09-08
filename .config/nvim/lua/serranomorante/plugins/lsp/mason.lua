@@ -8,6 +8,7 @@ return {
 		{ "williamboman/mason-lspconfig.nvim", config = false },
 		"jay-babu/mason-null-ls.nvim",
 		"jose-elias-alvarez/null-ls.nvim",
+		-- "jose-elias-alvarez/typescript.nvim",
 	},
 	lazy = false,
 	cmd = { "Mason", "MasonInstall", "MasonUpdate" },
@@ -162,6 +163,7 @@ return {
 				-- null_ls.builtins.diagnostics.mypy.with({
 				-- 	extra_args = { "--python-executable", ".venv/bin/python" },
 				-- }),
+				-- require("typescript.extensions.null-ls.code-actions"),
 			},
 		})
 	end,

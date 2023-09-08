@@ -9,6 +9,7 @@ return {
 		"p00f/clangd_extensions.nvim",
 		"b0o/SchemaStore.nvim",
 		"pmizio/typescript-tools.nvim",
+		-- "jose-elias-alvarez/typescript.nvim",
 	},
 	init = function()
 		-- Thanks Lsp-Zero!
@@ -26,11 +27,13 @@ return {
 		local lspconfig = require("lspconfig")
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
-		local on_attach = function(client, bufnr)
+		local on_init = function(client)
 			-- Disable semanticTokensProvider
 			-- https://gist.github.com/swarn/fb37d9eefe1bc616c2a7e476c0bc0316
 			client.server_capabilities.semanticTokensProvider = nil
+		end
 
+		local on_attach = function(client, bufnr)
 			local opts = { noremap = true, silent = true, buffer = bufnr }
 
 			opts.desc = "Show LSP references"
@@ -73,7 +76,7 @@ return {
 			vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 
 			opts.desc = "Restart LSP"
-			vim.keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts)
+			vim.keymap.set("n", "<leader>rs", string.format("<cmd>LspRestart %s<CR>", client.id), opts)
 		end
 
 		local capabilities =
@@ -95,11 +98,12 @@ return {
 
 		local servers = require("mason-lspconfig").get_installed_servers()
 
-		local skip_server_setup = { "tsserver", "lua_ls", "clangd" }
+		local skip_server_setup = { "tsserver", "lua_ls", "clangd", "jsonls" }
 
 		for _, server in pairs(servers) do
 			if not vim.tbl_contains(skip_server_setup, server) then
 				lspconfig[server].setup({
+					on_init = on_init,
 					on_attach = on_attach,
 					capabilities = capabilities,
 				})
@@ -107,11 +111,21 @@ return {
 		end
 
 		require("typescript-tools").setup({
+			on_init = on_init,
 			capabilities = capabilities,
 			on_attach = on_attach,
 		})
 
+		-- require("typescript").setup({
+		-- 	server = {
+		-- 		on_init = on_init,
+		-- 		capabilities = capabilities,
+		-- 		on_attach = on_attach,
+		-- 	},
+		-- })
+
 		lspconfig["clangd"].setup({
+			on_init = on_init,
 			capabilities = { offsetEncoding = "utf-16" },
 			on_attach = function()
 				-- https://github.com/p00f/clangd_extensions.nvim#inlay-hints
@@ -123,12 +137,19 @@ return {
 
 		if utils.is_available("schemastore") then
 			lspconfig["jsonls"].setup({
+				on_init = on_init,
+				on_attach = on_attach,
+				capabilities = capabilities,
 				settings = {
 					json = { schemas = require("schemastore").json.schemas(), validate = { enable = true } },
 				},
 			})
 		else
-			lspconfig["jsonls"].setup({})
+			lspconfig["jsonls"].setup({
+				on_init = on_init,
+				on_attach = on_attach,
+				capabilities = capabilities,
+			})
 		end
 
 		lspconfig["ruff_lsp"].setup({
@@ -140,6 +161,7 @@ return {
 
 		-- configure lua server (with special settings)
 		lspconfig["lua_ls"].setup({
+			on_init = on_init,
 			capabilities = capabilities,
 			on_attach = on_attach,
 			settings = {

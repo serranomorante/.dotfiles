@@ -61,7 +61,7 @@ vim.opt.undofile = true
 vim.opt.termguicolors = true
 
 vim.opt.scrolloff = 8
-vim.opt.signcolumn = "auto:1-2"
+vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 50
@@ -80,7 +80,7 @@ vim.opt.foldlevel = 99 -- set high foldlevel for nvim-ufo
 vim.opt.foldlevelstart = 99 -- start with all code unfolded
 vim.opt.foldenable = true -- enable fold for nvim-ufo
 
-vim.o.sessionoptions = "blank,buffers,curdir,folds,globals,tabpages,winpos,winsize"
+vim.o.sessionoptions = "blank,buffers,curdir,globals,tabpages,winpos,winsize"
 
 -- This is specific to my setup in order to add git worktrees support
 -- to gitsigns.nvim

@@ -69,7 +69,7 @@ local function update_status()
 			end
 		else
 			if not vim.tbl_contains(excluded_clients, client.name) then
-				table.insert(buf_client_names, client.name)
+				table.insert(buf_client_names, string.format("%s:%s", client.name, client.id))
 			end
 		end
 	end
@@ -132,7 +132,7 @@ return {
 		if utils.is_available("auto-session") then
 			table.insert(custom_opts.sections.lualine_x, {
 				require("auto-session.lib").current_session_name,
-				icon = ""
+				icon = "",
 			})
 		end
 
