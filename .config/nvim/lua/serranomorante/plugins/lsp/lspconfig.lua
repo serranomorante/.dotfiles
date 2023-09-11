@@ -127,7 +127,9 @@ return {
 		lspconfig["clangd"].setup({
 			on_init = on_init,
 			capabilities = { offsetEncoding = "utf-16" },
-			on_attach = function()
+			on_attach = function(client, bufnr)
+				-- Preserve custom mappings
+				on_attach(client, bufnr)
 				-- https://github.com/p00f/clangd_extensions.nvim#inlay-hints
 				-- TODO: change to `vim.lsp.inlay_hint(bufnr, true)` on nvim 0.10
 				require("clangd_extensions.inlay_hints").setup_autocmd()

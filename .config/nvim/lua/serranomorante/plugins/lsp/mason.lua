@@ -28,6 +28,7 @@ return {
 				"typescriptreact",
 				"typescript.tsx",
 				"python",
+				"go",
 			},
 		}
 
@@ -132,10 +133,10 @@ return {
 				"pylint",
 				-- golang
 				"gomodifytags",
-				"gofumpt",
+				"gofumpt", -- formatting
+				"goimports", -- formatting
 				"iferr",
 				"impl",
-				"goimports",
 				-- rust
 				-- "rustfmt", --deprecated
 			},
