@@ -77,7 +77,6 @@ return {
 
 	{
 		"nvim-telescope/telescope.nvim",
-		tag = "0.1.2",
 		dependencies = {
 			{ "nvim-telescope/telescope-live-grep-args.nvim" },
 			{
@@ -232,6 +231,20 @@ return {
 				extensions = {
 					undo = {
 						use_delta = false,
+					},
+				},
+				pickers = {
+					-- Re-use open buffer instead of opening a new window
+					-- Thanks: https://github.com/jensenojs/dotfiles/blob/08cef709e68b25b99173e3445291ff15b666226d/.config/nvim/lua/plugins/ide/telescope.lua#L139
+					buffers = {
+						show_all_buffers = true,
+						sort_lastused = true,
+						mappings = {
+							n = {
+								["<c-d>"] = actions.delete_buffer,
+								["<CR>"] = actions.select_tab_drop,
+							},
+						},
 					},
 				},
 			}
