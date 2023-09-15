@@ -9,7 +9,6 @@ return {
 		"p00f/clangd_extensions.nvim",
 		"b0o/SchemaStore.nvim",
 		"pmizio/typescript-tools.nvim",
-		-- "jose-elias-alvarez/typescript.nvim",
 	},
 	init = function()
 		-- Thanks Lsp-Zero!
@@ -115,14 +114,6 @@ return {
 			capabilities = capabilities,
 			on_attach = on_attach,
 		})
-
-		-- require("typescript").setup({
-		-- 	server = {
-		-- 		on_init = on_init,
-		-- 		capabilities = capabilities,
-		-- 		on_attach = on_attach,
-		-- 	},
-		-- })
 
 		lspconfig["clangd"].setup({
 			on_init = on_init,

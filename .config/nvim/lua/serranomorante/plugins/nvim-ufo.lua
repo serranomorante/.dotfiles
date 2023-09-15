@@ -1,7 +1,36 @@
+local utils = require("serranomorante.utils")
+
+local handler = function(virtText, lnum, endLnum, width, truncate)
+	local newVirtText = {}
+	local suffix = (" 󰁂 %d "):format(endLnum - lnum)
+	local sufWidth = vim.fn.strdisplaywidth(suffix)
+	local targetWidth = width - sufWidth
+	local curWidth = 0
+	for _, chunk in ipairs(virtText) do
+		local chunkText = chunk[1]
+		local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+		if targetWidth > curWidth + chunkWidth then
+			table.insert(newVirtText, chunk)
+		else
+			chunkText = truncate(chunkText, targetWidth - curWidth)
+			local hlGroup = chunk[2]
+			table.insert(newVirtText, { chunkText, hlGroup })
+			chunkWidth = vim.fn.strdisplaywidth(chunkText)
+			-- str width returned from truncate() may less than 2nd argument, need padding
+			if curWidth + chunkWidth < targetWidth then
+				suffix = suffix .. (" "):rep(targetWidth - curWidth - chunkWidth)
+			end
+			break
+		end
+		curWidth = curWidth + chunkWidth
+	end
+	table.insert(newVirtText, { suffix, "MoreMsg" })
+	return newVirtText
+end
+
 return {
 	"kevinhwang91/nvim-ufo",
 	event = "BufEnter",
-	enabled = true,
 	keys = {
 		{
 			"zR",
@@ -36,8 +65,32 @@ return {
 	},
 	dependencies = {
 		"kevinhwang91/promise-async",
+		-- Remove ugly numbers in the foldcolumn
+		-- Thanks: https://github.com/kevinhwang91/nvim-ufo/issues/4#issuecomment-1512772530
+		{
+			"luukvbaal/statuscol.nvim",
+			config = function()
+				local builtin = require("statuscol.builtin")
+				require("statuscol").setup({
+					relculright = true,
+					segments = {
+						{ text = { builtin.foldfunc }, click = "v:lua.ScFa" },
+						{ text = { "%s" }, click = "v:lua.ScSa" },
+						{ text = { builtin.lnumfunc, " " }, click = "v:lua.ScLa" },
+					},
+				})
+			end,
+		},
 	},
+	init = function()
+		vim.opt.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+		vim.opt.foldcolumn = "1"
+		vim.opt.foldlevel = 99 -- set high foldlevel for nvim-ufo
+		vim.opt.foldlevelstart = 99 -- start with all code unfolded
+		vim.opt.foldenable = true -- enable fold for nvim-ufo
+	end,
 	opts = {
+		fold_virt_text_handler = handler,
 		preview = {
 			mappings = {
 				scrollB = "<C-b>",
@@ -68,4 +121,14 @@ return {
 				end
 		end,
 	},
+	config = function(_, opts)
+		require("ufo").setup(opts)
+
+		if utils.is_available("tokyonight.nvim") then
+			local colors = require("tokyonight.colors").setup()
+
+			-- Fix jsdoc comments not being visible with default `Folded` highlight
+			vim.api.nvim_set_hl(0, "Folded", { bg = colors.bg_dark })
+		end
+	end,
 }

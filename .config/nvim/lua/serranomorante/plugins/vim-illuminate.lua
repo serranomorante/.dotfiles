@@ -1,3 +1,5 @@
+local utils = require("serranomorante.utils")
+
 return {
 	"RRethy/vim-illuminate",
 	event = "BufEnter",
@@ -10,9 +12,13 @@ return {
 	config = function(_, opts)
 		require("illuminate").configure(opts)
 
-		-- Fix jsdoc comments not being visible
-		vim.api.nvim_set_hl(0, "IlluminatedWordText", { bg = "#323a50" })
-		vim.api.nvim_set_hl(0, "IlluminatedWordRead", { bg = "#323a50" })
-		vim.api.nvim_set_hl(0, "IlluminatedWordWrite", { bg = "#323a50" })
+		if utils.is_available("tokyonight.nvim") then
+			local colors = require("tokyonight.colors").setup()
+
+			-- Fix jsdoc comments not being visible
+			vim.api.nvim_set_hl(0, "IlluminatedWordText", { bg = colors.bg_visual })
+			vim.api.nvim_set_hl(0, "IlluminatedWordRead", { bg = colors.bg_visual })
+			vim.api.nvim_set_hl(0, "IlluminatedWordWrite", { bg = colors.bg_visual })
+		end
 	end,
 }

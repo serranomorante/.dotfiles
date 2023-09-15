@@ -97,11 +97,6 @@ return {
 					{
 						"diff",
 						source = diff_source,
-						diff_color = {
-							added = { fg = "#42f5c8" },
-							modified = { fg = "#f5d742" },
-							removed = { fg = "#f56f42" },
-						},
 					},
 					"diagnostics",
 				},
@@ -111,9 +106,6 @@ return {
 				lualine_x = {
 					{
 						update_status,
-						fmt = function(str)
-							return "[" .. str .. "]"
-						end,
 						icon = "",
 					},
 				},
@@ -134,6 +126,22 @@ return {
 				require("auto-session.lib").current_session_name,
 				icon = "",
 			})
+		end
+
+		-- Custom colors for git diff
+		if utils.is_available("tokyonight.nvim") then
+			local colors = require("tokyonight.colors").setup()
+
+			local diff_colors = vim.tbl_deep_extend("force", custom_opts.sections.lualine_b[2], {
+				diff_color = {
+					-- Check `tokyonight.lua` for the custom colors
+					added = { fg = colors.diff.add },
+					modified = { fg = colors.diff.change },
+					removed = { fg = colors.diff.delete },
+				},
+			})
+
+			custom_opts.sections.lualine_b[2] = diff_colors
 		end
 
 		opts = vim.tbl_deep_extend("force", opts, custom_opts)
