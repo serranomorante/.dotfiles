@@ -49,6 +49,7 @@ return {
 		"MunifTanjim/nui.nvim",
 	},
 	opts = {
+		popup_border_style = "single",
 		close_if_last_window = true,
 		enable_normal_mode_for_inputs = true,
 		window = {
@@ -147,4 +148,15 @@ return {
 			},
 		},
 	},
+	config = function(_, opts)
+		require("neo-tree").setup(opts)
+
+		if utils.is_available("tokyonight.nvim") then
+			local colors = require("tokyonight.colors").setup()
+
+			-- Adapt neo-tree popus to general window theme
+			vim.api.nvim_set_hl(0, "NeoTreeFloatBorder", { fg = colors.border_highlight, bg = colors.bg_dark })
+			vim.api.nvim_set_hl(0, "NeoTreeFloatTitle", { fg = colors.border_highlight, bg = colors.bg_dark })
+		end
+	end,
 }

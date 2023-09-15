@@ -17,7 +17,11 @@ return {
 				and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build\n'; make install_jsregexp"
 			or nil,
 		opts = {
-			update_events = { "TextChanged", "TextChangedI" },
+			-- Don't jump into snippets that have been left
+			-- Thanks: https://github.com/AstroNvim/AstroNvim/commit/af54d1481ee217a2389230109cbd298f24639118
+			history = true,
+			delete_check_events = "TextChanged",
+			region_check_events = "CursorMoved",
 		},
 		config = function(_, opts)
 			if opts then
@@ -65,8 +69,7 @@ return {
 				if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
 					return false
 				end
-				---@diagnostic disable-next-line: deprecated
-				local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+				local line, col = (unpack or table.unpack)(vim.api.nvim_win_get_cursor(0))
 				return col ~= 0
 					and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
 			end

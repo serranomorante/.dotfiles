@@ -193,11 +193,26 @@ return {
 					require("auto-session.session-lens").search_session()
 				end,
 			},
+			{
+				"<leader>gc",
+				function()
+					require("telescope.builtin").git_bcommits()
+				end,
+				desc = "Git commits (current file)",
+			},
+			{
+				"<leader>gC",
+				function()
+					require("telescope.builtin").git_commits()
+				end,
+				desc = "Git commits (repository)",
+			},
 		},
 		opts = function()
 			local actions = require("telescope.actions")
 			return {
 				defaults = {
+					git_worktrees = vim.g.git_worktrees,
 					path_display = { "shorten" },
 					sorting_strategy = "ascending",
 					layout_config = {
