@@ -4,6 +4,7 @@ local utils = require("serranomorante.utils")
 return {
 	{ "nvim-lua/plenary.nvim" },
 
+	-- git-worktree.nvim
 	{
 		-- https://github.com/ThePrimeagen/git-worktree.nvim/pull/106
 		"brandoncc/git-worktree.nvim",
@@ -75,6 +76,7 @@ return {
 		end,
 	},
 
+	-- telescope.nvim
 	{
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
@@ -87,7 +89,6 @@ return {
 			{ "debugloop/telescope-undo.nvim" },
 			{ "rmagatti/auto-session" },
 		},
-		event = "VeryLazy",
 		keys = {
 			{
 				"<leader>f<CR>",
@@ -210,7 +211,8 @@ return {
 		},
 		opts = function()
 			local actions = require("telescope.actions")
-			return {
+
+			local opts = {
 				defaults = {
 					git_worktrees = vim.g.git_worktrees,
 					path_display = { "shorten" },
@@ -249,20 +251,22 @@ return {
 					},
 				},
 				pickers = {
-					-- Re-use open buffer instead of opening a new window
-					-- Thanks: https://github.com/jensenojs/dotfiles/blob/08cef709e68b25b99173e3445291ff15b666226d/.config/nvim/lua/plugins/ide/telescope.lua#L139
 					buffers = {
 						show_all_buffers = true,
 						sort_lastused = true,
 						mappings = {
 							n = {
 								["<c-d>"] = actions.delete_buffer,
+								-- Re-use open buffer instead of opening a new window
+								-- Thanks: https://github.com/jensenojs/dotfiles/blob/08cef709e68b25b99173e3445291ff15b666226d/.config/nvim/lua/plugins/ide/telescope.lua#L139
 								["<CR>"] = actions.select_tab_drop,
 							},
 						},
 					},
 				},
 			}
+
+			return opts
 		end,
 		config = function(_, opts)
 			local telescope = require("telescope")

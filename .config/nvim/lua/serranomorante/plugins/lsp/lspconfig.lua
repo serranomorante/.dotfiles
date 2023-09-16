@@ -14,13 +14,13 @@ return {
 		-- Thanks Lsp-Zero!
 		-- See: https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/guides/under-the-hood.md
 		vim.diagnostic.config({
-			float = { border = "rounded" },
+			float = { border = "single" },
 		})
 
-		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "single" })
 
 		vim.lsp.handlers["textDocument/signatureHelp"] =
-			vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
+			vim.lsp.with(vim.lsp.handlers.signature_help, { border = "single" })
 	end,
 	config = function()
 		local lspconfig = require("lspconfig")
@@ -71,8 +71,9 @@ return {
 			opts.desc = "Go to next diagnostic"
 			vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
 
-			opts.desc = "Show documentation for what is under cursor"
-			vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+			-- Neovim 0.10.0 already sets this keymap
+			-- opts.desc = "Show documentation for what is under cursor"
+			-- vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 
 			opts.desc = "Restart LSP"
 			vim.keymap.set("n", "<leader>rs", string.format("<cmd>LspRestart %s<CR>", client.id), opts)
@@ -123,8 +124,9 @@ return {
 				on_attach(client, bufnr)
 				-- https://github.com/p00f/clangd_extensions.nvim#inlay-hints
 				-- TODO: change to `vim.lsp.inlay_hint(bufnr, true)` on nvim 0.10
-				require("clangd_extensions.inlay_hints").setup_autocmd()
-				require("clangd_extensions.inlay_hints").set_inlay_hints()
+				-- require("clangd_extensions.inlay_hints").setup_autocmd()
+				-- require("clangd_extensions.inlay_hints").set_inlay_hints()
+				vim.lsp.inlay_hint(bufnr, true)
 			end,
 		})
 

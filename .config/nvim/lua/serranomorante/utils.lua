@@ -1,5 +1,4 @@
-local uv = vim.loop
-local path_sep = uv.os_uname().version:match("Windows") and "\\" or "/"
+local path_sep = (vim.uv or vim.loop).os_uname().version:match("Windows") and "\\" or "/"
 
 local M = {}
 
@@ -93,7 +92,7 @@ end
 --@param path (string) path to check
 --@returns (bool)
 function M.is_directory(path)
-	local stat = uv.fs_stat(path)
+	local stat = (vim.uv or vim.loop).fs_stat(path)
 	return stat and stat.type == "directory" or false
 end
 

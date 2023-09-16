@@ -51,7 +51,7 @@ local neo_tree_extension = {
 
 local function update_status()
 	local excluded_clients = { "copilot", "gitsigns" }
-	local buf_clients = vim.lsp.buf_get_clients()
+	local buf_clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
 	local null_ls_installed, null_ls = pcall(require, "null-ls")
 	local buf_client_names = {}
 	for _, client in pairs(buf_clients) do

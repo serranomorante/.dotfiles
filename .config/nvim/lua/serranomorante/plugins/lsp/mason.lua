@@ -49,6 +49,11 @@ return {
 			end
 
 			local client = vim.lsp.get_client_by_id(client_id)
+
+			if client == nil then
+				return
+			end
+
 			local files = servers[client.name]
 
 			if type(files) == "string" then
