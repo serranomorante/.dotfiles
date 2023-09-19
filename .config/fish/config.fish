@@ -20,16 +20,17 @@ if status is-interactive
     # Force cursor switch
     set fish_vi_force_cursor true
 
-    # function reverse_history_search
-    #   history | fzf --no-sort | read -l command
-    #   if test $command
-    #     commandline -rb $command
-    #   end
-    # end
-    # 
-    # function fish_user_key_bindings
-    #   bind -M default / reverse_history_search
-    # end
+    # Use fzf to search history
+    function reverse_history_search
+      history | fzf --no-sort -q "$(commandline -b)" | read -l command
+      if test $command
+        commandline -rb $command
+      end
+    end
+
+    function fish_user_key_bindings
+      bind -M default / reverse_history_search
+    end
 
     # Add ruby gems
     rbenv init - fish | source
