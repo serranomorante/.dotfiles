@@ -106,14 +106,6 @@ autocmd({ "BufEnter", "BufWinEnter" }, {
 	end,
 })
 
---- Add syntax highlighting to .conf files
-autocmd({ "BufEnter", "BufWinEnter" }, {
-	pattern = { "*.conf" },
-	callback = function(_)
-		vim.bo.filetype = "dosini"
-	end,
-})
-
 --- Keep track of valid window ids in a variable.
 ---
 --- Thanks!
