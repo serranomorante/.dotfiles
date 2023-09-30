@@ -2,7 +2,7 @@ local utils = require("serranomorante.utils")
 
 return {
 	"RRethy/vim-illuminate",
-	event = "BufEnter",
+	event = "User CustomFile",
 	opts = {
 		delay = 200,
 		-- Disable this plugin on these modes: visual, line visual and visual block

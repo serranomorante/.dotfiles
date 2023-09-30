@@ -30,37 +30,51 @@ end
 
 return {
 	"kevinhwang91/nvim-ufo",
-	event = "BufEnter",
+	event = "User	CustomFile",
 	keys = {
 		{
 			"zR",
 			function()
 				require("ufo").openAllFolds()
 			end,
+			desc = "Open all folds",
 		},
 		{
 			"zM",
 			function()
-				require("ufo").closeAllFolds()
+				-- require("ufo").closeAllFolds()
+
+				-- Apparently this completely fixes auto-folding insert issues
+				-- https://github.com/kevinhwang91/nvim-ufo/issues/85#issue-1402031998
+				local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
+				vim.cmd("normal gg")
+				for i = 1, vim.api.nvim_buf_line_count(0) do
+					vim.cmd("silent! normal " .. tostring(i) .. "GzC")
+				end
+				vim.cmd("normal " .. tostring(row) .. "G")
 			end,
+			desc = "Close all folds",
 		},
 		{
 			"zr",
 			function()
 				require("ufo").openFoldsExceptKinds()
 			end,
+			desc = "Open folds except kinds",
 		},
 		{
 			"zm",
 			function()
 				require("ufo").closeFoldsWith()
 			end,
+			desc = "Close folds with level",
 		},
 		{
 			"zp",
 			function()
 				require("ufo").peekFoldedLinesUnderCursor()
 			end,
+			desc = "Peek folded lines under cursor",
 		},
 	},
 	dependencies = {
@@ -74,22 +88,28 @@ return {
 				require("statuscol").setup({
 					relculright = true,
 					segments = {
-						{ text = { builtin.foldfunc }, click = "v:lua.ScFa" },
 						{ text = { "%s" }, click = "v:lua.ScSa" },
-						{ text = { builtin.lnumfunc, " " }, click = "v:lua.ScLa" },
+						{ text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
+						{
+							text = { " ", builtin.foldfunc, " " },
+							condition = { builtin.not_empty, true, builtin.not_empty },
+							click = "v:lua.ScFa",
+						},
 					},
 				})
 			end,
 		},
 	},
 	init = function()
-		vim.opt.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+		vim.opt.fillchars = [[eob: ,fold: ,foldopen:-,foldsep: ,foldclose:+]]
 		vim.opt.foldcolumn = "1"
 		vim.opt.foldlevel = 99 -- set high foldlevel for nvim-ufo
 		vim.opt.foldlevelstart = 99 -- start with all code unfolded
 		vim.opt.foldenable = true -- enable fold for nvim-ufo
+		vim.opt.foldopen:remove({ "hor" })
 	end,
 	opts = {
+		close_fold_kinds = { "imports", "comment" },
 		fold_virt_text_handler = handler,
 		preview = {
 			mappings = {

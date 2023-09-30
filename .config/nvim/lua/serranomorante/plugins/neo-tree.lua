@@ -8,6 +8,7 @@ return {
 		{
 			"<leader>e",
 			"<cmd>Neotree toggle<cr>",
+			desc = "Toggle neo-tree",
 		},
 		{
 			"<leader>o",
@@ -37,10 +38,12 @@ return {
 					vim.cmd.Neotree("focus")
 				end
 			end,
+			desc = "Focus neo-tree",
 		},
 		{
 			"<leader>rb",
 			"<cmd>Neotree filesystem reveal left<cr>",
+			desc = "Reveal file in neo-tree",
 		},
 	},
 	dependencies = {
@@ -125,25 +128,33 @@ return {
 			{
 				event = "neo_tree_window_before_open",
 				handler = function()
-					require("bufresize").block_register()
+					if utils.is_available("bufresize.nvim") then
+						require("bufresize").block_register()
+					end
 				end,
 			},
 			{
 				event = "neo_tree_window_after_open",
 				handler = function()
-					require("bufresize").resize_open()
+					if utils.is_available("bufresize.nvim") then
+						require("bufresize").resize_open()
+					end
 				end,
 			},
 			{
 				event = "neo_tree_window_before_close",
 				handler = function()
-					require("bufresize").block_register()
+					if utils.is_available("bufresize.nvim") then
+						require("bufresize").block_register()
+					end
 				end,
 			},
 			{
 				event = "neo_tree_window_after_close",
 				handler = function()
-					require("bufresize").resize_close()
+					if utils.is_available("bufresize.nvim") then
+						require("bufresize").resize_close()
+					end
 				end,
 			},
 		},
