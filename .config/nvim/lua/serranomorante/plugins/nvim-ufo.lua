@@ -150,5 +150,9 @@ return {
 			-- Fix jsdoc comments not being visible with default `Folded` highlight
 			vim.api.nvim_set_hl(0, "Folded", { bg = colors.bg_dark })
 		end
+
+		if utils.is_available("tint.nvim") then
+			require("tint").refresh()
+		end
 	end,
 }

@@ -20,5 +20,9 @@ return {
 			vim.api.nvim_set_hl(0, "IlluminatedWordRead", { bg = colors.bg_visual })
 			vim.api.nvim_set_hl(0, "IlluminatedWordWrite", { bg = colors.bg_visual })
 		end
+
+		if utils.is_available("tint.nvim") then
+			require("tint").refresh()
+		end
 	end,
 }
