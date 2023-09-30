@@ -1,5 +1,6 @@
 return {
 	"folke/tokyonight.nvim",
+	enabled = false,
 	lazy = false, -- make sure we load this during startup if it is your main colorscheme
 	priority = 1000, -- make sure to load this before all the other start plugins
 	opts = {
@@ -27,7 +28,7 @@ return {
 			hl.FloatBorder = { fg = c.border_highlight, bg = c.bg_dark }
 			hl.FloatTitle = { fg = c.border_highlight, bg = c.bg_dark }
 
-      -- Add more explicit border to splits
+			-- Add more explicit border to splits
 			hl.WinSeparator = { fg = c.bg_highlight }
 		end,
 	},
