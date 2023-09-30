@@ -12,42 +12,49 @@ return {
 			function()
 				require("gitsigns").blame_line()
 			end,
+			desc = "Blame line",
 		},
 		{
 			"<leader>gd",
 			function()
 				require("gitsigns").diffthis()
 			end,
+			desc = "Diff this",
 		},
 		{
 			"<leader>gp",
 			function()
 				require("gitsigns").preview_hunk()
 			end,
+			desc = "Preview hunk",
 		},
 		{
 			"]g",
 			function()
 				require("gitsigns").next_hunk()
 			end,
+			desc = "Next hunk",
 		},
 		{
 			"[g",
 			function()
 				require("gitsigns").prev_hunk()
 			end,
+			desc = "Prev hunk",
 		},
 		{
 			"<leader>gh",
 			function()
 				require("gitsigns").reset_hunk()
 			end,
+			desc = "Reset hunk",
 		},
 		{
 			"<leader>gs",
 			function()
 				require("gitsigns").stage_hunk()
 			end,
+			desc = "Stage hunk",
 		},
 	},
 }

@@ -78,7 +78,7 @@ end
 
 return {
 	"nvim-lualine/lualine.nvim",
-	event = "VeryLazy",
+	lazy = false,
 	-- Removed gitsigns.nvim as a dependency to fix the git worktrees
 	opts = function(_, opts)
 		local custom_opts = {
@@ -108,6 +108,15 @@ return {
 						update_status,
 						icon = "",
 					},
+					{
+						function()
+							if package.loaded["auto-session"] then
+								return require("auto-session.lib").current_session_name()
+							end
+							return ""
+						end,
+						icon = "",
+					},
 				},
 				lualine_y = {
 					{ "progress", color = { fg = CONTRAST_COLOR } },
@@ -119,14 +128,6 @@ return {
 			},
 			extensions = { "lazy", "fugitive", "quickfix", harpoon_extension, neo_tree_extension },
 		}
-
-		-- Add session name to the statusline
-		if utils.is_available("auto-session") then
-			table.insert(custom_opts.sections.lualine_x, {
-				require("auto-session.lib").current_session_name,
-				icon = "",
-			})
-		end
 
 		-- Custom colors for git diff
 		if utils.is_available("tokyonight.nvim") then

@@ -1,7 +1,7 @@
 return {
 	"j-hui/fidget.nvim",
 	tag = "legacy",
-	event = "VeryLazy",
+	event = "LspAttach",
 	opts = {
 		sources = {
 			["null-ls"] = { ignore = true },

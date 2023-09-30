@@ -30,24 +30,28 @@ return {
 				function()
 					require("smart-splits").resize_left()
 				end,
+				desc = "Resize left",
 			},
 			{
 				"<A-j>",
 				function()
 					require("smart-splits").resize_down()
 				end,
+				desc = "Resize down",
 			},
 			{
 				"<A-k>",
 				function()
 					require("smart-splits").resize_up()
 				end,
+				desc = "Resize up",
 			},
 			{
 				"<A-l>",
 				function()
 					require("smart-splits").resize_right()
 				end,
+				desc = "Resize right",
 			},
 			-- Swap splits keymaps
 			{
@@ -62,18 +66,21 @@ return {
 
 					require("smart-splits").swap_buf_left()
 				end,
+				desc = "Swap left",
 			},
 			{
 				"<leader><leader>j",
 				function()
 					require("smart-splits").swap_buf_down()
 				end,
+				desc = "Swap down",
 			},
 			{
 				"<leader><leader>k",
 				function()
 					require("smart-splits").swap_buf_up()
 				end,
+				desc = "Swap up",
 			},
 			{
 				"<leader><leader>l",
@@ -91,6 +98,7 @@ return {
 
 					require("smart-splits").swap_buf_right()
 				end,
+				desc = "Swap right",
 			},
 		},
 		opts = function()

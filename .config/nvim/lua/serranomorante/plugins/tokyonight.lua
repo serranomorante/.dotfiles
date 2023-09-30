@@ -26,6 +26,9 @@ return {
 			hl.NormalFloat = { fg = c.fg_float, bg = c.bg_dark }
 			hl.FloatBorder = { fg = c.border_highlight, bg = c.bg_dark }
 			hl.FloatTitle = { fg = c.border_highlight, bg = c.bg_dark }
+
+      -- Add more explicit border to splits
+			hl.WinSeparator = { fg = c.bg_highlight }
 		end,
 	},
 	config = function(_, opts)

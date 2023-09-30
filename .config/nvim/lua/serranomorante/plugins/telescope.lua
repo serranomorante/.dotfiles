@@ -9,6 +9,7 @@ return {
 		-- https://github.com/ThePrimeagen/git-worktree.nvim/pull/106
 		"brandoncc/git-worktree.nvim",
 		branch = "catch-and-handle-telescope-related-error",
+		lazy = true,
 		config = function(_, opts)
 			local Worktree = require("git-worktree")
 			Worktree.setup(opts)
@@ -87,7 +88,6 @@ return {
 				build = "make",
 			},
 			{ "debugloop/telescope-undo.nvim" },
-			{ "rmagatti/auto-session" },
 		},
 		keys = {
 			{
@@ -95,48 +95,56 @@ return {
 				function()
 					require("telescope.builtin").resume()
 				end,
+				desc = "Resume last telescope session",
 			},
 			{
 				"<leader>fb",
 				function()
 					require("telescope.builtin").buffers()
 				end,
+				desc = "Buffers",
 			},
 			{
 				"<leader>fh",
 				function()
 					require("telescope.builtin").help_tags()
 				end,
+				desc = "Help tags",
 			},
 			{
 				"<leader>fk",
 				function()
 					require("telescope.builtin").keymaps()
 				end,
+				desc = "Keymaps",
 			},
 			{
 				"<leader>fm",
 				function()
 					require("telescope.builtin").man_pages()
 				end,
+				desc = "Man pages",
 			},
 			{
 				"<leader>fr",
 				function()
 					require("telescope.builtin").registers()
 				end,
+				desc = "Registers",
 			},
 			{
 				"<leader>fc",
 				function()
 					require("telescope.builtin").grep_string()
 				end,
+				desc = "Find word under cursor",
 			},
 			{
 				"<leader>ff",
 				function()
 					require("telescope.builtin").find_files({ path_display = { "truncate" } })
 				end,
+				desc = "Find files",
 			},
 			{
 				"<leader>fF",
@@ -147,12 +155,14 @@ return {
 						path_display = { "truncate" },
 					})
 				end,
+				desc = "Find files (hidden)",
 			},
 			{
 				"<leader>fw",
 				function()
 					require("telescope.builtin").live_grep()
 				end,
+				desc = "Live grep",
 			},
 			{
 				"<leader>fW",
@@ -163,36 +173,35 @@ return {
 						end,
 					})
 				end,
+				desc = "Live grep (hidden)",
 			},
 			{
 				"<leader>fg",
 				function()
 					require("telescope").extensions.live_grep_args.live_grep_args()
 				end,
+				desc = "Live grep (with args)",
 			},
 			{
 				"<leader>uu",
 				function()
 					require("telescope").extensions.undo.undo()
 				end,
+				desc = "Undo history",
 			},
 			{
 				"<leader>gw",
 				function()
 					require("telescope").extensions.git_worktree.git_worktrees()
 				end,
+				desc = "Git worktrees",
 			},
 			{
 				"<leader>gW",
 				function()
 					require("telescope").extensions.git_worktree.create_git_worktree()
 				end,
-			},
-			{
-				"<leader>xf",
-				function()
-					require("auto-session.session-lens").search_session()
-				end,
+				desc = "Create git worktree",
 			},
 			{
 				"<leader>gc",

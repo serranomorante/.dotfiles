@@ -1,5 +1,6 @@
 return {
 	"stevearc/dressing.nvim",
+	lazy = false,
 	opts = {
 		input = {
 			border = "single",
