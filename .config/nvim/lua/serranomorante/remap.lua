@@ -6,7 +6,8 @@ local utils = require("serranomorante.utils")
 -- Toggle wrap
 vim.keymap.set("n", "<leader>uw", function()
 	vim.wo.wrap = not vim.wo.wrap
-end)
+	vim.notify("Wrap " .. (vim.wo.wrap and "enabled" or "disabled"))
+end, { desc = "Toggle wrap" })
 
 -- Navigate display lines
 vim.keymap.set({ "n", "x" }, "j", function()
@@ -17,8 +18,8 @@ vim.keymap.set({ "n", "x" }, "k", function()
 end, { noremap = true, expr = true })
 
 -- New file
-vim.keymap.set("n", "<leader>n", "<cmd>enew<cr>")
-vim.keymap.set("n", "<leader>c", "<cmd>bd<cr>")
+vim.keymap.set("n", "<leader>n", "<cmd>enew<cr>", { desc = "New buffer" })
+vim.keymap.set("n", "<leader>c", "<cmd>bd<cr>", { desc = "Close buffer" })
 
 -- Move selected lines around
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -26,24 +27,21 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("v", "H", "<gv")
 vim.keymap.set("v", "L", ">gv")
 
--- Half page jumping keep cursor at the middle
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
-
--- Keep cursor in the middle while doing search
-vim.keymap.set("n", "n", "nzzzv")
-vim.keymap.set("n", "N", "Nzzzv")
-
 -- Delete highlighted word into the void
 -- register and paste over it.
-vim.keymap.set("x", "<leader>p", '"_dP')
+vim.keymap.set("x", "<leader>p", '"_dP', { desc = "Paste without losing previous copy" })
 
 -- Replace the highlighted word
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+vim.keymap.set(
+	"n",
+	"<leader>s",
+	[[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+	{ desc = "Replace highlighted word" }
+)
 
 -- Horizontal and vertical splits
-vim.keymap.set("n", "ss", "<cmd>split<CR><C-w>w")
-vim.keymap.set("n", "sv", "<cmd>vsplit<CR><C-w>w")
+vim.keymap.set("n", "ss", "<cmd>split<CR><C-w>w", { desc = "Horizontal split" })
+vim.keymap.set("n", "sv", "<cmd>vsplit<CR><C-w>w", { desc = "Vertical split" })
 
 -- Navigate between nvim splits
 vim.keymap.set("n", "<C-h>", "<C-w>h")
@@ -55,20 +53,20 @@ vim.keymap.set("n", "<C-l>", "<C-w>l")
 vim.keymap.set("n", "<C-q>", "<C-w>q")
 
 -- Tabs navigation
-vim.keymap.set("n", "te", "<cmd>tabedit<CR>")
-vim.keymap.set("n", "H", "<cmd>tabprevious<CR>")
-vim.keymap.set("n", "L", "<cmd>tabnext<CR>")
+vim.keymap.set("n", "te", "<cmd>tabedit<CR>", { desc = "New tab" })
+vim.keymap.set("n", "H", "<cmd>tabprevious<CR>", { desc = "Previous tab" })
+vim.keymap.set("n", "L", "<cmd>tabnext<CR>", { desc = "Next tab" })
 
 -- Tabs move
-vim.keymap.set("n", "<t", "<cmd>tabmove -1<CR>")
-vim.keymap.set("n", ">t", "<cmd>tabmove +1<CR>")
+vim.keymap.set("n", "<t", "<cmd>tabmove -1<CR>", { desc = "Move tab left" })
+vim.keymap.set("n", ">t", "<cmd>tabmove +1<CR>", { desc = "Move tab right" })
 
 vim.keymap.set("n", "<leader>qf", function()
 	utils.toggle_qf("q")
-end)
+end, { desc = "Toggle quickfix" })
 vim.keymap.set("n", "<leader>ql", function()
 	utils.toggle_qf("l")
-end)
+end, { desc = "Toggle location list" })
 
 -- Keymap to open lazygit in zellij floating pane
 -- This should be compatible with worktrees
@@ -99,5 +97,5 @@ if vim.env.ZELLIJ == "0" and vim.fn.executable("lazygit") == 1 then
 		end
 
 		open_lazygit_in_zellij_floating_page()
-	end)
+	end, { desc = "Open lazygit in zellij floating page" })
 end
