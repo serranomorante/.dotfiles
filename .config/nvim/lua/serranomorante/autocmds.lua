@@ -35,6 +35,8 @@ vim.on_key(function(char)
 			"/",
 		}, vim.fn.keytrans(char))
 
+		--- See :help vim.opt:get()
+		---@diagnostic disable-next-line: undefined-field
 		if vim.opt.hlsearch:get() ~= new_hlsearch then
 			vim.opt.hlsearch = new_hlsearch
 		end
@@ -60,29 +62,15 @@ autocmd("BufWinEnter", {
 })
 
 if is_available("neo-tree.nvim") then
-	-- Thanks AstroNvim!
-	autocmd("BufEnter", {
-		desc = "Open Neo-Tree on startup with directory",
-		group = augroup("neotree_start", { clear = true }),
-		callback = function()
-			if package.loaded["neo-tree"] then
-				vim.api.nvim_del_augroup_by_name("neotree_start")
-			else
-				local stats = (vim.uv or vim.loop).fs_stat(vim.api.nvim_buf_get_name(0)) -- TODO: REMOVE vim.loop WHEN DROPPING SUPPORT FOR Neovim v0.9
-				if stats and stats.type == "directory" then
-					vim.api.nvim_del_augroup_by_name("neotree_start")
-					require("neo-tree")
-				end
-			end
-		end,
-	})
-
 	-- Fix the neo-tree width even when vim window is resized
 	autocmd("VimResized", {
+		desc = "Preserve a fixed neo-tree width even on vim window resize",
 		callback = function()
 			local tabpages = vim.api.nvim_list_tabpages()
 
 			for _, tabpage in ipairs(tabpages) do
+				--- See :help vim.fn.winnr()
+				---@diagnostic disable-next-line: param-type-mismatch
 				local winnr = vim.fn.tabpagewinnr(tabpage, "99999h")
 				local winid = vim.fn.win_getid(winnr)
 				local filetype = utils.buf_filetype_from_winid(winid)
@@ -171,6 +159,8 @@ autocmd({ "BufReadPost", "BufNewFile", "BufWritePost" }, {
 		local current_file = vim.fn.resolve(vim.fn.expand("%"))
 
 		if not (current_file == "" or vim.api.nvim_get_option_value("buftype", { buf = args.buf }) == "nofile") then
+			events.event("File")
+
 			local worktree = utils.file_worktree()
 
 			if worktree or utils.cmd({ "git", "-C", vim.fn.fnamemodify(current_file, ":p:h"), "rev-parse" }, false) then
