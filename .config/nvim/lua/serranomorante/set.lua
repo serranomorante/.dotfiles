@@ -13,25 +13,26 @@ end
 
 vim.opt.viewoptions:remove("curdir")
 
-vim.opt.guicursor =
-	"n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175"
+vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25-Cursor,r-cr-o:hor20,a:blinkon1"
 
 if vim.fn.has("nvim-0.9") == 1 then
 	vim.opt.diffopt:append("linematch:60") -- enable linematch diff algorithm
 end
 
-vim.opt.nu = true
+vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true
--- vim.opt.cursorcolumn = true
+vim.opt.cursorlineopt = "number"
 vim.opt.linebreak = true
 
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
--- vim.opt.listchars = { eol = "↵", tab = "  " } -- because of tabstop=2
+
+-- https://github.com/awerebea/dotfiles/blob/main/nvim/.config/nvim/lua/config/options.lua
 -- vim.opt.list = true
+-- vim.opt.listchars:append "eol:¬,tab:▸—,trail:~,extends:»,precedes:«,space:·"
 
 vim.opt.smartindent = true
 vim.opt.preserveindent = true
@@ -61,7 +62,7 @@ vim.opt.undofile = true
 vim.opt.termguicolors = true
 
 vim.opt.scrolloff = 8
-vim.opt.signcolumn = "yes"
+vim.opt.signcolumn = "yes:1"
 vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 50
