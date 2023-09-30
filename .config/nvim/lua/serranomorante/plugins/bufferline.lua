@@ -6,6 +6,7 @@ return {
 	event = "VeryLazy",
 	opts = {
 		options = {
+			themable = true, -- allows highlight groups to be overriden i.e. sets highlights as default
 			offsets = {
 				{
 					filetype = "NvimTree",
@@ -28,6 +29,8 @@ return {
 			indicator = {
 				style = "none",
 			},
+			diagnostics = "nvim_lsp",
+			diagnostics_indicator = false,
 			---@diagnostic disable-next-line: unused-local
 			custom_filter = function(buf_number, buf_numbers)
 				-- filter out filetypes you don't want to see
