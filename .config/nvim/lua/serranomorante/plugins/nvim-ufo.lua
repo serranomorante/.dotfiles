@@ -109,7 +109,6 @@ return {
 		vim.opt.foldopen:remove({ "hor" })
 	end,
 	opts = {
-		close_fold_kinds = { "imports", "comment" },
 		fold_virt_text_handler = handler,
 		preview = {
 			mappings = {
