@@ -3,12 +3,13 @@ local utils = require("serranomorante.utils")
 return {
 	"neovim/nvim-lspconfig",
 	cmd = { "LspInfo", "LspInstall", "LspStart" },
-	event = { "BufReadPre", "BufNewFile" },
+	event = "User CustomFile",
 	dependencies = {
 		"hrsh7th/cmp-nvim-lsp",
 		"p00f/clangd_extensions.nvim",
 		"b0o/SchemaStore.nvim",
 		"pmizio/typescript-tools.nvim",
+		"williamboman/mason-lspconfig.nvim",
 	},
 	init = function()
 		-- Thanks Lsp-Zero!
@@ -167,6 +168,9 @@ return {
 					diagnostics = {
 						globals = { "vim" },
 					},
+					completion = {
+						callSnippet = "Replace",
+					},
 					workspace = {
 						library = {
 							vim.env.VIMRUNTIME,
@@ -175,5 +179,17 @@ return {
 				},
 			},
 		})
+
+		-- Thanks AstroNvim!
+		if utils.is_available("mason-lspconfig.nvim") then
+			vim.api.nvim_create_autocmd("User", {
+				desc = "set up LSP servers after mason-lspconfig",
+				pattern = "CustomMasonLspSetup",
+				once = true,
+				callback = function()
+					vim.api.nvim_exec_autocmds("FileType", {})
+				end,
+			})
+		end
 	end,
 }
