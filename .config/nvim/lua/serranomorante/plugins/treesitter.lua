@@ -24,6 +24,9 @@ return {
 	build = ":TSUpdate",
 	opts = {
 		ensure_installed = {
+			-- markdown
+			"markdown",
+			-- shell
 			"bash",
 			"fish",
 			-- lua
