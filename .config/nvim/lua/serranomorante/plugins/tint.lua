@@ -1,3 +1,5 @@
+local utils = require("serranomorante.utils")
+
 return {
 	"levouh/tint.nvim",
 	event = "VeryLazy",
@@ -15,6 +17,13 @@ return {
 				local buftype = vim.api.nvim_buf_get_option(bufid, "buftype")
 				local filetype = vim.api.nvim_buf_get_option(bufid, "filetype")
 				local floating = vim.api.nvim_win_get_config(winid).relative ~= ""
+
+				if utils.is_available("diffview.nvim") then
+					-- Disable tint.nvim on diff windows
+					if vim.wo.diff or require("diffview.lib").get_current_view() ~= nil then
+						return true
+					end
+				end
 
 				-- Do not tint `terminal` or floating windows, tint everything else
 				return buftype == "terminal" or floating or filetype == "harpoon"
