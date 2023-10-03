@@ -7,6 +7,12 @@ return {
 			transparent = true,
 			dim_inactive = false,
 		},
+		groups = {
+			nightfox = {
+				-- Make window splits more obvious
+				WinSeparator = { fg = "bg2" },
+			},
+		},
 	},
 	config = function(_, opts)
 		require("nightfox").setup(opts)
