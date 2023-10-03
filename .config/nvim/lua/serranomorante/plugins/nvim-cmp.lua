@@ -1,13 +1,12 @@
+local utils = require("serranomorante.utils")
+
 return {
 	{
-		"zbirenbaum/copilot.lua",
-		cmd = "Copilot",
-		event = "InsertEnter",
-		opts = {
-			suggestion = { enabled = false },
-			panel = { enabled = false },
-			copilot_node_command = vim.fn.expand("$HOME") .. "/.volta/tools/image/node/18.16.0/bin/node",
-		},
+		"Exafunction/codeium.nvim",
+		cmd = "Codeium",
+		config = function()
+			require("codeium").setup({})
+		end,
 	},
 
 	{
@@ -39,18 +38,6 @@ return {
 		event = "InsertEnter",
 		dependencies = {
 			{ "L3MON4D3/LuaSnip" },
-			{ "zbirenbaum/copilot.lua" },
-			{
-				"zbirenbaum/copilot-cmp",
-				-- The following config helps to improve start times
-				-- https://github.com/zbirenbaum/copilot-cmp#copilot-cmp-1
-				opts = {
-					{
-						event = { "InsertEnter", "LspAttach" },
-						fix_pairs = false,
-					},
-				},
-			},
 			{ "saadparwaiz1/cmp_luasnip" },
 			{ "hrsh7th/cmp-nvim-lua" },
 		},
@@ -81,7 +68,7 @@ return {
 					end,
 				},
 				sources = {
-					{ name = "copilot" },
+					{ name = "codeium" },
 					{ name = "luasnip" },
 					{ name = "nvim_lsp" },
 					{ name = "nvim_lua" },
@@ -130,6 +117,11 @@ return {
 					documentation = cmp.config.window.bordered(border_opts),
 				},
 			})
+
+			-- Setup `codeium.nvim` after `cmp`
+			if utils.is_available("codeium.nvim") then
+				require("codeium")
+			end
 		end,
 	},
 }
