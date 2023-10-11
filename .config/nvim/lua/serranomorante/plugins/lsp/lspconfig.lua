@@ -131,7 +131,7 @@ return {
 			end,
 		})
 
-		if utils.is_available("schemastore") then
+		if utils.is_available("SchemaStore.nvim") then
 			lspconfig["jsonls"].setup({
 				on_init = on_init,
 				on_attach = on_attach,

@@ -15,5 +15,8 @@ return {
 			vsplit = "sv",
 			split = "ss",
 		},
+		preview = {
+			winblend = 0,
+		},
 	},
 }

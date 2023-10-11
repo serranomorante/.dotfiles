@@ -150,23 +150,26 @@ set $ws8 "8: :"
 set $ws9 "9"
 set $ws10 "10"
 
-set $primary "HDMI-0"
-set $primary_fallback "HDMI-1"
-set $secondary "eDP-1-1"
-set $secondary_fallback "eDP-1-2"
+set $external_v1 "HDMI-0"
+set $external_v2 "HDMI-1"
+set $external_v3 "HDMI-1-0"
+set $internal_v1 "eDP-1"
+set $internal_v2 "eDP-1-2"
+set $internal_v3 "eDP-1-2"
+set $internal_v4 "eDP-2"
 
 # assign outputs to workspace
-workspace $ws1 output $primary $primary_fallback $secondary $secondary_fallback
-workspace $ws2 output $primary $primary_fallback $secondary $secondary_fallback
-workspace $ws3 output $primary $primary_fallback $secondary $secondary_fallback
-workspace $ws4 output $primary $primary_fallback $secondary $secondary_fallback
-workspace $ws5 output $primary $primary_fallback $secondary $secondary_fallback
-workspace $ws6 output $primary $primary_fallback $secondary $secondary_fallback
-workspace $ws7 output $primary $primary_fallback $secondary $secondary_fallback
+workspace $ws1 output $external_v1 $external_v2 $external_v3 $internal_v1 $internal_v2 $internal_v3 $internal_v4
+workspace $ws2 output $external_v1 $external_v2 $external_v3 $internal_v1 $internal_v2 $internal_v3 $internal_v4
+workspace $ws3 output $external_v1 $external_v2 $external_v3 $internal_v1 $internal_v2 $internal_v3 $internal_v4
+workspace $ws4 output $external_v1 $external_v2 $external_v3 $internal_v1 $internal_v2 $internal_v3 $internal_v4
+workspace $ws5 output $external_v1 $external_v2 $external_v3 $internal_v1 $internal_v2 $internal_v3 $internal_v4
+workspace $ws6 output $external_v1 $external_v2 $external_v3 $internal_v1 $internal_v2 $internal_v3 $internal_v4
+workspace $ws7 output $external_v1 $external_v2 $external_v3 $internal_v1 $internal_v2 $internal_v3 $internal_v4
 # Only this workspace is on the secondary screen
-workspace $ws8 output $secondary $secondary_fallback $primary $primary_fallback
-workspace $ws9 output $primary $primary_fallback $secondary $secondary_fallback
-workspace $ws10 output $primary $primary_fallback $secondary $secondary_fallback
+workspace $ws8 output $internal_v1 $internal_v2 $internal_v3 $internal_v4 $external_v1 $external_v2 $external_v3
+workspace $ws9 output $external_v1 $external_v2 $external_v3 $internal_v1 $internal_v2 $internal_v3 $internal_v4
+workspace $ws10 output $external_v1 $external_v2 $external_v3 $internal_v1 $internal_v2 $internal_v3 $internal_v4
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
@@ -285,7 +288,7 @@ for_window [title="^DevTools" window_role="pop-up"] floating disable
 for_window [title="[^.]+\.[^.]+\.[^.]+ is sharing your screen."] move scratchpad
 
 # exec --no-startup-id feh --bg-scale /usr/share/wallpapers/SafeLanding/contents/images/5120x2880.jpg 
-exec --no-startup-id feh --bg-scale --randomize ~/.wallpapers/*
+exec_always --no-startup-id feh --bg-scale --randomize ~/.wallpapers/*
 
 gaps horizontal $my_hor_gap 
 smart_gaps inverse_outer

@@ -93,10 +93,6 @@ return {
 				fuzzy_finder_mappings = {
 					["<C-j>"] = "move_cursor_down",
 					["<C-k>"] = "move_cursor_up",
-					["<down>"] = "noop",
-					["<up>"] = "noop",
-					["<C-n>"] = "noop",
-					["<C-p>"] = "noop",
 				},
 			},
 		},
