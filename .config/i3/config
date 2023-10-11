@@ -17,6 +17,9 @@ set $mod Mod4
 # is used in the bar {} block below.
 font pango:monospace 8
 
+# https://wiki.archlinux.org/title/i3#KRunner_as_application_launcher_in_KDE_Plasma/i3
+set $menu --no-startup-id qdbus org.kde.krunner /App display
+
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
@@ -35,6 +38,8 @@ font pango:monospace 8
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 # exec --no-startup-id nm-applet
+
+exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # Use pactl to adjust volume in PulseAudio.
 # set $refresh_i3status killall -SIGUSR1 i3status
@@ -60,7 +65,10 @@ tiling_drag modifier titlebar
 bindsym $mod+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec --no-startup-id dmenu_run -fn "HackNerdFont"
+# bindsym $mod+d exec --no-startup-id dmenu_run -fn "HackNerdFont"
+
+# https://wiki.archlinux.org/title/i3#KRunner_as_application_launcher_in_KDE_Plasma/i3
+bindsym $mod+d exec $menu
 
 # A more modern dmenu replacement is rofi:
 # bindcode $mod+40 exec "rofi -modi drun,run -show drun"
