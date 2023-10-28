@@ -151,6 +151,13 @@ return {
 				vim.api.nvim_set_hl(0, "Folded", { bg = colors.bg_dark })
 			end
 
+			if utils.is_available("nightfox.nvim") then
+				local palette = require("nightfox.palette").load("nightfox")
+
+				-- Darker folded highlight to visually separate it from cursor line
+				vim.api.nvim_set_hl(0, "Folded", { bg = palette.bg0 })
+			end
+
 			if utils.is_available("tint.nvim") then
 				require("tint").refresh()
 			end
