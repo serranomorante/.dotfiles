@@ -102,7 +102,7 @@ return {
 		},
 		dependencies = "kevinhwang91/promise-async",
 		init = function()
-			vim.opt.fillchars:append({ eob = " ", fold = " ", foldopen = "-", foldsep = " ", foldclose = "+" })
+			vim.opt.fillchars:append({ eob = " ", fold = " ", foldopen = "", foldsep = " ", foldclose = "+" })
 			vim.opt.foldcolumn = "1"
 			vim.opt.foldlevel = 99 -- set high foldlevel for nvim-ufo
 			vim.opt.foldlevelstart = 99 -- start with all code unfolded

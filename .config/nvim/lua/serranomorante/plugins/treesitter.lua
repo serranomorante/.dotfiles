@@ -25,7 +25,7 @@ return {
 	opts = {
 		ensure_installed = {
 			-- markdown
-			"markdown",
+			-- "markdown",
 			-- shell
 			"bash",
 			"fish",
