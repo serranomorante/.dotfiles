@@ -52,25 +52,21 @@ local neo_tree_extension = {
 local function update_status()
 	local excluded_clients = { "copilot", "gitsigns" }
 	local buf_clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
-	local null_ls_installed, null_ls = pcall(require, "null-ls")
+	local lint_installed, lint = pcall(require, "lint")
 	local buf_client_names = {}
+	-- Append filetype linters
+	if lint_installed then
+		local buf_linters = lint.linters_by_ft[vim.bo.filetype]
+		if vim.tbl_islist(buf_linters) then
+			for _, linter in ipairs(buf_linters) do
+				table.insert(buf_client_names, linter)
+			end
+		end
+	end
+	-- Append buffer LSPs
 	for _, client in pairs(buf_clients) do
-		if client.name == "null-ls" then
-			if null_ls_installed then
-				for _, source in ipairs(null_ls.get_source({ filetype = vim.bo.filetype })) do
-					-- Exclude some clients
-					if not vim.tbl_contains(excluded_clients, source.name) then
-						-- Exclude duplicated clients
-						if not vim.tbl_contains(buf_client_names, source.name) then
-							table.insert(buf_client_names, source.name)
-						end
-					end
-				end
-			end
-		else
-			if not vim.tbl_contains(excluded_clients, client.name) then
-				table.insert(buf_client_names, string.format("%s:%s", client.name, client.id))
-			end
+		if not vim.tbl_contains(excluded_clients, client.name) then
+			table.insert(buf_client_names, string.format("%s:%s", client.name, client.id))
 		end
 	end
 	return table.concat(buf_client_names, ",")
