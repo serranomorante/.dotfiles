@@ -29,6 +29,7 @@ vim.opt.tabstop = 2
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
+vim.opt.numberwidth = 3
 
 -- https://github.com/awerebea/dotfiles/blob/main/nvim/.config/nvim/lua/config/options.lua
 -- vim.opt.list = true
