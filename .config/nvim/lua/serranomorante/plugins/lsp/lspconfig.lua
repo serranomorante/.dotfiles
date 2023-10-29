@@ -14,8 +14,10 @@ return {
 	init = function()
 		-- Thanks Lsp-Zero!
 		-- See: https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/guides/under-the-hood.md
+		-- See: https://github.com/mfussenegger/nvim-lint/issues/340#issuecomment-1676438571
 		vim.diagnostic.config({
-			float = { border = "single" },
+			virtual_text = { source = true },
+			float = { border = "single", source = true },
 		})
 
 		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "single" })
