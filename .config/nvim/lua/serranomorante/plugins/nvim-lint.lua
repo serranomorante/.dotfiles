@@ -29,12 +29,7 @@ return {
 			'import sys; sys.path.append("/usr/lib/python3.11/site-packages"); import pylint_venv; pylint_venv.inithook(force_venv_activation=True, quiet=True)'
 
 		local pylint = lint.linters.pylint
-		pylint.args = {
-			"-f",
-			"json",
-			"--init-hook",
-			venv_path,
-		}
+		pylint.args = vim.list_extend(vim.deepcopy(pylint.args), { "--init-hook", venv_path })
 
 		autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
 			group = augroup("lint", { clear = true }),
