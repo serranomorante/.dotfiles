@@ -2,44 +2,41 @@ local events = require("serranomorante.events")
 
 return {
 	{
-		"WhoIsSethDaniel/mason-tool-installer.nvim",
-		lazy = true,
-	},
-
-	{
 		"williamboman/mason.nvim",
 		dependencies = "folke/neodev.nvim",
 		lazy = false,
 		cmd = { "Mason", "MasonInstall", "MasonUpdate" },
-		config = function(_, opts)
-			local mason = require("mason")
+		config = true,
+	},
 
-			mason.setup(opts)
+	-- We load this plugin on `CustomMasonLspSetup` because otherwise
+	-- it would try to load `mason-lspconfig` and `lspconfig` on startup
+	-- Be careful, `MasonToolsClean` command will delete the `mason-lspconfig` installed packages
+	{
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		event = "User CustomMasonLspSetup",
+		cmd = { "MasonToolsInstall", "MasonToolsUpdate" },
+		opts = {
+			ensure_installed = {
+				-- Formatters
+				"stylua", -- lua
+				"prettierd", -- javascript/typescript
+				"isort", -- python
+				"black", -- python
+				"gofumpt", -- go
+				"goimports", -- go
+				"gomodifytags", -- go
 
-			local mason_tool_installer = require("mason-tool-installer")
+				-- Linters
+				"mypy", -- python
+				"pylint", -- python
+				"eslint_d", -- javascript/typescript
 
-			mason_tool_installer.setup({
-				ensure_installed = {
-					-- Formatters
-					"stylua", -- lua
-					"prettierd", -- javascript/typescript
-					"isort", -- python
-					"black", -- python
-					"gofumpt", -- go
-					"goimports", -- go
-					"gomodifytags", -- go
-
-					-- Linters
-					"mypy", -- python
-					"pylint", -- python
-					"eslint_d", -- javascript/typescript
-
-					-- Others
-					"iferr", -- go
-					"impl", -- go
-				},
-			})
-		end,
+				-- Others
+				"iferr", -- go
+				"impl", -- go
+			},
+		},
 	},
 
 	{
