@@ -58,5 +58,12 @@ return {
 				"impl", -- go
 			},
 		},
+		config = function(_, opts)
+			local mason_tool_installer = require("mason-tool-installer")
+			mason_tool_installer.setup(opts)
+			-- As this plugin is lazy loaded, the original event (VimEnter) will never get trigger
+			-- That's why I'm forcing the `run_on_start()` trigger
+			mason_tool_installer.run_on_start()
+		end,
 	},
 }
