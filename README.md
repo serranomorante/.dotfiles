@@ -5,7 +5,7 @@ This are my personal config files that might only make sense for my particular w
 Main technologies:
 
 - [kitty](https://github.com/kovidgoyal/kitty). Terminal emulator
-- [neovim](https://neovim.io/). Text editor
+- [neovim](https://neovim.io/). (**Neovim >=0.10.0 only**) My text editor
 - [fish](https://fishshell.com/docs/current/tutorial.html). Shell
 - [zellij](https://github.com/zellij-org/zellij). Terminal multiplexer
 - [optimus-manager](https://github.com/Askannz/optimus-manager). GPU switching on Optimus laptops
@@ -32,7 +32,7 @@ Necesary dependencies for my workflow
 
 Even thought I like [fish](https://fishshell.com/docs/current/index.html) and I use it extensively, I still refuse to make it my main shell.
 
-In my current workflow, I only use fish from inside my terminal (wezterm), leaving the rest of my system to use the default shell (bash).
+In my current workflow, I only use fish from inside my terminal (kitty), leaving the rest of my system to use the default shell (bash).
 
 As I don't want to duplicate the same env variables and aliases from my `.bashrc` file into my `config.fish`, I decided to use fish [bass](https://github.com/edc/bass) plugin. With this plugin I just need to source my `~/.bashrc` file from inside fish and it will try its best to transpile bash syntax into fish.
 
