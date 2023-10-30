@@ -1,0 +1,42 @@
+layout {
+  cwd "/home/serranomorante/.config"
+  default_tab_template {
+    children
+    pane size=1 borderless=true {
+      plugin location="zellij:compact-bar"
+    }
+  }
+  tab name=" vim" {
+    pane split_direction="horizontal" stacked=true {
+      pane name="vim" cwd="nvim" command="fish" // edit="."
+      pane name="astronvim" cwd="/home/serranomorante/repos/AstroNvim" command="fish" // edit="."
+      pane name="lunarvim" cwd="/home/serranomorante/repos/LunarVim" command="fish" // edit="."
+      pane name="chain_nvim_config" cwd="/home/serranomorante/repos/chaitan-nvim-config" command="fish" // edit="."
+    }
+  }
+  tab name=" terminal" {
+    pane split_direction="horizontal" stacked=true {
+      pane name="zellij" cwd="zellij" command="fish" // edit="."
+      pane name="fish" cwd="fish" command="fish" // edit="."
+      pane name="kitty" cwd="kitty" command="fish" // edit="."
+      pane name=".bashrc" edit="/home/serranomorante/.bashrc"
+    }
+  }
+  tab name="X" {
+    pane split_direction="horizontal" stacked=true {
+      pane name="keyd conf" cwd="/etc/keyd" command="fish" // edit="."
+      pane name="keyd compose" cwd="/usr/share/keyd" edit="keyd.compose"
+      pane name="XCompose" cwd="/home/serranomorante" edit=".XCompose"
+      pane name="Xresources" cwd="/home/serranomorante" edit=".Xresources"
+    }
+  }
+  tab name=" workspace" {
+    pane split_direction="horizontal" stacked=true {
+      pane name="i3" cwd="i3" command="fish"
+      pane name="autorandr" cwd="autorandr" command="fish"
+    }
+  }
+  tab name=" foam" cwd="/home/serranomorante/Notes/foam" {
+    pane name="notes" command="fish" // edit="."
+  }
+}

@@ -1,0 +1,26 @@
+layout {
+  cwd "/home/serranomorante/.config"
+  default_tab_template {
+    children
+    pane size=1 borderless=true {
+      plugin location="zellij:compact-bar"
+    }
+  }
+  tab name="pipewire" {
+    pane split_direction="horizontal" stacked=true {
+      pane name=".pipewire" cwd="pipewire" command="fish" // edit="."
+      pane name="/usr/share/pipewire" cwd="/usr/share/pipewire" command="fish" // edit="."
+      pane name="repos/pipewire_config" cwd="/home/serranomorante/repos/pipewire_config" command="fish" // edit="."
+    }
+  }
+  tab name="wireplumber" {
+    pane split_direction="horizontal" stacked=true {
+      pane name=".wireplumber" cwd="wireplumber" command="fish" // edit="."
+      pane name="/usr/share/wireplumber" cwd="/usr/share/wireplumber" command="fish" // edit="."
+      pane name="repos/wireplumber_config" cwd="/home/serranomorante/repos/wireplumber_config" command="fish" // edit="."
+    }
+  }
+  tab name=" foam" cwd="/home/serranomorante/Notes/foam" {
+    pane name="editor" command="fish" // edit="."
+  }
+}
