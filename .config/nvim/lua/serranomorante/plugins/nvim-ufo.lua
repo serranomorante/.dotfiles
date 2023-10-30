@@ -128,6 +128,10 @@ return {
 		opts = {
 			fold_virt_text_handler = handler,
 			preview = {
+				win_config = {
+					winblend = 0,
+					winhighlight = "Normal:Folded",
+				},
 				mappings = {
 					scrollB = "<C-b>",
 					scrollF = "<C-f>",
