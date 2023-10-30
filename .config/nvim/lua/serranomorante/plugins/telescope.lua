@@ -10,71 +10,40 @@ return {
 		"brandoncc/git-worktree.nvim",
 		branch = "catch-and-handle-telescope-related-error",
 		lazy = true,
-		config = function(_, opts)
-			local Worktree = require("git-worktree")
-			Worktree.setup(opts)
+		keys = {
+			{
+				"<leader>pw",
+				function()
+					local Job = require("plenary.job")
 
-			local Job = require("plenary.job")
+					local current_file = vim.fn.resolve(vim.fn.expand("%"))
+					local file_directory = vim.fn.fnamemodify(current_file, ":p:h")
+					local branch_name = utils.branch_name(nil, file_directory)
 
-			Worktree.on_tree_change(function(op, metadata)
-				if op == Worktree.Operations.Switch then
-					local pane_name = utils.shorten(metadata.path, 20, true)
-
-					if vim.t.zellij_worktree_switch_history == nil then
-						vim.t.zellij_worktree_switch_history = {}
-					end
-
-					-- Stop further execution if there's already a floating pane
-					-- for this worktree
-					if vim.tbl_contains(vim.t.zellij_worktree_switch_history, metadata.path) then
-						return
-					end
-
-					local function toggle_zellij_floating_window()
-						Job:new({
-							command = "zellij",
-							args = {
-								"action",
-								"toggle-floating-panes",
-							},
-						}):start()
-					end
-
-					local function rename_zellij_pane()
-						Job:new({
-							command = "zellij",
-							args = {
-								"action",
-								"rename-pane",
-								pane_name,
-							},
-							on_exit = toggle_zellij_floating_window,
-						}):start()
-					end
-
-					local function new_zellij_floating_pane()
-						Job:new({
-							command = "zellij",
-							args = {
-								"run",
-								"-f",
-								"--",
-								"fish",
-							},
-							on_exit = function()
-								local history = vim.t.zellij_worktree_switch_history
-								table.insert(history, 1, metadata.path)
-								vim.t.zellij_worktree_switch_history = history
-
-								rename_zellij_pane()
-							end,
-						}):start()
-					end
-
-					new_zellij_floating_pane()
-				end
-			end)
-		end,
+					Job:new({
+						command = "zellij",
+						args = {
+							"run",
+							"-f",
+							"--",
+							"fish",
+						},
+						cwd = file_directory,
+						on_exit = function()
+							Job:new({
+								command = "zellij",
+								args = {
+									"action",
+									"rename-pane",
+									branch_name,
+								},
+							}):start()
+						end,
+					}):start()
+				end,
+			},
+		},
+		config = true,
 	},
 
 	-- telescope.nvim

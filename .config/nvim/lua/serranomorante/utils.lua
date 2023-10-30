@@ -208,8 +208,9 @@ end
 
 --- Get the branch name with git-dir and worktree support
 --- @param worktree table<string, string>|nil # a table specifying the `toplevel` and `gitdir` of a worktree
+--- @param as_path string|nil # execute the git command from specific path
 --- @return string branch # The branch name
-function M.branch_name(worktree)
+function M.branch_name(worktree, as_path)
 	local branch
 
 	if worktree then
@@ -219,6 +220,8 @@ function M.branch_name(worktree)
 				worktree.toplevel
 			)
 		)
+	elseif as_path then
+		branch = vim.fn.system(("git -C %s branch --show-current 2> /dev/null | tr -d '\n'"):format(as_path))
 	else
 		branch = vim.fn.system("git branch --show-current 2> /dev/null | tr -d '\n'")
 	end
