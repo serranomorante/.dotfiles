@@ -7,7 +7,7 @@ return {
 			"<leader>lf",
 			function()
 				require("conform").format({
-					lsp_fallback = true,
+					lsp_fallback = false,
 					async = false,
 					timeout_ms = 10000,
 				})
@@ -19,12 +19,14 @@ return {
 	opts = {
 		formatters_by_ft = {
 			lua = { "stylua" },
-			javascript = { { "prettier", "prettierd" } },
-			typescript = { { "prettier", "prettierd" } },
-			javascriptreact = { { "prettier", "prettierd" } },
-			typescriptreact = { { "prettier", "prettierd" } },
+			javascript = { { "prettierd", "prettier" } },
+			typescript = { { "prettierd", "prettier" } },
+			javascriptreact = { { "prettierd", "prettier" } },
+			typescriptreact = { { "prettierd", "prettier" } },
 			python = { "isort", "black" },
 			go = { "gofumpt", "goimports" },
+			json = { { "prettierd", "prettier" } },
+			jsonc = { { "prettierd", "prettier" } },
 		},
 	},
 }
