@@ -3,7 +3,42 @@ layout {
   default_tab_template {
     children
     pane size=1 borderless=true {
-      plugin location="zellij:compact-bar"
+      plugin location="file:/home/serranomorante/.config/zellij/plugins/zjstatus.wasm" {
+        format_left  "{mode} #[fg=#89B4FA,bold]{session} {tabs}"
+        format_right "{swap_layout}"
+        format_space ""
+
+        border_enabled  "false"
+        border_char     "─"
+        border_format   "#[fg=#6C7086]{char}"
+        border_position "top"
+
+        mode_normal  "#[bg=blue] "
+        mode_tmux    "#[bg=#ffc387] "
+
+        tab_normal              "#[fg=#6C7086] {name} "
+        tab_normal_fullscreen   "#[fg=#6C7086] {name}  "
+        tab_normal_sync         "#[fg=#6C7086] {name}  "
+
+        tab_active              "#[fg=#9399B2,bold,italic] {name} "
+        tab_active_fullscreen   "#[fg=#9399B2,bold,italic] {name}  "
+        tab_active_sync         "#[fg=#9399B2,bold,italic] {name}  "
+
+        mode_normal        " {name} "
+        mode_locked        " {name} "
+        mode_resize        " {name} "
+        mode_pane          " {name} "
+        mode_tab           " {name} "
+        mode_scroll        " {name} "
+        mode_enter_search  " {name} "
+        mode_search        " {name} "
+        mode_rename_tab    " {name} "
+        mode_rename_pane   " {name} "
+        mode_session       " {name} "
+        mode_move          " {name} "
+        mode_prompt        " {name} "
+        mode_tmux          " {name} "
+      }
     }
   }
   tab name="pipewire" {
