@@ -21,7 +21,7 @@ Necesary dependencies for my workflow
 
 - [JetBrains Mono](https://github.com/ryanoasis/nerd-fonts#patched-fonts)
 - [feh](https://wiki.archlinux.org/title/feh). Set your system wallpaper programatically
-- [bass](https://github.com/edc/bass). To re-use .bashrc entries in fish. You must clone the repo and execute `make install`
+- [babelfish](https://github.com/bouk/babelfish). To re-use .bashrc entries in fish (faster than `bass`). You must install `babelfish` first. I did it with `go install`
 - [jq](https://man.archlinux.org/man/jq.1.en). Command-line JSON processor
 - [xgetres](https://aur.archlinux.org/packages/xgetres). Get entries from .Xresources
 - [veikk-tablet-bin](https://aur.archlinux.org/packages/veikk-tablet-bin). Driver for my graphic tablet
@@ -34,7 +34,7 @@ Even thought I like [fish](https://fishshell.com/docs/current/index.html) and I 
 
 In my current workflow, I only use fish from inside my terminal (kitty), leaving the rest of my system to use the default shell (bash).
 
-As I don't want to duplicate the same env variables and aliases from my `.bashrc` file into my `config.fish`, I decided to use fish [bass](https://github.com/edc/bass) plugin. With this plugin I just need to source my `~/.bashrc` file from inside fish and it will try its best to transpile bash syntax into fish.
+As I don't want to duplicate the same env variables and aliases from my `.bashrc` file into my `config.fish`, I decided to use fish [babelfish](https://github.com/bouk/babelfish) plugin. With this plugin I just need to source my `~/.bashrc` file from inside fish and it will try its best to transpile bash syntax into fish.
 
 ## Plans
 

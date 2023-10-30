@@ -1,5 +1,5 @@
 if status is-interactive
-    bass source ~/.bashrc
+    source ~/.bashrc
 
     # Commands to run in interactive sessions can go here
     set fish_greeting ""
