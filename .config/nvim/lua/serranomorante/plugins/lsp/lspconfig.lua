@@ -10,6 +10,7 @@ return {
 		"b0o/SchemaStore.nvim",
 		"pmizio/typescript-tools.nvim",
 		"williamboman/mason-lspconfig.nvim",
+		"nvim-telescope/telescope.nvim",
 	},
 	init = function()
 		-- Thanks Lsp-Zero!
