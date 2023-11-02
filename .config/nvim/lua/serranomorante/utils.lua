@@ -159,7 +159,8 @@ function M.cmd(cmd, show_error)
 	return success and result:gsub("[\27\155][][()#;?%d]*[A-PRZcf-ntqry=><~]", "") or nil
 end
 
---- Get the first worktree that a file belongs to
+--- Get the first worktree that a file belongs to (from a predefined list of worktrees only)
+--- Very useful for `.dotfiles` repository
 ---
 --- Thanks AstroNvim!!
 --- https://astronvim.com/Recipes/detached_git_worktrees

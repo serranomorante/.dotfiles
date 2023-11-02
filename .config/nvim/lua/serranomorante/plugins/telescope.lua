@@ -1,5 +1,47 @@
 local utils = require("serranomorante.utils")
 
+--- A delta previewer for git status, commits and bcommits
+---
+--- You should copy this `.gitconfig` pager change for scroll (<C-d> and <C-u>) to work
+--- https://github.com/dandavison/delta/issues/630#issuecomment-860046929
+---
+---@param previewers table Don't import the telescope `previewers` inside this function to avoid issues. Use only from parameter.
+---@param mode string? The preview git mode: bcommits, commits, etc.
+---@param worktree table<string, string>? Make the previewer compatible with `.dotfiles`
+local get_delta_previewer = function(previewers, mode, worktree)
+	local delta = previewers.new_termopen_previewer({
+		get_command = function(entry)
+			local args = { "git", "diff" }
+
+			-- Make it compatible with `.dotfiles`
+			local worktree_match = worktree or utils.file_worktree() -- don't rely on `utils.file_worktree()` in here. Prefer the passing the param.
+			if worktree_match ~= nil then
+				table.insert(args, 2, ("--work-tree=%s"):format(worktree_match.toplevel))
+				table.insert(args, 2, ("--git-dir=%s"):format(worktree_match.gitdir))
+			end
+
+			-- git commits and git bcommits
+			if mode == "bcommits" then
+				table.insert(args, entry.value .. "^!")
+				table.insert(args, "--")
+				table.insert(args, vim.fn.expand("#:p"))
+			elseif mode == "commits" then
+				table.insert(args, entry.value .. "^!")
+			-- git status
+			elseif mode == "status" then
+				local value = worktree_match and ("%s/%s"):format(worktree_match.toplevel, entry.value) or entry.value
+				table.insert(args, value)
+			-- fallback
+			else
+				table.insert(args, entry.value .. "^!")
+			end
+
+			return args
+		end,
+	})
+	return delta
+end
+
 -- Thanks to AstroNvim config
 return {
 	{ "nvim-lua/plenary.nvim" },
@@ -12,7 +54,7 @@ return {
 		lazy = true,
 		keys = {
 			{
-				"<leader>pw",
+				"<leader>pf",
 				function()
 					local Job = require("plenary.job")
 
@@ -41,6 +83,23 @@ return {
 						end,
 					}):start()
 				end,
+				desc = "Open floating pane inside worktree",
+			},
+			{
+				"<leader>pw",
+				function()
+					vim.ui.input({ prompt = "Git branch: " }, function(branch)
+						local data = {}
+						data.git_branch = branch
+
+						vim.ui.input({ prompt = "Unique path: " }, function(path)
+							data.unique_path = path
+
+							require("git-worktree").create_worktree(data.unique_path, data.git_branch)
+						end)
+					end)
+				end,
+				desc = "Create new worktree",
 			},
 		},
 		config = true,
@@ -175,20 +234,61 @@ return {
 			{
 				"<leader>gc",
 				function()
-					require("telescope.builtin").git_bcommits()
+					local worktree = utils.file_worktree()
+					local previewers = require("telescope.previewers")
+					local delta = get_delta_previewer(previewers, "bcommits", worktree)
+					local options = { previewer = delta }
+					require("telescope.builtin").git_bcommits(options)
 				end,
-				desc = "Git commits (current file)",
+				desc = "List commits for current buffer (bcommits)",
 			},
 			{
 				"<leader>gC",
 				function()
-					require("telescope.builtin").git_commits()
+					local worktree = utils.file_worktree()
+					local previewers = require("telescope.previewers")
+					local delta = get_delta_previewer(previewers, "commits", worktree)
+					local options = { previewer = delta }
+					require("telescope.builtin").git_commits(options)
 				end,
-				desc = "Git commits (repository)",
+				desc = "List commits for current directory",
+			},
+			{
+				"<leader>gt",
+				function()
+					local worktree = utils.file_worktree()
+					local previewers = require("telescope.previewers")
+					local delta = get_delta_previewer(previewers, "status", worktree)
+
+					local options = { previewer = delta }
+
+					if worktree ~= nil then
+						options = vim.tbl_deep_extend("force", options, {
+							-- if we should use git root as cwd or the cwd
+							use_git_root = false,
+						})
+					else
+						local current_file = vim.fn.resolve(vim.fn.expand("%"))
+						local file_directory = vim.fn.fnamemodify(current_file, ":p:h")
+
+						-- Make `git_bcommits` compatible with git worktrees in bare repos
+						options = vim.tbl_deep_extend("force", options, {
+							-- if we should use the current buffer git root
+							use_file_path = true,
+							-- specify the path of the repo
+							cwd = file_directory,
+						})
+					end
+
+					require("telescope.builtin").git_status(options)
+				end,
+				desc = "Git status",
 			},
 		},
 		opts = function()
 			local actions = require("telescope.actions")
+			local action_state = require("telescope.actions.state")
+			local action_set = require("telescope.actions.set")
 
 			local opts = {
 				defaults = {
@@ -238,6 +338,23 @@ return {
 								-- Re-use open buffer instead of opening a new window
 								-- Thanks: https://github.com/jensenojs/dotfiles/blob/08cef709e68b25b99173e3445291ff15b666226d/.config/nvim/lua/plugins/ide/telescope.lua#L139
 								["<CR>"] = actions.select_tab_drop,
+							},
+						},
+					},
+					git_status = {
+						mappings = {
+							n = {
+								-- Fix selection not working for `.dotfiles` repo
+								["<CR>"] = function(prompt_bufnr)
+									local entry = action_state.get_selected_entry()
+									local extracted_entry = getmetatable(entry)
+									if extracted_entry.toplevel ~= nil then
+										actions.close(prompt_bufnr)
+										local selected_file = extracted_entry.toplevel .. "/" .. entry.value
+										return vim.cmd("edit " .. selected_file)
+									end
+									action_set.select(prompt_bufnr, "default")
+								end,
 							},
 						},
 					},
