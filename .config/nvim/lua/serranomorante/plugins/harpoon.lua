@@ -11,14 +11,14 @@ return {
 	},
 	keys = {
 		{
-			"<leader>a",
+			"<leader>aa",
 			function()
 				require("harpoon.mark").add_file()
 			end,
 			desc = "Add file to harpoon",
 		},
 		{
-			"<C-e>",
+			"<leader>ae",
 			function()
 				require("harpoon.ui").toggle_quick_menu()
 			end,
