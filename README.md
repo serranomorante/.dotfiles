@@ -7,13 +7,14 @@ Main technologies:
 - [kitty](https://github.com/kovidgoyal/kitty). Terminal emulator
 - [neovim](https://neovim.io/). (**Neovim >=0.10.0 only**) My text editor
 - [fish](https://fishshell.com/docs/current/tutorial.html). Shell
-- [zellij](https://github.com/zellij-org/zellij). Terminal multiplexer
-- [optimus-manager](https://github.com/Askannz/optimus-manager). GPU switching on Optimus laptops
+- [zellij](https://github.com/zellij-org/zellij). (**Nightly only**) Terminal multiplexer
 - [autorandr](https://github.com/phillipberndt/autorandr). Automate display configuration
 - [i3](https://i3wm.org/). Window tiling manager
 - [m2i](https://gitlab.com/enetheru/midi2input). Use midi to control your system
 - [gromit-mpx](https://github.com/bk138/gromit-mpx). Draw on top of your screen
 - [keyd](https://github.com/rvaiya/keyd). A key remapping daemon for linux
+- [pipewire](https://github.com/rvaiya/keyd). Multimedia processing graphs
+- [wireplumber](https://gitlab.freedesktop.org/pipewire/wireplumber). (**Wireplumber >=0.5 only**) Session manager for Pipewire
 
 ## Requirements
 
@@ -38,10 +39,10 @@ As I don't want to duplicate the same env variables and aliases from my `.bashrc
 
 ## Plans
 
-- **Add zellij's config files**. I still don't add them because at the moment zellij doens't support path variable expansion so I will wait until then.
-- **Add wireplumber's config files**. Still in progress
-- **Add pipewire's config files**. Still in progress
 - **Add m2i's config files**. Still in progress
+- **Add zellij's config files**. :white_check_mark: ~I still don't add them because at the moment zellij doens't support path variable expansion so I will wait until then.~
+- **Add wireplumber's config files**. :white_check_mark: ~Still in progress~
+- **Add pipewire's config files**. :white_check_mark: ~Still in progress~
 
 ## Some guides to my self
 
@@ -50,7 +51,10 @@ As I don't want to duplicate the same env variables and aliases from my `.bashrc
 - [disable internal keyboard with libinput and keyd](./docs/disable-internal-keyboard.md)
 - [migrate from optimus-manager to official NVIDIA prime](./docs/nvidia-setup.md)
 
-## Past technologies
+## Past tools
+
+I deprecated this tools from my setup for several reasons
 
 - [wezterm](https://wezfurlong.org/wezterm/index.html). Terminal emulator. I stopped using it due to CPU performance consumption.
+- [optimus-manager](https://github.com/Askannz/optimus-manager). GPU switching on Optimus laptops. Migrated from it to official NVIDIA prime method.
 
