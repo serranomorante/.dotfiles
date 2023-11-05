@@ -4,42 +4,42 @@ layout {
     children
     pane size=1 borderless=true {
       plugin location="file:/home/serranomorante/.config/zellij/plugins/zjstatus.wasm" {
-        format_left  "{mode} #[fg=#89B4FA,bold]{session} {tabs}"
-        format_right "{swap_layout}"
-        format_space ""
+        format_left  "{mode}#[fg=#ffffff,bg=#232136]{tabs}"
+        format_right "#[fg=#ffffff,bg=#232136,bold] [{session}  ] #[fg=#030303,bg=#fda47f]{swap_layout}"
+        format_space "#[bg=#232136]"
 
         border_enabled  "false"
         border_char     "─"
-        border_format   "#[fg=#6C7086]{char}"
+        border_format   "#[fg=#ffffff]{char}"
         border_position "top"
 
-        mode_normal  "#[bg=blue] "
-        mode_tmux    "#[bg=#ffc387] "
+        tab_normal              "#[fg=#254147,bg=#232136]|#[bg=#232136] {name} #[fg=#254147,bg=#232136]|"
+        tab_normal_fullscreen   "#[fg=#254147,bg=#232136]|#[bg=#232136] {name} #[fg=#c9826b,bg=#232136] #[fg=#254147,bg=#232136]|"
+        tab_normal_sync         "#[fg=#254147,bg=#232136]|#[bg=#232136] {name} #[fg=#c9826b,bg=#232136] #[fg=#254147,bg=#232136]|"
 
-        tab_normal              "#[fg=#6C7086] {name} "
-        tab_normal_fullscreen   "#[fg=#6C7086] {name}  "
-        tab_normal_sync         "#[fg=#6C7086] {name}  "
+        tab_active              "#[fg=#cbd9d8,bg=#ffffff]|#[fg=0,bg=#ffffff,bold] {name}* #[fg=#cbd9d8,bg=#ffffff]|"
+        tab_active_fullscreen   "#[fg=#cbd9d8,bg=#ffffff]|#[fg=0,bg=#ffffff,bold] {name}* #[fg=#c9826b,bg=#ffffff] #[fg=#cbd9d8,bg=#ffffff]|"
+        tab_active_sync         "#[fg=#cbd9d8,bg=#ffffff]|#[fg=0,bg=#ffffff,bold] {name}* #[fg=#c9826b,bg=#ffffff] #[fg=#cbd9d8,bg=#ffffff]|"
 
-        tab_active              "#[fg=#9399B2,bold,italic] {name} "
-        tab_active_fullscreen   "#[fg=#9399B2,bold,italic] {name}  "
-        tab_active_sync         "#[fg=#9399B2,bold,italic] {name}  "
-
-        mode_normal        " {name} "
-        mode_locked        " {name} "
-        mode_resize        " {name} "
-        mode_pane          " {name} "
-        mode_tab           " {name} "
-        mode_scroll        " {name} "
-        mode_enter_search  " {name} "
-        mode_search        " {name} "
-        mode_rename_tab    " {name} "
-        mode_rename_pane   " {name} "
-        mode_session       " {name} "
-        mode_move          " {name} "
-        mode_prompt        " {name} "
-        mode_tmux          " {name} "
+        mode_normal        "#[bg=#232136] ZELLIJ  "
+        mode_locked        "#[fg=#ff8349,bg=#232136] LOCKED   "
+        mode_resize        "#[fg=#ff8349,bg=#232136] RESIZE   "
+        mode_pane          "#[fg=#ff8349,bg=#232136] PANE     "
+        mode_tab           "#[fg=#ff8349,bg=#232136] TAB      "
+        mode_scroll        "#[fg=#ff8349,bg=#232136] SCROLL   "
+        mode_enter_search  "#[fg=#ff8349,bg=#232136] /        "
+        mode_search        "#[fg=#ff8349,bg=#232136] SEARCH   "
+        mode_rename_tab    "#[fg=#ff8349,bg=#232136] RENAME   "
+        mode_rename_pane   "#[fg=#ff8349,bg=#232136] RENAME   "
+        mode_session       "#[fg=#ff8349,bg=#232136] SESSION  "
+        mode_move          "#[fg=#ff8349,bg=#232136] MOVE     "
+        mode_prompt        "#[fg=#ff8349,bg=#232136] PROMPT   "
+        mode_tmux          "#[fg=#ff8349,bg=#232136] TMUX     "
       }
     }
+  }
+  tab name=" foam" cwd="/home/serranomorante/Notes/foam" {
+    pane name="notes" command="fish" // edit="."
   }
   tab name=" vim" {
     pane split_direction="horizontal" stacked=true {
@@ -70,8 +70,5 @@ layout {
       pane name="i3" cwd="i3" command="fish"
       pane name="autorandr" cwd="autorandr" command="fish"
     }
-  }
-  tab name=" foam" cwd="/home/serranomorante/Notes/foam" {
-    pane name="notes" command="fish" // edit="."
   }
 }
