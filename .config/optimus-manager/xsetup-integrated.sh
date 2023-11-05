@@ -1,1 +1,0 @@
-/etc/optimus-manager/xsetup-integrated.sh
