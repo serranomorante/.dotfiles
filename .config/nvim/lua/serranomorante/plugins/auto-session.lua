@@ -31,7 +31,8 @@ return {
 		post_save_cmds = { notify_save },
 	},
 	init = function()
-		autocmd("User LazyLoad", {
+		autocmd("User", {
+			pattern = "LazyLoad",
 			desc = "Lazy setup session lens when loading telescope.nvim",
 			group = augroup("AutoSession", { clear = true }),
 			callback = function(event)

@@ -117,7 +117,7 @@ return {
 				lualine_y = {
 					{ "progress", color = { fg = CONTRAST_COLOR } },
 				},
-				lualine_z = { "location" },
+				lualine_z = { "searchcount", "location" },
 			},
 			options = {
 				globalstatus = true,
