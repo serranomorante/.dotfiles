@@ -52,10 +52,10 @@ local neo_tree_extension = {
 local function update_status()
 	local excluded_clients = { "copilot", "gitsigns" }
 	local buf_clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
-	local lint_installed, lint = pcall(require, "lint")
 	local buf_client_names = {}
-	-- Append filetype linters
-	if lint_installed then
+	if package.loaded["nvim-lint"] then
+		local lint = require("lint")
+		-- Append filetype linters
 		local buf_linters = lint.linters_by_ft[vim.bo.filetype]
 		if vim.tbl_islist(buf_linters) then
 			for _, linter in ipairs(buf_linters) do
