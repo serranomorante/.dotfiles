@@ -1,7 +1,5 @@
 return {
-  -- TODO: Stop using this PR https://github.com/toppair/peek.nvim/pull/50
-  -- when issue fixed upstream
-	"Saimo/peek.nvim",
+	"toppair/peek.nvim",
 	build = "deno task --quiet build:fast",
 	cmd = { "PeekOpen", "PeekClose" },
 	config = function(_, opts)
