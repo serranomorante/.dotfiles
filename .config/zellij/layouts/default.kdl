@@ -53,7 +53,7 @@ layout {
     }
   }
   tab name=" foam" cwd="/home/serranomorante/Notes/foam" {
-    pane name="notes" command="fish" // edit="."
+    pane name="notes"
   }
   tab {
     pane

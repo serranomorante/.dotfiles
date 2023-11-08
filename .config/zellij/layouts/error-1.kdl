@@ -1,0 +1,15 @@
+layout {
+  cwd "/home/"
+  tab name="1" {
+    pane split_direction="horizontal" stacked=true {
+      pane name="pane 1" cwd="/home/"
+      pane name="pane 2" cwd="/home/"
+    }
+  }
+  tab name="2" {
+    pane split_direction="horizontal" stacked=true {
+      pane name="pane 3" cwd="/home/"
+      pane name="pane 4" cwd="/home/"
+    }
+  }
+}
