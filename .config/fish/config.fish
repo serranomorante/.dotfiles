@@ -16,6 +16,8 @@ if status is-interactive
     # The following variable can be used to configure cursor shape in
     # visual mode, but due to fish_cursor_default, is redundant here
     set fish_cursor_visual block blink
+    # https://github.com/fish-shell/fish-shell/issues/5894
+    set -g fish_escape_delay_ms 10
 
     # Force cursor switch
     set fish_vi_force_cursor true
