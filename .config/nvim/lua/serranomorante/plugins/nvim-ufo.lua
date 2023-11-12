@@ -102,16 +102,16 @@ return {
 			{
 				"<leader>zl",
 				function()
-					local hide_foldopen = function()
-						vim.opt.fillchars:remove("foldopen")
-						vim.opt.fillchars:append({ foldopen = " " })
-					end
+					local winid = vim.api.nvim_get_current_win()
+					local foldopen_visible = vim.wo[winid].fillchars:gsub("foldopen: ", "foldopen:")
+					vim.wo[winid].fillchars = foldopen_visible
 
-					vim.opt.fillchars:remove("foldopen")
-					vim.opt.fillchars:append({ foldopen = "" })
 					-- Hide available folds after timout
 					local timeout = 2000
-					vim.defer_fn(hide_foldopen, timeout)
+					vim.defer_fn(function()
+						local foldopen_hidden = vim.wo[winid].fillchars:gsub("foldopen:", "foldopen: ")
+						vim.wo[winid].fillchars = foldopen_hidden
+					end, timeout)
 				end,
 				desc = "Temporary show available folds",
 			},
