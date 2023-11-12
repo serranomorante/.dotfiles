@@ -62,26 +62,37 @@ return {
 					local file_directory = vim.fn.fnamemodify(current_file, ":p:h")
 					local branch_name = utils.branch_name(nil, file_directory)
 
-					Job:new({
-						command = "zellij",
-						args = {
-							"run",
-							"-f",
-							"--",
-							"fish",
-						},
-						cwd = file_directory,
-						on_exit = function()
-							Job:new({
-								command = "zellij",
-								args = {
-									"action",
-									"rename-pane",
-									branch_name,
-								},
-							}):start()
-						end,
-					}):start()
+					if vim.env.TMUX ~= nil then
+						Job:new({
+							command = "tmux",
+							args = {
+								"split-window",
+								"-Z"
+							},
+							cwd = file_directory,
+						}):start()
+					elseif vim.env.ZELLIJ == "0" then
+						Job:new({
+							command = "zellij",
+							args = {
+								"run",
+								"-f",
+								"--",
+								"fish",
+							},
+							cwd = file_directory,
+							on_exit = function()
+								Job:new({
+									command = "zellij",
+									args = {
+										"action",
+										"rename-pane",
+										branch_name,
+									},
+								}):start()
+							end,
+						}):start()
+					end
 				end,
 				desc = "Open floating pane inside worktree",
 			},
