@@ -43,12 +43,6 @@ vim.keymap.set(
 vim.keymap.set("n", "ss", "<cmd>split<CR><C-w>w", { desc = "Horizontal split" })
 vim.keymap.set("n", "sv", "<cmd>vsplit<CR><C-w>w", { desc = "Vertical split" })
 
--- Navigate between nvim splits
-vim.keymap.set("n", "<C-h>", "<C-w>h")
-vim.keymap.set("n", "<C-k>", "<C-w>k")
-vim.keymap.set("n", "<C-j>", "<C-w>j")
-vim.keymap.set("n", "<C-l>", "<C-w>l")
-
 -- Close window
 vim.keymap.set("n", "<C-q>", "<C-w>q")
 
