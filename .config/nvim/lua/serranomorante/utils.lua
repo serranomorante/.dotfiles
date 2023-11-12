@@ -311,4 +311,17 @@ function M.toggle_qf(type)
 	end
 end
 
+--- Toggle buffer LSP inlay hints
+--- Thanks AstroNvim
+---@param bufnr? number of the buffer to toggle the clients on
+function M.toggle_buffer_inlay_hints(bufnr)
+	bufnr = bufnr or 0
+	vim.b[bufnr].inlay_hints_enabled = not vim.b[bufnr].inlay_hints_enabled
+	vim.lsp.inlay_hint(bufnr, vim.b[bufnr].inlay_hints_enabled)
+end
+
+function M.bool2str(bool)
+	return bool and "on" or "off"
+end
+
 return M

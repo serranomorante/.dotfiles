@@ -75,12 +75,19 @@ return {
 			opts.desc = "Go to next diagnostic"
 			vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
 
-			-- Neovim 0.10.0 already sets this keymap
-			-- opts.desc = "Show documentation for what is under cursor"
-			-- vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-
 			opts.desc = "Restart LSP"
 			vim.keymap.set("n", "<leader>rs", string.format("<cmd>LspRestart %s<CR>", client.id), opts)
+
+			-- Toggle inlay hints with keymap
+			if client.supports_method("textDocument/inlayHint") then
+				vim.keymap.set("n", "<leader>uH", function()
+					utils.toggle_buffer_inlay_hints(bufnr)
+					vim.notify(
+						string.format("Inlay hints %s", utils.bool2str(vim.b[bufnr].inlay_hints_enabled)),
+						vim.log.levels.INFO
+					)
+				end, { desc = "Toggle inlay hints" })
+			end
 		end
 
 		local capabilities =
@@ -102,7 +109,7 @@ return {
 
 		local servers = require("mason-lspconfig").get_installed_servers()
 
-		local skip_server_setup = { "tsserver", "lua_ls", "clangd", "jsonls" }
+		local skip_server_setup = { "tsserver", "lua_ls", "clangd", "jsonls", "ruff_lsp" }
 
 		for _, server in pairs(servers) do
 			if not vim.tbl_contains(skip_server_setup, server) then
@@ -114,24 +121,30 @@ return {
 			end
 		end
 
+		-- Per server configurations
+
 		require("typescript-tools").setup({
 			on_init = on_init,
 			capabilities = capabilities,
 			on_attach = on_attach,
+			settings = {
+				tsserver_file_preferences = {
+					includeInlayParameterNameHints = "all",
+					includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+					includeInlayFunctionParameterTypeHints = true,
+					includeInlayVariableTypeHints = true,
+					includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+					includeInlayPropertyDeclarationTypeHints = true,
+					includeInlayFunctionLikeReturnTypeHints = true,
+					includeInlayEnumMemberValueHints = true,
+				},
+			},
 		})
 
 		lspconfig["clangd"].setup({
 			on_init = on_init,
-			capabilities = { offsetEncoding = "utf-16" },
-			on_attach = function(client, bufnr)
-				-- Preserve custom mappings
-				on_attach(client, bufnr)
-				-- https://github.com/p00f/clangd_extensions.nvim#inlay-hints
-				-- TODO: change to `vim.lsp.inlay_hint(bufnr, true)` on nvim 0.10
-				-- require("clangd_extensions.inlay_hints").setup_autocmd()
-				-- require("clangd_extensions.inlay_hints").set_inlay_hints()
-				vim.lsp.inlay_hint(bufnr, true)
-			end,
+			capabilities = vim.tbl_deep_extend("force", capabilities, { offsetEncoding = "utf-16" }),
+			on_attach = on_attach,
 		})
 
 		if utils.is_available("SchemaStore.nvim") then
@@ -152,10 +165,13 @@ return {
 		end
 
 		lspconfig["ruff_lsp"].setup({
-			on_attach = function(client, _)
+			on_init = on_init,
+			on_attach = function(client, bufnr)
 				-- Disable hover in favor of Pyright
 				client.server_capabilities.hoverProvider = false
+				on_attach(client, bufnr)
 			end,
+			capabilities = capabilities,
 		})
 
 		-- configure lua server (with special settings)
