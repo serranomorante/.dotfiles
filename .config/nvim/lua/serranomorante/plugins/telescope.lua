@@ -336,7 +336,7 @@ return {
 				},
 				extensions = {
 					undo = {
-						use_delta = false,
+						use_delta = true,
 					},
 				},
 				pickers = {
