@@ -1,5 +1,5 @@
 return {
-	"Wansmer/symbol-usage.nvim",
-	event = "LspAttach",
-	config = true,
+  "Wansmer/symbol-usage.nvim",
+  event = "LspAttach",
+  config = true,
 }

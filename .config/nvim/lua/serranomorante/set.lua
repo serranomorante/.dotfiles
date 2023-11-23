@@ -3,20 +3,16 @@ local utils = require("serranomorante.utils")
 local undodir = utils.join_paths(vim.call("stdpath", "cache"), "undodir")
 local shadadir = utils.join_paths(vim.call("stdpath", "cache"), "shadadir")
 
-if not utils.is_directory(undodir) then
-	vim.fn.mkdir(undodir, "p")
-end
+if not utils.is_directory(undodir) then vim.fn.mkdir(undodir, "p") end
 
-if not utils.is_directory(shadadir) then
-	vim.fn.mkdir(shadadir, "p")
-end
+if not utils.is_directory(shadadir) then vim.fn.mkdir(shadadir, "p") end
 
 vim.opt.viewoptions:remove("curdir")
 
 vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25-Cursor,r-cr-o:hor20,a:blinkon1"
 
 if vim.fn.has("nvim-0.9") == 1 then
-	vim.opt.diffopt:append("linematch:60") -- enable linematch diff algorithm
+  vim.opt.diffopt:append("linematch:60") -- enable linematch diff algorithm
 end
 
 vim.opt.number = true
@@ -59,8 +55,8 @@ vim.g.max_file = { size = 1024 * 100, lines = 10000 } -- set global limits for l
 -- This is specific to my setup in order to add git worktrees support
 -- to gitsigns.nvim
 vim.g.git_worktrees = {
-	{
-		toplevel = vim.env.HOME,
-		gitdir = vim.env.HOME .. "/.dotfiles",
-	},
+  {
+    toplevel = vim.env.HOME,
+    gitdir = vim.env.HOME .. "/.dotfiles",
+  },
 }

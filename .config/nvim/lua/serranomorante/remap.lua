@@ -2,8 +2,8 @@ local utils = require("serranomorante.utils")
 
 -- Toggle wrap
 vim.keymap.set("n", "<leader>uw", function()
-	vim.wo.wrap = not vim.wo.wrap
-	vim.notify("Wrap " .. (vim.wo.wrap and "enabled" or "disabled"))
+  vim.wo.wrap = not vim.wo.wrap
+  vim.notify("Wrap " .. (vim.wo.wrap and "enabled" or "disabled"))
 end, { desc = "Toggle wrap" })
 
 -- New file
@@ -22,10 +22,10 @@ vim.keymap.set("x", "<leader>p", '"_dP', { desc = "Paste without losing previous
 
 -- Replace the highlighted word
 vim.keymap.set(
-	"n",
-	"<leader>s",
-	[[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
-	{ desc = "Replace highlighted word" }
+  "n",
+  "<leader>s",
+  [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+  { desc = "Replace highlighted word" }
 )
 
 -- Horizontal and vertical splits
@@ -44,41 +44,5 @@ vim.keymap.set("n", "L", "<cmd>tabnext<CR>", { desc = "Next tab" })
 vim.keymap.set("n", "<t", "<cmd>tabmove -1<CR>", { desc = "Move tab left" })
 vim.keymap.set("n", ">t", "<cmd>tabmove +1<CR>", { desc = "Move tab right" })
 
-vim.keymap.set("n", "<leader>qf", function()
-	utils.toggle_qf("q")
-end, { desc = "Toggle quickfix" })
-vim.keymap.set("n", "<leader>ql", function()
-	utils.toggle_qf("l")
-end, { desc = "Toggle location list" })
-
--- Keymap to open lazygit in zellij floating pane
--- This should be compatible with worktrees
-if vim.env.ZELLIJ == "0" and vim.fn.executable("lazygit") == 1 then
-	vim.keymap.set("n", "<leader>gg", function()
-		local Job = require("plenary.job")
-
-		local function open_lazygit_in_zellij_floating_page()
-			local worktree = utils.file_worktree()
-			local args = {
-				"run",
-				"-f",
-				"--name",
-				"lazygit",
-				"--",
-				"lazygit",
-			}
-
-			if worktree then
-				table.insert(args, ("--work-tree=%s"):format(worktree.toplevel))
-				table.insert(args, ("--git-dir=%s"):format(worktree.gitdir))
-			end
-
-			Job:new({
-				command = "zellij",
-				args = args,
-			}):start()
-		end
-
-		open_lazygit_in_zellij_floating_page()
-	end, { desc = "Open lazygit in zellij floating page" })
-end
+vim.keymap.set("n", "<leader>qf", function() utils.toggle_qf("q") end, { desc = "Toggle quickfix" })
+vim.keymap.set("n", "<leader>ql", function() utils.toggle_qf("l") end, { desc = "Toggle location list" })

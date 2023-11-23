@@ -1,9 +1,9 @@
 ---@diagnostic disable: undefined-global
 return {
-	s(
-		"ra_form_print",
-		fmt(
-			[[
+  s(
+    "ra_form_print",
+    fmt(
+      [[
 	  <FormDataConsumer>
 	    {{({{ {} }}) => (
           <pre>
@@ -13,7 +13,7 @@ return {
       }}
 	  </FormDataConsumer>
 	]],
-			{ i(1, "formData"), rep(1) }
-		)
-	),
+      { i(1, "formData"), rep(1) }
+    )
+  ),
 }
