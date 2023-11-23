@@ -9,40 +9,6 @@ local MAX_WIN_HISTORY_LENGTH = 4
 
 local general = augroup("General Settings", { clear = true })
 
--- Highlight when yanking
-autocmd("TextYankPost", {
-	desc = "Highlight yanked text",
-	group = augroup("highlightyank", { clear = true }),
-	pattern = "*",
-	callback = function()
-		vim.highlight.on_yank({
-			higroup = "IncSearch",
-			timeout = 40,
-		})
-	end,
-})
-
--- Highlight timeout when searching
-vim.on_key(function(char)
-	if vim.fn.mode() == "n" then
-		local new_hlsearch = vim.tbl_contains({
-			"<CR>",
-			"n",
-			"N",
-			"*",
-			"#",
-			"?",
-			"/",
-		}, vim.fn.keytrans(char))
-
-		--- See :help vim.opt:get()
-		---@diagnostic disable-next-line: undefined-field
-		if vim.opt.hlsearch:get() ~= new_hlsearch then
-			vim.opt.hlsearch = new_hlsearch
-		end
-	end
-end, namespace("auto_hlsearch"))
-
 -- Make q close windows
 -- Thanks AstroNvim!
 autocmd("BufWinEnter", {
@@ -88,6 +54,7 @@ end
 
 --- Add syntax highlighting to zellij .dump temp files
 autocmd({ "BufEnter", "BufWinEnter" }, {
+	desc = "Add syntax highlighting to zellij .dump temp files",
 	pattern = { "*.dump" },
 	callback = function(_)
 		vim.bo.filetype = "bash"
@@ -99,6 +66,7 @@ autocmd({ "BufEnter", "BufWinEnter" }, {
 --- Thanks!
 --- https://www.reddit.com/r/neovim/comments/szjysg/comment/hyli78a/?utm_source=share&utm_medium=web2x&context=3
 autocmd({ "WinEnter", "VimEnter" }, {
+	desc = "Keep track of valid windows ids in a global variable",
 	callback = function(_)
 		-- Exclude floating windows
 		if "" ~= vim.api.nvim_win_get_config(0).relative then
@@ -154,6 +122,7 @@ autocmd({ "WinEnter", "VimEnter" }, {
 --- This adds support for worktrees in gitsigns.nvim
 --- Thanks AstroNvim!!
 autocmd({ "BufReadPost", "BufNewFile", "BufWritePost" }, {
+	desc = "Adds support for worktrees in gitsigns.nvim",
 	group = augroup("file_user_events", { clear = true }),
 	callback = function(args)
 		local current_file = vim.fn.resolve(vim.fn.expand("%"))
@@ -173,9 +142,19 @@ autocmd({ "BufReadPost", "BufNewFile", "BufWritePost" }, {
 
 --- Disable automatic comment on next line
 autocmd("BufEnter", {
+	desc = "Disable New Line Comment",
 	callback = function()
 		vim.opt.formatoptions:remove({ "c", "r", "o" })
 	end,
 	group = general,
-	desc = "Disable New Line Comment",
+})
+
+autocmd("BufReadPre", {
+	desc = "Disable certain functionality on very large files",
+	group = augroup("large_buf", { clear = true }),
+	callback = function(args)
+		local ok, stats = pcall((vim.uv or vim.loop.fs_stat), vim.api.nvim_buf_get_name(args.buf))
+		vim.b[args.buf].large_buf = (ok and stats and stats.size > vim.g.max_file.size)
+			or vim.api.nvim_buf_line_count(args.buf) > vim.g.max_file.lines
+	end,
 })

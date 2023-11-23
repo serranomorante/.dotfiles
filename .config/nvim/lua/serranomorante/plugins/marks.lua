@@ -14,6 +14,6 @@ return {
 		},
 	},
 	opts = {
-		refresh_interval = 1000,
+		refresh_interval = 4000,
 	},
 }

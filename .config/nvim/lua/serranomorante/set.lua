@@ -21,26 +21,6 @@ end
 
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.cursorline = true
-vim.opt.cursorlineopt = "number"
-vim.opt.linebreak = true
-
-vim.opt.tabstop = 2
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 2
-vim.opt.expandtab = true
-vim.opt.numberwidth = 3
-
--- https://github.com/awerebea/dotfiles/blob/main/nvim/.config/nvim/lua/config/options.lua
--- vim.opt.list = true
--- vim.opt.listchars:append "eol:¬,tab:▸—,trail:~,extends:»,precedes:«,space:·"
-
-vim.opt.smartindent = true
-vim.opt.preserveindent = true
-vim.opt.breakindent = true
-vim.opt.copyindent = true
-
-vim.opt.wrap = false
 
 vim.opt.swapfile = false
 vim.opt.backup = false
@@ -62,11 +42,8 @@ vim.opt.undofile = true
 
 vim.opt.termguicolors = true
 
-vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes:1"
 vim.opt.isfname:append("@-@")
-
-vim.opt.updatetime = 50
 
 vim.opt.clipboard = "unnamedplus"
 
@@ -77,7 +54,7 @@ vim.g.markdown_fenced_languages = { "html", "javascript", "typescript", "css", "
 -- Global variable to neo-tree window width
 vim.g.neo_tree_width = 30
 
-vim.o.sessionoptions = "blank,buffers,curdir,globals,tabpages,winpos,winsize"
+vim.g.max_file = { size = 1024 * 100, lines = 10000 } -- set global limits for large files
 
 -- This is specific to my setup in order to add git worktrees support
 -- to gitsigns.nvim

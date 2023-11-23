@@ -2,7 +2,7 @@ return {
 	"nvim-treesitter/nvim-treesitter",
 	dependencies = {
 		"windwp/nvim-ts-autotag",
-		"JoosepAlviste/nvim-ts-context-commentstring",
+		{ "JoosepAlviste/nvim-ts-context-commentstring", commit = "6c30f3c8915d7b31c3decdfe6c7672432da1809d" },
 		"nvim-treesitter/nvim-treesitter-textobjects",
 	},
 	event = "User CustomFile",
@@ -58,6 +58,9 @@ return {
 		},
 		highlight = {
 			enable = true,
+			disable = function(_, bufnr)
+				return vim.b[bufnr].large_buf
+			end,
 		},
 		incremental_selection = { enable = true },
 		indent = { enable = true },

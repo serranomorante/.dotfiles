@@ -67,7 +67,6 @@ return {
 							command = "tmux",
 							args = {
 								"split-window",
-								"-Z"
 							},
 							cwd = file_directory,
 						}):start()
@@ -94,7 +93,7 @@ return {
 						}):start()
 					end
 				end,
-				desc = "Open floating pane inside worktree",
+				desc = "Open tmux/zellij pane inside worktree",
 			},
 			{
 				"<leader>pw",
