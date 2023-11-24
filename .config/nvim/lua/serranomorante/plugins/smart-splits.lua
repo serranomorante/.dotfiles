@@ -1,5 +1,6 @@
 local utils = require("serranomorante.utils")
 local autocmd = vim.api.nvim_create_autocmd
+local augroup = vim.api.nvim_create_augroup
 
 return {
   {
@@ -12,8 +13,20 @@ return {
       -- window (q:), then closing it, then opening neo-tree again with
       -- `ctrl+o` will resize the cmd window height
       autocmd("CmdwinLeave", {
+        desc = "Resize after leaving command line view",
+        group = augroup("tab_bufresize", { clear = true }),
         callback = function()
           vim.schedule(function() require("bufresize").resize_close() end)
+        end,
+      })
+
+      autocmd({ "TabNewEntered", "TabClosed" }, {
+        desc = "Resize after tab open/close shifts the view",
+        group = augroup("tab_bufresize", { clear = true }),
+        callback = function(_)
+          local tabpages = vim.api.nvim_list_tabpages()
+          if #tabpages == 1 then vim.schedule(function() require("bufresize").resize_close() end) end
+          if #tabpages == 2 then vim.schedule(function() require("bufresize").resize_open() end) end
         end,
       })
     end,
@@ -104,17 +117,15 @@ return {
         desc = "Swap right",
       },
     },
-    opts = function()
-      return {
-        cursor_follows_swapped_bufs = true,
-        ignored_filetypes = {
-          "nofile",
-          "prompt",
-          "neo-tree",
-          "harpoon",
-          "NvimTree",
-        },
-      }
-    end,
+    opts = {
+      cursor_follows_swapped_bufs = true,
+      ignored_filetypes = {
+        "nofile",
+        "prompt",
+        "neo-tree",
+        "harpoon",
+        "NvimTree",
+      },
+    },
   },
 }

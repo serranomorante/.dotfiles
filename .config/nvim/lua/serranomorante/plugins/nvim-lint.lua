@@ -32,6 +32,7 @@ return {
     pylint.args = vim.list_extend(vim.deepcopy(pylint.args), { "--init-hook", venv_path })
 
     autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+      desc = "Trigger linting",
       group = augroup("lint", { clear = true }),
       callback = function() lint.try_lint() end,
     })

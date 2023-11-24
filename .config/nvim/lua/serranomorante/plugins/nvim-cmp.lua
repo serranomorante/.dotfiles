@@ -36,10 +36,18 @@ return {
       { "L3MON4D3/LuaSnip" },
       { "saadparwaiz1/cmp_luasnip" },
       { "hrsh7th/cmp-nvim-lua" },
+      { "onsails/lspkind.nvim" },
     },
     config = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")
+      local lspkind = require("lspkind")
+
+      lspkind.init({
+        symbol_map = {
+          Codeium = "",
+        },
+      })
 
       -- Thanks Astro!
       local border_opts = {
@@ -59,10 +67,15 @@ return {
           expand = function(args) luasnip.lsp_expand(args.body) end,
         },
         sources = {
-          { name = "codeium" },
           { name = "luasnip" },
-          { name = "nvim_lsp" },
+          {
+            name = "nvim_lsp",
+            entry_filter = function(entry, _)
+              return require("cmp.types").lsp.CompletionItemKind[entry:get_kind()] ~= "Text"
+            end,
+          },
           { name = "nvim_lua" },
+          { name = "codeium" },
         },
         mapping = {
           ["<C-y>"] = cmp.mapping.confirm({ select = false }),
@@ -106,6 +119,19 @@ return {
         window = {
           completion = cmp.config.window.bordered(border_opts),
           documentation = cmp.config.window.bordered(border_opts),
+        },
+        formatting = {
+          format = lspkind.cmp_format({
+            with_text = true,
+            menu = {
+              buffer = "[buf]",
+              nvim_lsp = "[LSP]",
+              nvim_lua = "[api]",
+              path = "[path]",
+              luasnip = "[snip]",
+              codeium = "[codeium]",
+            },
+          }),
         },
       })
 
