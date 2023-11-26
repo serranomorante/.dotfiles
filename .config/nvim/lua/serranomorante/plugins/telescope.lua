@@ -312,14 +312,10 @@ return {
         },
         pickers = {
           buffers = {
-            show_all_buffers = true,
-            sort_lastused = true,
+            sort_mru = true,
             mappings = {
               n = {
-                ["<c-d>"] = actions.delete_buffer,
-                -- Re-use open buffer instead of opening a new window
-                -- Thanks: https://github.com/jensenojs/dotfiles/blob/08cef709e68b25b99173e3445291ff15b666226d/.config/nvim/lua/plugins/ide/telescope.lua#L139
-                ["<CR>"] = actions.select_tab_drop,
+                ["dd"] = actions.delete_buffer,
               },
             },
           },
