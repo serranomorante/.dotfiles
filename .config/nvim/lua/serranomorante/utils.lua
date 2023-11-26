@@ -292,6 +292,33 @@ function M.toggle_buffer_inlay_hints(bufnr)
   vim.lsp.inlay_hint.enable(bufnr, vim.b[bufnr].inlay_hints_enabled)
 end
 
+--- Toggle LSP codelens
+function M.toggle_codelens()
+  vim.g.codelens_enabled = not vim.g.codelens_enabled
+  if not vim.g.codelens_enabled then vim.lsp.codelens.clear() end
+end
+
 function M.bool2str(bool) return bool and "on" or "off" end
+
+--- Helper function to check if any active LSP clients given a filter provide a specific capability
+---@param capability string The server capability to check for (example: "documentFormattingProvider")
+---@param filter vim.lsp.get_clients.filter|nil (table|nil) A table with
+---              key-value pairs used to filter the returned clients.
+---              The available keys are:
+---               - id (number): Only return clients with the given id
+---               - bufnr (number): Only return clients attached to this buffer
+---               - name (string): Only return clients with the given name
+---@return boolean # Whether or not any of the clients provide the capability
+function M.has_capability(capability, filter)
+  for _, client in ipairs(vim.lsp.get_clients(filter)) do
+    if client.supports_method(capability) then return true end
+  end
+  return false
+end
+
+function M.del_buffer_autocmd(augroup, bufnr)
+  local cmds_found, cmds = pcall(vim.api.nvim_get_autocmds, { group = augroup, buffer = bufnr })
+  if cmds_found then vim.tbl_map(function(cmd) vim.api.nvim_del_autocmd(cmd.id) end, cmds) end
+end
 
 return M

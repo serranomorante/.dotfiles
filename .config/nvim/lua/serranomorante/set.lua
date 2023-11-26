@@ -51,6 +51,7 @@ vim.g.markdown_fenced_languages = { "html", "javascript", "typescript", "css", "
 vim.g.neo_tree_width = 30
 
 vim.g.max_file = { size = 1024 * 100, lines = 10000 } -- set global limits for large files
+vim.g.codelens_enabled = false
 
 -- This is specific to my setup in order to add git worktrees support
 -- to gitsigns.nvim

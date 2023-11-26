@@ -1,4 +1,6 @@
 local utils = require("serranomorante.utils")
+local augroup = vim.api.nvim_create_augroup
+local autocmd = vim.api.nvim_create_autocmd
 
 return {
   "neovim/nvim-lspconfig",
@@ -88,6 +90,33 @@ return {
           )
         end, { desc = "Toggle inlay hints" })
       end
+
+      -- Refresh codelens if supported
+      if client.supports_method("textDocument/codeLens") then
+        if vim.g.codelens_enabled then vim.lsp.codelens.refresh() end
+
+        vim.keymap.set("n", "<leader>uL", function()
+          utils.toggle_codelens()
+          vim.notify(string.format("CodeLens %s", utils.bool2str(vim.g.codelens_enabled)), vim.log.levels.INFO)
+          if vim.g.codelens_enabled then vim.lsp.codelens.refresh() end
+        end, { desc = "Toggle codelens" })
+
+        -- Create autocmd to refresh codelens on BufEnter and InsertLeave
+        local codelens_augroup = augroup("lsp_codelens_augroup", { clear = true })
+        autocmd({ "InsertLeave", "BufEnter" }, {
+          desc = "Refresh codelens",
+          group = codelens_augroup,
+          callback = function()
+            if not utils.has_capability("textDocument/codeLens", { bufnr = bufnr }) then
+              utils.del_buffer_autocmd("lsp_codelens_augroup", bufnr)
+              return
+            end
+            if vim.g.codelens_enabled then vim.lsp.codelens.refresh() end
+          end,
+        })
+
+        -- Put mappings here
+      end
     end
 
     local capabilities =
@@ -122,12 +151,12 @@ return {
     end
 
     -- Per server configurations
-
     require("typescript-tools").setup({
       on_init = on_init,
       capabilities = capabilities,
       on_attach = on_attach,
       settings = {
+        code_lens = "all",
         tsserver_file_preferences = {
           includeInlayParameterNameHints = "all",
           includeInlayParameterNameHintsWhenArgumentMatchesName = true,
