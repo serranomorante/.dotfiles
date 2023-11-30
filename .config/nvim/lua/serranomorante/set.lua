@@ -17,6 +17,7 @@ end
 
 vim.opt.number = true
 vim.opt.relativenumber = true
+vim.opt.expandtab = true
 
 vim.opt.swapfile = false
 vim.opt.backup = false
