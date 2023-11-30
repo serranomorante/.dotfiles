@@ -112,7 +112,10 @@ return {
         desc = "Create new worktree",
       },
     },
-    config = true,
+    opts = {
+      -- only change the pwd for the current vim Tab
+      change_directory_command = "tcd",
+    },
   },
 
   -- telescope.nvim
