@@ -43,6 +43,14 @@ vim.opt.isfname:append("@-@")
 
 vim.opt.clipboard = "unnamedplus"
 
+vim.opt.foldmethod = "manual"
+vim.opt.foldcolumn = "1"
+vim.opt.foldlevel = 99 -- set high foldlevel for nvim-ufo
+vim.opt.foldlevelstart = 99 -- start with all code unfolded
+vim.opt.foldenable = true -- enable fold for nvim-ufo
+vim.opt.foldopen:remove({ "hor" })
+vim.opt.fillchars:append({ eob = " ", fold = " ", foldopen = " ", foldsep = " ", foldclose = "+" })
+
 vim.g.mapleader = " "
 
 vim.g.markdown_fenced_languages = { "html", "javascript", "typescript", "css", "scss", "vim", "lua", "json", "yaml" }
