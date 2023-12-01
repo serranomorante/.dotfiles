@@ -44,7 +44,6 @@ vim.opt.isfname:append("@-@")
 
 vim.opt.clipboard = "unnamedplus"
 
-vim.opt.foldmethod = "manual"
 vim.opt.foldcolumn = "1"
 vim.opt.foldlevel = 99 -- set high foldlevel for nvim-ufo
 vim.opt.foldlevelstart = 99 -- start with all code unfolded

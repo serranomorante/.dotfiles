@@ -11,6 +11,8 @@ return {
       nightfox = {
         -- Make window splits more obvious
         WinSeparator = { fg = "bg2" },
+        -- Dim the folded highlight
+        Folded = { bg = "bg0" },
       },
     },
   },
