@@ -8,6 +8,24 @@ local MAX_WIN_HISTORY_LENGTH = 4
 
 local general = augroup("General Settings", { clear = true })
 
+autocmd("TextYankPost", {
+  desc = "Highlight yanked text",
+  group = augroup("highlightyank", { clear = true }),
+  callback = function()
+    local highlight_timeout = 500
+    local illuminate_available = utils.is_available("vim-illuminate")
+    if illuminate_available then require("illuminate").pause_buf() end
+
+    vim.highlight.on_yank({
+      higroup = "Substitute",
+      timeout = highlight_timeout,
+      on_macro = true,
+    })
+
+    if illuminate_available then vim.defer_fn(function() require("illuminate").resume_buf() end, highlight_timeout) end
+  end,
+})
+
 autocmd("BufWinEnter", {
   desc = "Make q close help, man, quickfix, dap floats",
   group = augroup("q_close_windows", { clear = true }),
