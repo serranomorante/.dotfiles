@@ -46,7 +46,7 @@ return {
   },
   dependencies = {
     "nvim-lua/plenary.nvim",
-    -- "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+    "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
     "MunifTanjim/nui.nvim",
   },
   opts = {
@@ -145,15 +145,5 @@ return {
       },
     },
   },
-  config = function(_, opts)
-    require("neo-tree").setup(opts)
-
-    if utils.is_available("tokyonight.nvim") then
-      local colors = require("tokyonight.colors").setup()
-
-      -- Adapt neo-tree popus to general window theme
-      vim.api.nvim_set_hl(0, "NeoTreeFloatBorder", { fg = colors.border_highlight, bg = colors.bg_dark })
-      vim.api.nvim_set_hl(0, "NeoTreeFloatTitle", { fg = colors.border_highlight, bg = colors.bg_dark })
-    end
-  end,
+  config = function(_, opts) require("neo-tree").setup(opts) end,
 }
