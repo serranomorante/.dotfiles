@@ -145,5 +145,14 @@ return {
       },
     },
   },
-  config = function(_, opts) require("neo-tree").setup(opts) end,
+  config = function(_, opts)
+    if utils.is_available("nightfox.nvim") then
+      local palette = require("nightfox.palette").load("nightfox")
+
+      -- Darker folded highlight to visually separate it from cursor line
+      vim.api.nvim_set_hl(0, "NeoTreeIndentMarker", { fg = palette.bg2 })
+    end
+
+    require("neo-tree").setup(opts)
+  end,
 }
