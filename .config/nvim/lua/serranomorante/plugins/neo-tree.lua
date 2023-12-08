@@ -110,14 +110,6 @@ return {
       },
     },
     event_handlers = {
-      {
-        event = "before_render",
-        handler = function()
-          local worktree = utils.file_worktree()
-          local branch_name = utils.branch_name(worktree)
-          vim.g.neo_tree_git_branch = branch_name
-        end,
-      },
       -- See https://github.com/kwkarlwang/bufresize.nvim/pull/8
       {
         event = "neo_tree_window_before_open",
@@ -149,7 +141,7 @@ return {
     if utils.is_available("nightfox.nvim") then
       local palette = require("nightfox.palette").load("nightfox")
 
-      -- Darker folded highlight to visually separate it from cursor line
+      -- Dim the neo-tree.nvim indent separator
       vim.api.nvim_set_hl(0, "NeoTreeIndentMarker", { fg = palette.bg2 })
     end
 

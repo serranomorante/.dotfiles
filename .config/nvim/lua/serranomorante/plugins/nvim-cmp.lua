@@ -4,6 +4,7 @@ return {
   {
     "Exafunction/codeium.nvim",
     cmd = "Codeium",
+    enabled = false,
     config = function() require("codeium").setup({}) end,
   },
 

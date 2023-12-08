@@ -24,7 +24,7 @@ return {
     if utils.is_available("nightfox.nvim") then
       local palette = require("nightfox.palette").load("nightfox")
 
-      -- Darker folded highlight to visually separate it from cursor line
+      -- Dim the color of the indent separator char
       vim.api.nvim_set_hl(0, "IblIndent", { fg = palette.bg0 })
     end
     require("ibl").setup(opts)
