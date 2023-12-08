@@ -47,6 +47,8 @@ vim.keymap.set("n", ">t", "<cmd>tabmove +1<CR>", { desc = "Move tab right" })
 vim.keymap.set("n", "<leader>qf", function() utils.toggle_qf("q") end, { desc = "Toggle quickfix" })
 vim.keymap.set("n", "<leader>ql", function() utils.toggle_qf("l") end, { desc = "Toggle location list" })
 
+vim.keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
+
 vim.keymap.set("n", "<leader>zl", function()
   local winid = vim.api.nvim_get_current_win()
   local foldopen_visible = vim.wo[winid].fillchars:gsub("foldopen: ", "foldopen:")
