@@ -103,6 +103,15 @@ return {
             if vim.g.codelens_enabled then vim.lsp.codelens.refresh() end
           end, { desc = "Toggle codelens" })
 
+          vim.keymap.set(
+            "n",
+            "<leader>ll",
+            function() vim.lsp.codelens.refresh() end,
+            { desc = "LSP CodeLens refresh" }
+          )
+
+          vim.keymap.set("n", "<leader>lL", function() vim.lsp.codelens.run() end, { desc = "LSP CodeLens run" })
+
           -- Create autocmd to refresh codelens on BufEnter and InsertLeave
           local codelens_augroup = augroup("lsp_codelens_augroup", { clear = true })
           autocmd({ "InsertLeave", "BufEnter" }, {
@@ -116,8 +125,6 @@ return {
               if vim.g.codelens_enabled then vim.lsp.codelens.refresh() end
             end,
           })
-
-          -- Put mappings here
         end
       end
 
@@ -151,6 +158,7 @@ return {
         capabilities = capabilities,
         on_attach = on_attach,
         settings = {
+          code_lens = "all",
           expose_as_code_action = { "fix_all", "add_missing_imports", "remove_unused" },
           tsserver_file_preferences = {
             includeInlayParameterNameHints = "all",
@@ -218,6 +226,12 @@ return {
               library = {
                 vim.env.VIMRUNTIME,
               },
+            },
+            codeLens = {
+              enable = true,
+            },
+            hint = {
+              enable = true,
             },
           },
         },

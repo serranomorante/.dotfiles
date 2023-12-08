@@ -146,3 +146,19 @@ autocmd("BufReadPre", {
       or vim.api.nvim_buf_line_count(args.buf) > vim.g.max_file.lines
   end,
 })
+
+-- I don't want `typescript-tools.nvim` CodeLens to be enable on startup
+-- I also don't want `typescript-tools.nvim` CodeLens to refresh on "CursorHold" event
+-- I want to enable both things on demand with keymaps
+autocmd("LspAttach", {
+  desc = "Remove auto commands from typescript-tools.nvim CodeLens feature",
+  group = augroup("remove_typescript_tools_codelens", { clear = true }),
+  callback = function()
+    local cmds_found, ts_codelens_cmds = pcall(vim.api.nvim_get_autocmds, {
+      group = "TypescriptToolsCodeLensGroup",
+    })
+    if cmds_found then
+      if cmds_found then vim.tbl_map(function(cmd) vim.api.nvim_del_autocmd(cmd.id) end, ts_codelens_cmds) end
+    end
+  end,
+})

@@ -13,6 +13,8 @@ return {
         WinSeparator = { fg = "bg2" },
         -- Dim the folded highlight
         Folded = { bg = "bg0" },
+        -- Differentiate CodeLens from comments
+        LspCodeLens = { bg = "bg0" },
       },
     },
   },
