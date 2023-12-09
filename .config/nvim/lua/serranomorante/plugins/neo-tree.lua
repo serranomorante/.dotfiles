@@ -50,6 +50,10 @@ return {
     "MunifTanjim/nui.nvim",
   },
   opts = {
+    enable_git_status = false,
+    enable_diagnostics = false,
+    enable_opened_markers = false,
+    enable_modified_markers = false,
     popup_border_style = "single",
     close_if_last_window = true,
     enable_normal_mode_for_inputs = true,
