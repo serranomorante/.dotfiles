@@ -3,7 +3,7 @@ local utils = require("serranomorante.utils")
 -- Toggle wrap
 vim.keymap.set("n", "<leader>uw", function()
   vim.wo.wrap = not vim.wo.wrap
-  vim.notify("Wrap " .. (vim.wo.wrap and "enabled" or "disabled"))
+  vim.notify("Wrap " .. utils.bool2str(vim.wo.wrap))
 end, { desc = "Toggle wrap" })
 
 -- New file
@@ -48,6 +48,8 @@ vim.keymap.set("n", "<leader>qf", function() utils.toggle_qf("q") end, { desc = 
 vim.keymap.set("n", "<leader>ql", function() utils.toggle_qf("l") end, { desc = "Toggle location list" })
 
 vim.keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
+
+vim.keymap.set("i", "<C-f>", "<Esc>gUiw`]a", { desc = "Make the word before the cursor uppercase" })
 
 vim.keymap.set("n", "<leader>zl", function()
   local winid = vim.api.nvim_get_current_win()

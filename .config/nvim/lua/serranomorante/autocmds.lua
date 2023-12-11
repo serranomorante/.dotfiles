@@ -17,7 +17,7 @@ autocmd("TextYankPost", {
 
     if illuminate_available then
       require("illuminate").invisible_buf(event.buf)
-      vim.defer_fn(function() require("illuminate").visible_buf(event.buf) end, highlight_timeout + 200)
+      vim.defer_fn(function() require("illuminate").visible_buf(event.buf) end, highlight_timeout)
     end
 
     vim.highlight.on_yank({
