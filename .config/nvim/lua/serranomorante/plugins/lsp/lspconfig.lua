@@ -117,6 +117,7 @@ return {
           autocmd({ "InsertLeave", "BufEnter" }, {
             desc = "Refresh codelens",
             group = codelens_augroup,
+            buffer = bufnr,
             callback = function()
               if not utils.has_capability("textDocument/codeLens", { bufnr = bufnr }) then
                 utils.del_buffer_autocmd("lsp_codelens_augroup", bufnr)
