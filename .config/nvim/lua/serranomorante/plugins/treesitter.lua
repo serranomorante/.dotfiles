@@ -16,7 +16,7 @@ return {
     "windwp/nvim-ts-autotag",
     event = "User CustomFile",
     dependencies = "nvim-treesitter/nvim-treesitter",
-    opts = { enable_close_on_slash = false },
+    opts = { enable_close_on_slash = true },
     config = function(_, opts) require("nvim-ts-autotag").setup(opts) end,
   },
 
