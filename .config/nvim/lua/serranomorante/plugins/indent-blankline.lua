@@ -5,7 +5,10 @@ return {
   event = "User CustomFile",
   main = "ibl",
   opts = {
-    indent = { char = "▏" },
+    indent = {
+      char = "▏",
+      priority = 11 -- Fix visibility on folded lines
+    },
     scope = { enabled = false },
     exclude = {
       buftypes = {
