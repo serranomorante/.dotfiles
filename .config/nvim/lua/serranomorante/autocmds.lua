@@ -162,3 +162,19 @@ autocmd("LspAttach", {
     end
   end,
 })
+
+-- https://vi.stackexchange.com/a/8997
+autocmd({ "BufWinLeave", "BufWinEnter" }, {
+  desc = "Keep screen position zt,zz,zb after switching buffer",
+  group = augroup("keep_screen_position", { clear = true }),
+  callback = function(event)
+    if event.event == "BufWinLeave" then
+      vim.b.winview = vim.fn.winsaveview()
+    else
+      if vim.b.winview == nil then return end
+
+      vim.fn.winrestview(vim.b.winview)
+      vim.b.winview = nil
+    end
+  end,
+})
