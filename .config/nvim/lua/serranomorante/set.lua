@@ -16,7 +16,6 @@ if vim.fn.has("nvim-0.9") == 1 then
 end
 
 vim.opt.number = true
-vim.opt.relativenumber = true
 vim.opt.expandtab = true
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
