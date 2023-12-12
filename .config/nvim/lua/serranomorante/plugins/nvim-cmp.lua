@@ -38,6 +38,7 @@ return {
       { "saadparwaiz1/cmp_luasnip" },
       { "hrsh7th/cmp-nvim-lua" },
       { "onsails/lspkind.nvim" },
+      { "hrsh7th/cmp-nvim-lsp-signature-help" },
     },
     config = function()
       local cmp = require("cmp")
@@ -75,6 +76,7 @@ return {
               return require("cmp.types").lsp.CompletionItemKind[entry:get_kind()] ~= "Text"
             end,
           },
+          { name = "nvim_lsp_signature_help" },
           { name = "nvim_lua" },
           { name = "codeium" },
         },

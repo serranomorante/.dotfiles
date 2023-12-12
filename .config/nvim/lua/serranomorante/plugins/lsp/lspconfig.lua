@@ -43,32 +43,61 @@ return {
       local on_attach = function(client, bufnr)
         local opts = { noremap = true, silent = true, buffer = bufnr }
 
-        opts.desc = "Show LSP references"
-        vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
+        if utils.is_available("telescope.nvim") then
+          if client.supports_method("textDocument/references") then
+            opts.desc = "Show LSP references"
+            vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
+          end
 
-        opts.desc = "Go to declaration"
-        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+          if client.supports_method("textDocument/definition") then
+            opts.desc = "Show LSP definitions"
+            vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
+          end
 
-        opts.desc = "Show LSP definitions"
-        vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
+          if client.supports_method("textDocument/implementation") then
+            opts.desc = "Show LSP implementations"
+            vim.keymap.set("n", "gI", "<cmd>Telescope lsp_implementations<CR>", opts)
+          end
 
-        opts.desc = "Show LSP implementations"
-        vim.keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
+          if client.supports_method("textDocument/typeDefinition") then
+            opts.desc = "Show LSP type definitions"
+            vim.keymap.set("n", "gy", "<cmd>Telescope lsp_type_definitions<CR>", opts)
+          end
 
-        opts.desc = "Show LSP type definitions"
-        vim.keymap.set("n", "go", "<cmd>Telescope lsp_type_definitions<CR>", opts)
+          opts.desc = "Show buffer diagnostics"
+          vim.keymap.set("n", "<leader>ld", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
 
-        opts.desc = "See available code actions"
-        vim.keymap.set({ "n", "v" }, "<leader>la", vim.lsp.buf.code_action, opts)
+          opts.desc = "Show workspace diagnostics"
+          vim.keymap.set("n", "<leader>lD", "<cmd>Telescope diagnostics<CR>", opts)
 
-        opts.desc = "Smart rename"
-        vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, opts)
+          opts.desc = "Document symbols"
+          vim.keymap.set("n", "<leader>ls", "<cmd>Telescope lsp_document_symbols<CR>", opts)
+        end
 
-        opts.desc = "Show buffer diagnostics"
-        vim.keymap.set("n", "<leader>ld", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
+        if client.supports_method("textDocument/declaration") then
+          opts.desc = "Go to declaration"
+          vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+        end
 
-        opts.desc = "Show workspace diagnostics"
-        vim.keymap.set("n", "<leader>lD", "<cmd>Telescope diagnostics<CR>", opts)
+        if client.supports_method("textDocument/codeAction") then
+          opts.desc = "See available code actions"
+          vim.keymap.set({ "n", "v" }, "<leader>la", vim.lsp.buf.code_action, opts)
+        end
+
+        if client.supports_method("textDocument/rename") then
+          opts.desc = "Smart rename"
+          vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, opts)
+        end
+
+        if client.supports_method("textDocument/signatureHelp") then
+          opts.desc = "Signature help"
+          vim.keymap.set("n", "<leader>lh", vim.lsp.buf.signature_help, opts)
+        end
+
+        if client.supports_method("workspace/symbol") then
+          opts.desc = "Search workspace symbols"
+          vim.keymap.set("n", "<leader>lG", vim.lsp.buf.workspace_symbol, opts)
+        end
 
         opts.desc = "Show line diagnostics"
         vim.keymap.set("n", "gl", vim.diagnostic.open_float, opts)
@@ -81,6 +110,10 @@ return {
 
         opts.desc = "Restart LSP"
         vim.keymap.set("n", "<leader>rs", string.format("<cmd>LspRestart %s<CR>", client.id), opts)
+
+        if utils.is_available("mason-lspconfig.nvim") then
+          vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP information" })
+        end
 
         -- Toggle inlay hints with keymap
         if client.supports_method("textDocument/inlayHint") then
