@@ -58,22 +58,22 @@ return {
       },
       -- Resize splits keymaps
       {
-        "<A-h>",
+        "<C-Left>",
         function() require("smart-splits").resize_left() end,
         desc = "Resize left",
       },
       {
-        "<A-j>",
+        "<C-Down>",
         function() require("smart-splits").resize_down() end,
         desc = "Resize down",
       },
       {
-        "<A-k>",
+        "<C-Up>",
         function() require("smart-splits").resize_up() end,
         desc = "Resize up",
       },
       {
-        "<A-l>",
+        "<C-Right>",
         function() require("smart-splits").resize_right() end,
         desc = "Resize right",
       },
