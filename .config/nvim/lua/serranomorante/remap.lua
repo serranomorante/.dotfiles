@@ -37,8 +37,8 @@ vim.keymap.set("n", "<C-q>", "<C-w>q")
 
 -- Tabs navigation
 vim.keymap.set("n", "te", "<cmd>tabedit<CR>", { desc = "New tab" })
-vim.keymap.set("n", "H", "<cmd>tabprevious<CR>", { desc = "Previous tab" })
-vim.keymap.set("n", "L", "<cmd>tabnext<CR>", { desc = "Next tab" })
+vim.keymap.set("n", "[t", "<cmd>tabprevious<CR>", { desc = "Previous tab" })
+vim.keymap.set("n", "]t", "<cmd>tabnext<CR>", { desc = "Next tab" })
 
 -- Tabs move
 vim.keymap.set("n", "<t", "<cmd>tabmove -1<CR>", { desc = "Move tab left" })
