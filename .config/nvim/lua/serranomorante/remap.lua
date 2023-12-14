@@ -37,8 +37,14 @@ vim.keymap.set("n", "<C-q>", "<C-w>q")
 
 -- Tabs navigation
 vim.keymap.set("n", "te", "<cmd>tabedit<CR>", { desc = "New tab" })
-vim.keymap.set("n", "[t", "<cmd>tabprevious<CR>", { desc = "Previous tab" })
-vim.keymap.set("n", "]t", "<cmd>tabnext<CR>", { desc = "Next tab" })
+vim.keymap.set("n", "<leader>zf", function()
+  -- https://github.com/pocco81/true-zen.nvim/blob/2b9e210e0d1a735e1fa85ec22190115dffd963aa/lua/true-zen/focus.lua#L11-L15
+  if vim.fn.winnr("$") == 1 then
+    vim.notify("there is only one window open", vim.log.levels.INFO)
+    return
+  end
+  vim.cmd("tab split")
+end, { desc = "Focus split on new tab" })
 
 -- Tabs move
 vim.keymap.set("n", "<t", "<cmd>tabmove -1<CR>", { desc = "Move tab left" })

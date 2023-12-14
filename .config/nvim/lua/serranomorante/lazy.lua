@@ -14,6 +14,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   { import = "serranomorante.plugins" },
   { import = "serranomorante.plugins.lsp" },
+  { import = "serranomorante.plugins.dap" },
 }, {
   change_detection = {
     notify = false,
