@@ -39,6 +39,7 @@ return {
       { "hrsh7th/cmp-nvim-lua" },
       { "onsails/lspkind.nvim" },
       { "hrsh7th/cmp-nvim-lsp-signature-help" },
+      { "rcarriga/cmp-dap" },
     },
     config = function()
       local cmp = require("cmp")
@@ -65,6 +66,15 @@ return {
       end
 
       cmp.setup({
+        enabled = function()
+          local dap_prompt = utils.is_available("cmp-dap") -- add interoperability with cmp-dap
+            and vim.tbl_contains(
+              { "dap-repl", "dapui_watches", "dapui_hover" },
+              vim.api.nvim_get_option_value("filetype", { buf = 0 })
+            )
+          if vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "prompt" and not dap_prompt then return false end
+          return true
+        end,
         snippet = { -- configure how nvim-cmp interacts with snippet engine
           expand = function(args) luasnip.lsp_expand(args.body) end,
         },
@@ -138,6 +148,12 @@ return {
         sources = {
           { name = "path" },
           { name = "buffer" },
+        },
+      })
+
+      cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+        sources = {
+          { name = "dap" },
         },
       })
 

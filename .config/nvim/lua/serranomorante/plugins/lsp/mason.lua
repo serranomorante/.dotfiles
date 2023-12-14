@@ -1,12 +1,23 @@
 local events = require("serranomorante.events")
 
 return {
+  -- mason-tool-installer.nvim should be in charge of installs/updates and not mason.nvim
+  -- This is because we are pinning specific package versions on mason-tool-installer.nvim.
+  -- We should leave mason.nvim to handle its core functionlity along with having
+  -- a nice UI, but no programmatic installations or updates.
   {
     "williamboman/mason.nvim",
     dependencies = "folke/neodev.nvim",
     lazy = false,
-    cmd = { "Mason", "MasonInstall", "MasonUpdate" },
-    config = true,
+    cmd = "Mason",
+    opts = {
+      ui = {
+        check_outdated_packages_on_open = false,
+        keymaps = {
+          update_all_packages = "noop",
+        },
+      },
+    },
   },
 
   {
@@ -24,6 +35,15 @@ return {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     event = "User CustomMasonLspSetup",
     cmd = { "MasonToolsInstall", "MasonToolsUpdate", "MasonToolsClean" },
+    init = function()
+      -- Thanks! https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim/issues/21#issuecomment-1406030068
+      vim.api.nvim_create_autocmd("User", {
+        desc = "Opens mason.nvim UI while installing/updating packages",
+        group = vim.api.nvim_create_augroup("open_mason_ui", { clear = true }),
+        pattern = "MasonToolsStartingInstall",
+        command = "Mason",
+      })
+    end,
     opts = {
       ensure_installed = {
         -- Formatters
@@ -56,6 +76,9 @@ return {
         -- Others
         "iferr", -- go
         "impl", -- go
+
+        -- DAP
+        "js-debug-adapter",
       },
     },
     config = function(_, opts)
