@@ -4,6 +4,7 @@ output DP-1
 off
 output DP-2
 off
+output eDP-1
 output eDP-1-2
 crtc 4
 mode 1920x1080
@@ -16,6 +17,7 @@ x-prop-underscan off
 x-prop-underscan_hborder 0
 x-prop-underscan_vborder 0
 output HDMI-0
+output HDMI-1-0
 crtc 0
 mode 3440x1440
 pos 1920x0

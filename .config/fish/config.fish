@@ -46,4 +46,7 @@ if status is-interactive
     # I'm commenting this line for now because I stopped liking pyenv-virtualenv
     # and now I just use poetry.
     # pyenv virtualenv-init - | source
+
+    # https://github.com/ajeetdsouza/zoxide?tab=readme-ov-file#installation
+    zoxide init fish | source
 end

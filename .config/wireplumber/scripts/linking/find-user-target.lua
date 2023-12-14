@@ -47,6 +47,7 @@ SimpleEventHook({
 		-- print("## si_props: " .. luaunit.prettystr(si_props))
 		-- print("## si_flags: " .. luaunit.prettystr(si_flags))
 		-- print("## target: " .. luaunit.prettystr(target))
+		print('## node name: ' .. si_props["node.name"])
 
 		-- bypass the hook if the target is already picked up
 		if target then

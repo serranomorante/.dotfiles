@@ -17,10 +17,17 @@ return {
       "nvim-telescope/telescope.nvim",
     },
     init = function()
-      -- Thanks Lsp-Zero!
       -- See: https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/guides/under-the-hood.md
       -- See: https://github.com/mfussenegger/nvim-lint/issues/340#issuecomment-1676438571
       vim.diagnostic.config({
+        signs = {
+          text = {
+            [vim.diagnostic.severity.INFO] = "",
+            [vim.diagnostic.severity.HINT] = "",
+            [vim.diagnostic.severity.WARN] = "",
+            [vim.diagnostic.severity.ERROR] = "",
+          },
+        },
         virtual_text = { source = true },
         float = { border = "single", source = true },
       })
@@ -31,6 +38,7 @@ return {
         vim.lsp.with(vim.lsp.handlers.signature_help, { border = "single" })
     end,
     config = function()
+      require("neodev")
       local lspconfig = require("lspconfig")
       local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
@@ -164,13 +172,6 @@ return {
 
       local capabilities =
         vim.tbl_deep_extend("force", lspconfig.util.default_config, cmp_nvim_lsp.default_capabilities())
-
-      -- Set symbols in the sign column
-      local signs = { Error = "", Warn = "", Hint = "", Info = "" }
-      for type, icon in pairs(signs) do
-        local hl = "DiagnosticSign" .. type
-        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-      end
 
       local servers = require("mason-lspconfig").get_installed_servers()
 

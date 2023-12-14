@@ -21,12 +21,12 @@
 [diff]
     colorMoved = default
 
-[core]
-	pager = less -LRc --mouse
+; [core]
+; 	pager = less -LRc --mouse
 
 [pager]
 	diff = LESS='LRc --mouse' delta
-	show = LESS='LRc --mouse' delta
-	stash = LESS='LRc --mouse' delta
-	log = LESS='LRc --mouse' delta
-	reflog = LESS='LRc --mouse' delta
+	; show = LESS='LRc --mouse' delta
+	; stash = LESS='LRc --mouse' delta
+	; log = LESS='LRc --mouse' delta
+	; reflog = LESS='LRc --mouse' delta

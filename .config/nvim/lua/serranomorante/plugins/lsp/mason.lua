@@ -7,7 +7,6 @@ return {
   -- a nice UI, but no programmatic installations or updates.
   {
     "williamboman/mason.nvim",
-    dependencies = "folke/neodev.nvim",
     lazy = false,
     cmd = "Mason",
     opts = {

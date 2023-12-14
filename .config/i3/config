@@ -65,10 +65,10 @@ tiling_drag modifier titlebar
 bindsym $mod+q kill
 
 # start dmenu (a program launcher)
-# bindsym $mod+d exec --no-startup-id dmenu_run -fn "HackNerdFont"
+bindsym $mod+d exec --no-startup-id dmenu_run -fn "HackNerdFont"
 
 # https://wiki.archlinux.org/title/i3#KRunner_as_application_launcher_in_KDE_Plasma/i3
-bindsym $mod+d exec $menu
+# bindsym $mod+d exec $menu
 
 # A more modern dmenu replacement is rofi:
 # bindcode $mod+40 exec "rofi -modi drun,run -show drun"
@@ -284,6 +284,8 @@ for_window [class="flameshot" title="^Configuration$"] floating enable
 for_window [class="org.cryptomator.launcher.Cryptomator.MainApp" title="^Unlock.*"] floating enable
 for_window [class="org.cryptomator.launcher.Cryptomator.MainApp" title="^Preferences$"] floating enable
 for_window [title="^DevTools" window_role="pop-up"] floating disable
+for_window [title="^Tabs Outliner" window_role="pop-up"] floating disable
+for_window [class="dolphin"] floating enable
 
 # Fix google meet popup window
 for_window [title="[^.]+\.[^.]+\.[^.]+ is sharing your screen."] move scratchpad

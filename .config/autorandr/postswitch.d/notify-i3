@@ -1,6 +1,7 @@
 #!/bin/bash
+# exec >/home/serranomorante/notify.out 2>&1
 
-~/.fehbg
+/home/serranomorante/.fehbg
 
 sleep 0.3
 

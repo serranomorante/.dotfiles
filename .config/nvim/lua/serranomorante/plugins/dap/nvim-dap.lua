@@ -28,6 +28,24 @@ return {
     { "<leader>ds", function() require("dap").run_to_cursor() end, desc = "Run To Cursor" },
     { "<leader>dh", function() require("dap.ui.widgets").hover() end, desc = "Debugger Hover" },
   },
+  init = function()
+    vim.api.nvim_create_autocmd("ColorScheme", {
+      pattern = "*",
+      group = vim.api.nvim_create_augroup("preserve_self_defined_colors", { clear = true }),
+      desc = "prevent colorscheme clears self-defined DAP icon colors.",
+      callback = function()
+        vim.api.nvim_set_hl(0, "DapBreakpoint", { ctermbg = 0, fg = "#993939" })
+        vim.api.nvim_set_hl(0, "DapLogPoint", { ctermbg = 0, fg = "#61afef" })
+        vim.api.nvim_set_hl(0, "DapStopped", { ctermbg = 0, fg = "#98c379" })
+      end,
+    })
+
+    vim.fn.sign_define("DapBreakpoint", { text = " ", texthl = "DapBreakpoint" })
+    vim.fn.sign_define("DapBreakpointCondition", { text = " ", texthl = "DapBreakpoint" })
+    vim.fn.sign_define("DapBreakpointRejected", { text = " ", texthl = "DapBreakpoint" })
+    vim.fn.sign_define("DapLogPoint", { text = ".>", texthl = "DapLogPoint" })
+    vim.fn.sign_define("DapStopped", { text = "󰁕 ", texthl = "DapStopped" })
+  end,
   config = function()
     local mason_js_debug_adapter = require("mason-registry").get_package("js-debug-adapter")
     local dynamic_port = "${port}" -- make nvim-dap resolve a free port.
