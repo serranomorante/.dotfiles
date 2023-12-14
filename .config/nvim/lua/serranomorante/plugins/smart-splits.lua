@@ -8,25 +8,30 @@ return {
     event = "VeryLazy",
     config = true,
     init = function()
-      -- Fix issue with bufresize and neotree in which toggling
-      -- neo-tree (hidding it), then openinng the command line history
-      -- window (q:), then closing it, then opening neo-tree again with
-      -- `ctrl+o` will resize the cmd window height
+      -- bufresize registers the "BufWinEnter", "WinEnter" events emitted from the cmd window
+      -- This causes neo-tree to resize the cmd line if the cmd window was previously closed
       autocmd("CmdwinLeave", {
         desc = "Resize after leaving command line view",
-        group = augroup("tab_bufresize", { clear = true }),
+        group = augroup("cmd_win_leave_resize", { clear = true }),
         callback = function()
-          vim.schedule(function() require("bufresize").resize_close() end)
+          vim.schedule(function()
+            -- Wrapped in a schedule so this executed when the cmd window is already closed
+            require("bufresize").register()
+          end)
         end,
       })
 
+      -- Make bufresize aware of tab bar toggling
       autocmd({ "TabNewEntered", "TabClosed" }, {
         desc = "Resize after tab open/close shifts the view",
         group = augroup("tab_bufresize", { clear = true }),
-        callback = function(_)
+        callback = function()
           local tabpages = vim.api.nvim_list_tabpages()
-          if #tabpages == 1 then vim.schedule(function() require("bufresize").resize_close() end) end
-          if #tabpages == 2 then vim.schedule(function() require("bufresize").resize_open() end) end
+          local is_first_tab_to_enter = #tabpages == 1
+          local is_last_tab_to_leave = #tabpages == 2
+
+          if is_first_tab_to_enter then require("bufresize").register() end
+          if is_last_tab_to_leave then require("bufresize").register() end
         end,
       })
     end,
@@ -59,22 +64,34 @@ return {
       -- Resize splits keymaps
       {
         "<C-Left>",
-        function() require("smart-splits").resize_left() end,
+        function()
+          require("smart-splits").resize_left()
+          if utils.is_available("bufresize.nvim") then require("bufresize").register() end
+        end,
         desc = "Resize left",
       },
       {
         "<C-Down>",
-        function() require("smart-splits").resize_down() end,
+        function()
+          require("smart-splits").resize_down()
+          if utils.is_available("bufresize.nvim") then require("bufresize").register() end
+        end,
         desc = "Resize down",
       },
       {
         "<C-Up>",
-        function() require("smart-splits").resize_up() end,
+        function()
+          require("smart-splits").resize_up()
+          if utils.is_available("bufresize.nvim") then require("bufresize").register() end
+        end,
         desc = "Resize up",
       },
       {
         "<C-Right>",
-        function() require("smart-splits").resize_right() end,
+        function()
+          require("smart-splits").resize_right()
+          if utils.is_available("bufresize.nvim") then require("bufresize").register() end
+        end,
         desc = "Resize right",
       },
       -- Swap splits keymaps

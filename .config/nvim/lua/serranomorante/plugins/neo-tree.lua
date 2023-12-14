@@ -19,6 +19,9 @@ return {
           local win_history = vim.t.win_history
           local prev_win = win_history[1]
 
+          -- closed quickfix window is invalid
+          if not vim.api.nvim_win_is_valid(prev_win) then return end
+
           -- If the previous window is a neo-tree window, then
           -- look for the window before that one.
           if utils.buf_filetype_from_winid(prev_win) == "neo-tree" then prev_win = win_history[2] end

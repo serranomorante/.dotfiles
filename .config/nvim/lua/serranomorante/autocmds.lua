@@ -77,7 +77,7 @@ autocmd({ "WinEnter", "VimEnter" }, {
     if "" ~= vim.api.nvim_win_get_config(0).relative then return end
 
     local ignored_filetypes = { "DressingInput", "neo-tree" }
-    local ignored_buftypes = { "nofile" }
+    local ignored_buftypes = { "nofile", "quickfix" }
 
     if vim.tbl_contains(ignored_filetypes, vim.bo.filetype) then return end
 
