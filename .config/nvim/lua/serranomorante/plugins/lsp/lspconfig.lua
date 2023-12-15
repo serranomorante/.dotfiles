@@ -177,7 +177,7 @@ return {
 
       local skip_server_setup = { "tsserver", "lua_ls", "clangd", "jsonls", "ruff_lsp" }
 
-      for _, server in pairs(servers) do
+      for _, server in ipairs(servers) do
         if not vim.tbl_contains(skip_server_setup, server) then
           lspconfig[server].setup({
             on_init = on_init,
