@@ -146,12 +146,18 @@ return {
       {
         "<leader>fc",
         function() require("telescope.builtin").grep_string() end,
-        desc = "Find word under cursor",
+        desc = "Find word under cursor (C-Space fuzzy)",
+      },
+      {
+        "<leader>fv",
+        function() require("telescope-live-grep-args.shortcuts").grep_visual_selection() end,
+        mode = "v",
+        desc = "Find visual selection (C-Space fuzzy)",
       },
       {
         "<leader>ff",
         function() require("telescope.builtin").find_files({ path_display = { "truncate" } }) end,
-        desc = "Find files",
+        desc = "Find files (fuzzy)",
       },
       {
         "<leader>fF",
@@ -162,12 +168,12 @@ return {
             path_display = { "truncate" },
           })
         end,
-        desc = "Find files (hidden)",
+        desc = "Find files (hidden, fuzzy)",
       },
       {
         "<leader>fw",
         function() require("telescope.builtin").live_grep() end,
-        desc = "Live grep",
+        desc = "Live grep (C-Space fuzzy)",
       },
       {
         "<leader>fW",
@@ -176,12 +182,12 @@ return {
             additional_args = function(args) return vim.list_extend(args, { "--hidden", "--no-ignore" }) end,
           })
         end,
-        desc = "Live grep (hidden)",
+        desc = "Live grep (hidden, C-Space fuzzy)",
       },
       {
         "<leader>fg",
         function() require("telescope").extensions.live_grep_args.live_grep_args() end,
-        desc = "Live grep (with args)",
+        desc = "Live grep (rg, C-Space fuzzy)",
       },
       {
         "<leader>uu",
@@ -256,6 +262,7 @@ return {
       local actions = require("telescope.actions")
       local action_state = require("telescope.actions.state")
       local action_set = require("telescope.actions.set")
+      local lga_actions = require("telescope-live-grep-args.actions")
 
       local opts = {
         defaults = {
@@ -293,6 +300,15 @@ return {
         extensions = {
           undo = {
             use_delta = true,
+          },
+          live_grep_args = {
+            mappings = {
+              i = {
+                ["<C-k>"] = lga_actions.quote_prompt(),
+                ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+                ["<C-Space>"] = actions.to_fuzzy_refine,
+              },
+            },
           },
         },
         pickers = {
