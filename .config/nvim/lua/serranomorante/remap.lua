@@ -8,7 +8,6 @@ end, { desc = "Toggle wrap" })
 
 -- New file
 vim.keymap.set("n", "<leader>n", "<cmd>enew<cr>", { desc = "New buffer" })
-vim.keymap.set("n", "<leader>c", "<cmd>bd<cr>", { desc = "Close buffer" })
 
 -- Move selected lines around
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")

@@ -1,5 +1,3 @@
-local path_sep = (vim.uv or vim.loop).os_uname().version:match("Windows") and "\\" or "/"
-
 local M = {}
 
 M.Direction = {
@@ -48,8 +46,11 @@ function M.is_directory(path)
   return stat and stat.type == "directory" or false
 end
 
---- Thanks LunarVim!
+local path_sep = (vim.uv or vim.loop).os_uname().version:match("Windows") and "\\" or "/"
+
 ---Join path segments that were passed as input
+---Thanks LunarVim!
+---@param ... string
 ---@return string
 function M.join_paths(...)
   local result = table.concat({ ... }, path_sep)
@@ -156,13 +157,15 @@ function M.win_wrap_id(direction)
   return vim.fn.win_getid(vim.fn.winnr(string.format("%s%s", "99999", M.DirectionKeysOpposite[direction])))
 end
 
--- Thanks! https://gitlab.com/ranjithshegde/dotbare/-/blob/master/.config/nvim/lua/r/extensions/qf.lua?ref_type=heads
--- 'q': find the quickfix window
--- 'l': find all loclist windows
+---Find the quickfix or loclist window
+---https://gitlab.com/ranjithshegde/dotbare/-/blob/master/.config/nvim/lua/r/extensions/qf.lua?ref_type=heads
+---@param type "q" | "l" Quickfix (q) or Loclist (l)
+---@return {winid: integer, bufnr: integer}[]
 local function find_qf(type)
   local wininfo = vim.fn.getwininfo()
   local win_tbl = {}
-  for _, win in pairs(wininfo) do
+  if wininfo == nil then return win_tbl end
+  for _, win in ipairs(wininfo) do
     local found = false
     if type == "l" and win["loclist"] == 1 then found = true end
     -- loclist window has 'quickfix' set, eliminate those
@@ -172,45 +175,45 @@ local function find_qf(type)
   return win_tbl
 end
 
--- Thanks! https://gitlab.com/ranjithshegde/dotbare/-/blob/master/.config/nvim/lua/r/extensions/qf.lua?ref_type=heads
--- open quickfix if not empty
+---Open quickfix window if not empty
+---https://gitlab.com/ranjithshegde/dotbare/-/blob/master/.config/nvim/lua/r/extensions/qf.lua?ref_type=heads
 local function open_qf()
   if not vim.tbl_isempty(vim.fn.getqflist()) then
     vim.cmd("botright copen")
     vim.cmd.wincmd("J")
   else
-    vim.notify("qflist is empty")
+    vim.notify("qflist is empty", vim.log.levels.WARN)
   end
 end
 
--- Thanks! https://gitlab.com/ranjithshegde/dotbare/-/blob/master/.config/nvim/lua/r/extensions/qf.lua?ref_type=heads
--- loclist on current window where not empty
+---Open loclist window if not empty
+---Thanks! https://gitlab.com/ranjithshegde/dotbare/-/blob/master/.config/nvim/lua/r/extensions/qf.lua?ref_type=heads
 local function open_loclist()
   if not vim.tbl_isempty(vim.fn.getloclist(0)) then
     vim.cmd("botright lopen")
   else
-    vim.notify("loclist is empty")
+    vim.notify("loclist is empty", vim.log.levels.WARN)
   end
 end
 
---- Thanks! https://gitlab.com/ranjithshegde/dotbare/-/blob/master/.config/nvim/lua/r/extensions/qf.lua?ref_type=heads
---- type='*': qf toggle and send to bottom
---- type='l': loclist toggle (all windows)
---- map to ":lua require'utils'.toggle_qf('l')"
+---Toggle quickfix or loclist window
+---Thanks! https://gitlab.com/ranjithshegde/dotbare/-/blob/master/.config/nvim/lua/r/extensions/qf.lua?ref_type=heads
+---@param type "q" | "l" Quickfix (q) or Loclist (l)
 function M.toggle_qf(type)
   local windows = find_qf(type)
-  if not vim.tbl_isempty(windows) then
-    -- hide all visible windows
-    for _, win in pairs(windows) do
+  local toggle_should_close = not vim.tbl_isempty(windows)
+
+  if toggle_should_close then
+    for _, win in ipairs(windows) do
       vim.api.nvim_win_hide(win.winid)
     end
+    return
+  end
+
+  if type == "l" then
+    open_loclist()
   else
-    -- no windows are visible, attempt to open
-    if type == "l" then
-      open_loclist()
-    else
-      open_qf()
-    end
+    open_qf()
   end
 end
 

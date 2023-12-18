@@ -4,6 +4,7 @@ return {
     "kevinhwang91/promise-async",
   },
   build = function() require("fundo").install() end,
-  event = "VeryLazy",
+  lazy = false,
+  init = function() vim.opt.undofile = true end,
   config = true,
 }

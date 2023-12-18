@@ -1,19 +1,17 @@
 local utils = require("serranomorante.utils")
 
-local undodir = utils.join_paths(vim.call("stdpath", "cache"), "undodir")
-local shadadir = utils.join_paths(vim.call("stdpath", "cache"), "shadadir")
-
+---@type string
+---@diagnostic disable-next-line: assign-type-mismatch
+local cache_path = vim.fn.stdpath("cache")
+local undodir = utils.join_paths(cache_path, "undodir")
+local shadadir = utils.join_paths(cache_path, "shadadir")
 if not utils.is_directory(undodir) then vim.fn.mkdir(undodir, "p") end
-
 if not utils.is_directory(shadadir) then vim.fn.mkdir(shadadir, "p") end
 
 vim.opt.viewoptions:remove("curdir")
-
 vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25-Cursor,r-cr-o:hor20,a:blinkon1"
 
-if vim.fn.has("nvim-0.9") == 1 then
-  vim.opt.diffopt:append("linematch:60") -- enable linematch diff algorithm
-end
+vim.opt.diffopt:append("linematch:60") -- enable linematch diff algorithm
 
 vim.opt.number = true
 vim.opt.expandtab = true

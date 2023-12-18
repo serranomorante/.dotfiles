@@ -56,6 +56,7 @@ if is_available("neo-tree.nvim") then
         ---@diagnostic disable-next-line: param-type-mismatch
         local winnr = vim.fn.tabpagewinnr(tabpage, "99999h")
         local winid = vim.fn.win_getid(winnr)
+        if winid == nil then return end
         local filetype = utils.buf_filetype_from_winid(winid)
 
         if filetype == "neo-tree" then

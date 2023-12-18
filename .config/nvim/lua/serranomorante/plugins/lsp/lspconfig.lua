@@ -38,7 +38,7 @@ return {
         vim.lsp.with(vim.lsp.handlers.signature_help, { border = "single" })
     end,
     config = function()
-      require("neodev")
+      if utils.is_available("neodev.nvim") then require("neodev") end
       local lspconfig = require("lspconfig")
       local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
@@ -177,7 +177,7 @@ return {
 
       local skip_server_setup = { "tsserver", "lua_ls", "clangd", "jsonls", "ruff_lsp" }
 
-      for _, server in pairs(servers) do
+      for _, server in ipairs(servers) do
         if not vim.tbl_contains(skip_server_setup, server) then
           lspconfig[server].setup({
             on_init = on_init,
