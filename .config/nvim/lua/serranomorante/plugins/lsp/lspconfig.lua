@@ -38,7 +38,7 @@ return {
         vim.lsp.with(vim.lsp.handlers.signature_help, { border = "single" })
     end,
     config = function()
-      require("neodev")
+      if utils.is_available("neodev.nvim") then require("neodev") end
       local lspconfig = require("lspconfig")
       local cmp_nvim_lsp = require("cmp_nvim_lsp")
 

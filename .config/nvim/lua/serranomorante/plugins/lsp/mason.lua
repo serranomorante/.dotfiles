@@ -77,7 +77,8 @@ return {
         "impl", -- go
 
         -- DAP
-        "js-debug-adapter",
+        "js-debug-adapter", -- { ..., version = "v1.76.1" }
+        "firefox-debug-adapter",
       },
     },
     config = function(_, opts)

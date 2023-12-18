@@ -1,5 +1,8 @@
 local utils = require("serranomorante.utils")
 
+---`h: dap.ext.vscode.load_launchjs`
+local vscode_type_to_ft
+
 return {
   "mfussenegger/nvim-dap",
   event = "User CustomFile",
@@ -7,7 +10,15 @@ return {
   keys = {
     { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint (F9)" },
     { "<leader>dB", function() require("dap").clear_breakpoints() end, desc = "Clear Breakpoints" },
-    { "<leader>dc", function() require("dap").continue() end, desc = "Start/Continue (F5)" },
+    {
+      "<leader>dc",
+      function()
+        -- https://github.com/mfussenegger/nvim-dap/issues/20#issuecomment-1356791734
+        require("dap.ext.vscode").load_launchjs(nil, vscode_type_to_ft)
+        require("dap").continue()
+      end,
+      desc = "Start/Continue (F5)",
+    },
     {
       "<leader>dC",
       function()
@@ -16,6 +27,11 @@ return {
         end)
       end,
       desc = "Conditional Breakpoint (S-F9)",
+    },
+    {
+      "<leader>dl",
+      function() require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: ")) end,
+      desc = "Log Point",
     },
     { "<leader>di", function() require("dap").step_into() end, desc = "Step Into (F11)" },
     { "<leader>do", function() require("dap").step_over() end, desc = "Step Over (F10)" },
@@ -47,7 +63,10 @@ return {
     vim.fn.sign_define("DapStopped", { text = "󰁕 ", texthl = "DapStopped" })
   end,
   config = function()
+    local dap = require("dap")
+    -- require("dap").set_log_level("TRACE")
     local mason_js_debug_adapter = require("mason-registry").get_package("js-debug-adapter")
+    local mason_firefox_debug_adapter = require("mason-registry").get_package("firefox-debug-adapter")
     local dynamic_port = "${port}" -- make nvim-dap resolve a free port.
 
     -- This env variable comes from my personal .bashrc file
@@ -57,32 +76,72 @@ return {
 
     if node_path and mason_js_debug_adapter then
       local js_debug_adapter_entrypoint = mason_js_debug_adapter:get_install_path() .. "/js-debug/src/dapDebugServer.js"
+      local firefox_debug_adapter_entrypoint = mason_firefox_debug_adapter:get_install_path()
+        .. "/dist/adapter.bundle.js"
 
       -- [docs]: https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#javascript
       -- [issue]: https://github.com/microsoft/vscode-js-debug/issues/1388#issuecomment-1483168025
       -- [example]: https://github.com/mxsdev/nvim-dap-vscode-js/issues/63#issuecomment-1801935986
-      require("dap").adapters["pwa-chrome"] = {
-        type = "server",
-        host = "localhost",
-        port = dynamic_port,
-        executable = {
-          command = node_path,
-          args = {
-            js_debug_adapter_entrypoint,
-            dynamic_port,
-          },
-        },
-      }
-
-      for _, language in ipairs({ "typescript", "javascript" }) do
-        require("dap").configurations[language] = {
-          {
-            type = "pwa-chrome",
-            request = "launch",
-            name = "Launch Chrome",
+      for _, chromium in ipairs({ "pwa-chrome", "pwa-msedge", "chrome" }) do
+        dap.adapters[chromium] = {
+          type = "server",
+          host = "localhost",
+          port = dynamic_port,
+          executable = {
+            command = node_path,
+            args = {
+              js_debug_adapter_entrypoint,
+              dynamic_port,
+            },
           },
         }
       end
+
+      dap.adapters.firefox = {
+        type = "executable",
+        command = node_path,
+        args = { firefox_debug_adapter_entrypoint },
+      }
+
+      local js_filtypes = { "typescript", "javascript", "javascriptreact", "typescriptreact" }
+      for _, language in ipairs(js_filtypes) do
+        dap.configurations[language] = {
+          {
+            name = "DAP: Debug with PWA Chrome",
+            type = "pwa-chrome",
+            request = "launch",
+            url = "http://localhost:3000",
+          },
+
+          {
+            name = "DAP: Debug with PWA Edge",
+            type = "pwa-msedge",
+            request = "launch",
+            url = "http://localhost:3000",
+          },
+
+          {
+            name = "DAP: Debug with Firefox",
+            type = "firefox",
+            request = "launch",
+            reAttach = true,
+            url = "http://localhost:3000",
+            webRoot = "${workspaceFolder}",
+            skipFiles = {
+              "${workspaceFolder}/<node_internals>/**",
+              "${workspaceFolder}/node_modules/**",
+            },
+            firefoxExecutable = "/usr/bin/firefox-developer-edition",
+          },
+        }
+      end
+
+      ---@diagnostic disable-next-line: unused-local
+      vscode_type_to_ft = {
+        ["pwa-chrome"] = js_filtypes,
+        ["firefox"] = js_filtypes,
+        ["chrome"] = js_filtypes,
+      }
     end
   end,
 }

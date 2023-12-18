@@ -1,5 +1,3 @@
-local path_sep = (vim.uv or vim.loop).os_uname().version:match("Windows") and "\\" or "/"
-
 local M = {}
 
 M.Direction = {
@@ -48,8 +46,11 @@ function M.is_directory(path)
   return stat and stat.type == "directory" or false
 end
 
---- Thanks LunarVim!
+local path_sep = (vim.uv or vim.loop).os_uname().version:match("Windows") and "\\" or "/"
+
 ---Join path segments that were passed as input
+---Thanks LunarVim!
+---@param ... string
 ---@return string
 function M.join_paths(...)
   local result = table.concat({ ... }, path_sep)
