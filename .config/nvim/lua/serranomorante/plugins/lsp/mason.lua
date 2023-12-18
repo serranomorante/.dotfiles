@@ -77,8 +77,9 @@ return {
         "impl", -- go
 
         -- DAP
-        "js-debug-adapter", -- { ..., version = "v1.76.1" }
         "firefox-debug-adapter",
+        ---Uncomment next line if you want to use `dapDebugServer` instead of `vsDebugServerBundle`
+        -- { "js-debug-adapter", version = "v1.82.0" },
       },
     },
     config = function(_, opts)
