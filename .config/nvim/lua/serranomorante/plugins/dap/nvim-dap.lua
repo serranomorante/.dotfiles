@@ -9,6 +9,7 @@ return {
   dependencies = {
     "rcarriga/nvim-dap-ui",
     "mxsdev/nvim-dap-vscode-js",
+    "mfussenegger/nvim-dap-python",
     {
       ---Mason don't have nightly version, so I'm using lazy to build this package from main.
       ---Notice that `vscode-js-debug` has 2 possible build commands: `vsDebugServerBundle` and `dapDebugServer`.
@@ -79,6 +80,7 @@ return {
   end,
   config = function()
     local dap = require("dap")
+    dap.set_log_level(vim.env.DAP_LOG_LEVEL or "INFO")
     local mason_registry = require("mason-registry")
 
     -- This env variable comes from my personal .bashrc file
@@ -89,13 +91,17 @@ return {
     if node_path then
       local vscode_js_debug_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug"
       local firefox_dap = mason_registry.get_package("firefox-debug-adapter")
+      local python_dap = mason_registry.get_package("debugpy")
       local firefox_dap_entrypoint = firefox_dap:get_install_path() .. "/dist/adapter.bundle.js"
+      local python_dap_executable = python_dap:get_install_path() .. "/venv/bin/python"
 
       require("dap-vscode-js").setup({
         node_path = node_path,
         debugger_path = vscode_js_debug_path,
         adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
       })
+
+      require("dap-python").setup(python_dap_executable)
 
       dap.adapters.firefox = {
         type = "executable",
