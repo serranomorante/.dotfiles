@@ -16,13 +16,10 @@ return {
       desc = "Toggle harpoon menu",
     },
   },
-  -- opts = {
-  --   global_settings = {
-  --     excluded_filetypes = { "harpoon", "neo-tree", "NvimTree" },
-  --   },
-  --   menu = {
-  --     width = is_valid_width and width or DEFAULT_WIDTH,
-  --   },
-  -- },
+  opts = {
+    settings = {
+      save_on_toggle = true,
+    },
+  },
   config = function(_, opts) require("harpoon").setup(opts) end,
 }
