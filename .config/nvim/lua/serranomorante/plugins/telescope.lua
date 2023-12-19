@@ -323,16 +323,41 @@ return {
           git_status = {
             mappings = {
               n = {
-                -- Fix selection not working for `.dotfiles` repo
+                ---Fix selection not working for `.dotfiles` bare repo
                 ["<CR>"] = function(prompt_bufnr)
-                  local entry = action_state.get_selected_entry()
-                  local extracted_entry = getmetatable(entry)
-                  if extracted_entry.toplevel ~= nil then
+                  local selection = action_state.get_selected_entry()
+                  local entry = getmetatable(selection)
+                  if entry.toplevel ~= nil then
                     actions.close(prompt_bufnr)
-                    local selected_file = extracted_entry.toplevel .. "/" .. entry.value
-                    return vim.cmd("edit " .. selected_file)
+                    local worktree_file = utils.join_paths(entry.toplevel, selection.value)
+                    return vim.cmd("edit " .. worktree_file)
                   end
                   action_set.select(prompt_bufnr, "default")
+                end,
+                ---Fix staging not working for `.dotfiles` bare repo
+                ["<Tab>"] = function(prompt_bufnr)
+                  local selection = action_state.get_selected_entry()
+                  if selection == nil then return end
+
+                  ---https://github.com/nvim-telescope/telescope.nvim/blob/6213322ab56eb27356fdc09a5078e41e3ea7f3bc/lua/telescope/actions/init.lua#L891
+                  local is_staged = selection.status:sub(2) == " "
+                  local cmd = is_staged and { "git", "restore", "--staged" } or { "git", "add" }
+
+                  ---Not a good experience, but refreshing the picker is too complex
+                  actions.close(prompt_bufnr)
+                  vim.notify("File " .. (is_staged and "unstaged" or "staged") .. " successfully!", vim.log.levels.INFO)
+
+                  local entry = getmetatable(selection)
+                  if entry.toplevel ~= nil then
+                    local worktree_file = utils.join_paths(entry.toplevel, selection.value)
+                    table.insert(cmd, 2, ("--git-dir=%s"):format(entry.gitdir))
+                    table.insert(cmd, 3, ("--work-tree=%s"):format(entry.toplevel))
+                    table.insert(cmd, worktree_file)
+                    utils.cmd(cmd)
+                  else
+                    table.insert(cmd, selection.value)
+                    utils.cmd(cmd)
+                  end
                 end,
               },
             },
