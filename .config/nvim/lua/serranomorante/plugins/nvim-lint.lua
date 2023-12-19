@@ -13,6 +13,15 @@ return {
       end,
       desc = "Trigger linting for current file",
     },
+    {
+      "<leader>ln",
+      function()
+        local linters = require("lint").get_running()
+        if #linters == 0 then vim.notify("󰦕", vim.log.levels.WARN) end
+        vim.notify("󱉶 " .. table.concat(linters, ", "))
+      end,
+      desc = "Show linters",
+    },
   },
   config = function()
     local lint = require("lint")
@@ -24,12 +33,6 @@ return {
       typescriptreact = { "eslint_d" },
       python = { "mypy", "pylint" },
     }
-
-    local venv_path =
-      'import sys; sys.path.append("/usr/lib/python3.11/site-packages"); import pylint_venv; pylint_venv.inithook(force_venv_activation=True, quiet=True)'
-
-    local pylint = lint.linters.pylint
-    pylint.args = vim.list_extend(vim.deepcopy(pylint.args), { "--init-hook", venv_path })
 
     autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
       desc = "Trigger linting",
