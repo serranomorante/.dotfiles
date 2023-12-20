@@ -7,20 +7,8 @@ return {
   keys = {
     {
       "<leader>lt",
-      function()
-        local lint = require("lint")
-        lint.try_lint()
-      end,
+      function() require("lint").try_lint() end,
       desc = "Trigger linting for current file",
-    },
-    {
-      "<leader>ln",
-      function()
-        local linters = require("lint").get_running()
-        if #linters == 0 then vim.notify("󰦕", vim.log.levels.WARN) end
-        vim.notify("󱉶 " .. table.concat(linters, ", "))
-      end,
-      desc = "Show linters",
     },
   },
   config = function()
@@ -36,7 +24,7 @@ return {
 
     autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
       desc = "Trigger linting",
-      group = augroup("lint", { clear = true }),
+      group = augroup("run_linters", { clear = true }),
       callback = function() lint.try_lint() end,
     })
   end,
