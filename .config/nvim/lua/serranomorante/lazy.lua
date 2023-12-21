@@ -15,6 +15,7 @@ require("lazy").setup({
   { import = "serranomorante.plugins" },
   { import = "serranomorante.plugins.lsp" },
   { import = "serranomorante.plugins.dap" },
+  { import = "serranomorante.plugins.overseer" },
 }, {
   change_detection = {
     notify = false,

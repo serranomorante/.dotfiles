@@ -24,7 +24,8 @@ return {
     config = function(_, opts)
       if opts then require("luasnip").config.setup(opts) end
       require("luasnip.loaders.from_lua").lazy_load({
-        paths = { vim.fn.stdpath("config") .. "/lua/serranomorante/snippets" },
+        ---@diagnostic disable-next-line: param-type-mismatch
+        paths = { utils.join_paths(vim.fn.stdpath("config"), "lua/serranomorante/snippets") },
       })
     end,
   },
