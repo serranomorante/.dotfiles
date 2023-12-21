@@ -49,4 +49,7 @@ if status is-interactive
 
     # https://github.com/ajeetdsouza/zoxide?tab=readme-ov-file#installation
     zoxide init fish | source
+
+    # https://github.com/direnv/direnv/blob/master/docs/hook.md#fish
+    direnv hook fish | source
 end
