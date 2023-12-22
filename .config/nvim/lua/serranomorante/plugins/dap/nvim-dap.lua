@@ -111,8 +111,8 @@ return {
         args = { firefox_dap_executable },
       }
 
-      local js_filtypes = { "typescript", "javascript", "javascriptreact", "typescriptreact" }
-      for _, language in ipairs(js_filtypes) do
+      local js_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact" }
+      for _, language in ipairs(js_filetypes) do
         dap.configurations[language] = {
           {
             name = "DAP: Debug with PWA Chrome",
@@ -169,10 +169,10 @@ return {
 
       ---@diagnostic disable-next-line: unused-local
       vscode_type_to_ft = {
-        ["pwa-chrome"] = js_filtypes,
-        ["pwa-msedge"] = js_filtypes,
-        ["pwa-node"] = js_filtypes,
-        ["firefox"] = js_filtypes,
+        ["pwa-chrome"] = js_filetypes,
+        ["pwa-msedge"] = js_filetypes,
+        ["pwa-node"] = js_filetypes,
+        ["firefox"] = js_filetypes,
       }
     end
   end,
