@@ -16,6 +16,10 @@ return {
     local template_path = "serranomorante/plugins/overseer/template"
 
     ---Register vscode custom tasks
-    overseer.register_template(require(utils.join_paths(template_path, "vscode/tsc")))
+    local vscode_bundle = require(utils.join_paths(template_path, "vscode"))
+
+    for _, name in ipairs(vscode_bundle) do
+      overseer.register_template(require(utils.join_paths(template_path, "vscode", name)))
+    end
   end,
 }
