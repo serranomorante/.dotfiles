@@ -90,16 +90,19 @@ return {
 
     local firefox_dap = mason_registry.get_package("firefox-debug-adapter")
     local python_dap = mason_registry.get_package("debugpy")
+    local js_dap = mason_registry.get_package("js-debug-adapter")
 
-    if node_path and firefox_dap and python_dap then
+    if node_path and firefox_dap and python_dap and js_dap then
       local vscode_js_debug_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug"
       local firefox_dap_executable = firefox_dap:get_install_path() .. "/dist/adapter.bundle.js"
       local python_dap_executable = python_dap:get_install_path() .. "/venv/bin/python"
+      local js_dap_executable = js_dap:get_install_path() .. "/js-debug/src/dapDebugServer.js"
+      local dynamic_port = "${port}" -- make nvim-dap resolve a free port.
 
       require("dap-vscode-js").setup({
         node_path = node_path,
         debugger_path = vscode_js_debug_path,
-        adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
+        adapters = { "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
         log_file_level = vim.log.levels[vim.env.DAP_LOG_LEVEL or "INFO"],
       })
 
@@ -110,6 +113,21 @@ return {
         command = node_path,
         args = { firefox_dap_executable },
       }
+
+      for _, adapter in ipairs({ "pwa-node" }) do
+        dap.adapters[adapter] = {
+          type = "server",
+          host = "localhost",
+          port = dynamic_port,
+          executable = {
+            command = node_path,
+            args = {
+              js_dap_executable,
+              dynamic_port,
+            },
+          },
+        }
+      end
 
       local js_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact" }
       for _, language in ipairs(js_filetypes) do
@@ -159,6 +177,13 @@ return {
               "${workspaceFolder}/**",
               "!**/node_modules/**",
             },
+          },
+          {
+            name = "NODE: Launch file",
+            type = "pwa-node",
+            request = "launch",
+            program = "${file}",
+            cwd = "${workspaceFolder}",
           },
         }
       end

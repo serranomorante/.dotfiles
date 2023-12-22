@@ -79,6 +79,7 @@ return {
         -- DAP
         "firefox-debug-adapter",
         "debugpy",
+        "js-debug-adapter",
         ---Uncomment next line if you want to use `dapDebugServer` instead of `vsDebugServerBundle`
         -- { "js-debug-adapter", version = "v1.82.0" },
       },
