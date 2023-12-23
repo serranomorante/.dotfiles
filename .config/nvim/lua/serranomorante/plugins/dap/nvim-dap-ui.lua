@@ -43,37 +43,4 @@ return {
       end,
     })
   end,
-  config = function(_, opts)
-    local dap, dapui = require("dap"), require("dapui")
-
-    dap.listeners.after.event_initialized["dapui_config"] = function()
-      -- Increase performance? Prevent bufresize autocmds from processing all the dap window events
-      if utils.is_available("bufresize.nvim") then require("bufresize").block_register() end
-      if utils.is_available("neo-tree.nvim") then vim.cmd("Neotree close") end
-      dapui.open()
-
-      -- Keep DAP windows dimensions in proportion when nvim is resized
-      if utils.is_available("bufresize.nvim") then
-        require("bufresize").unblock_register()
-        require("bufresize").register()
-      end
-    end
-    dap.listeners.before.event_terminated["dapui_config"] = function()
-      if utils.is_available("bufresize.nvim") then require("bufresize").block_register() end
-      dapui.close()
-      if utils.is_available("bufresize.nvim") then
-        require("bufresize").unblock_register()
-        require("bufresize").register()
-      end
-    end
-    dap.listeners.before.event_exited["dapui_config"] = function()
-      if utils.is_available("bufresize.nvim") then require("bufresize").block_register() end
-      dapui.close()
-      if utils.is_available("bufresize.nvim") then
-        require("bufresize").unblock_register()
-        require("bufresize").register()
-      end
-    end
-    dapui.setup(opts)
-  end,
 }

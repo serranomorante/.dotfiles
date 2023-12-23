@@ -1,26 +1,18 @@
 local utils = require("serranomorante.utils")
 
+---Debuggers can exist on one of 2 folders: `mason` or `debuggers`
+---Mason: installed automatically. Usually for stable versions of packages.
+---Debuggers: installed manually. Usually for nightly versions of packages.
+---`debuggers` is a custom folder on my system for vscode extensions like `cpp_tools`.
+
 ---`h: dap.ext.vscode.load_launchjs`
 local vscode_type_to_ft
 
 return {
   "mfussenegger/nvim-dap",
-  event = "User CustomFile",
   dependencies = {
-    "rcarriga/nvim-dap-ui",
     "mxsdev/nvim-dap-vscode-js",
     "mfussenegger/nvim-dap-python",
-    {
-      ---Mason don't have nightly version, so I'm using lazy to build this package from main.
-      ---Notice that `vscode-js-debug` has 2 possible build commands: `vsDebugServerBundle` and `dapDebugServer`.
-      ---dapDebugServer is DAP compliant and you don't need `mxsdev/nvim-dap-vscode-js` to make it work, but
-      ---breakpoints don't work realiable (you must constantly refresh the browser). Also, you need `<=v1.82.0`
-      ---vsDebugServerBundle is not DAP compliant, that's why you need `mxsdev/nvim-dap-vscode-js` to make it
-      ---work with nvim-dap. The good part is that breakpoints work a lot better with this adapter.
-      ---https://github.com/mxsdev/nvim-dap-vscode-js?tab=readme-ov-file#debugger
-      "microsoft/vscode-js-debug",
-      build = "npm install --no-save --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
-    },
   },
   keys = {
     { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint (F9)" },
@@ -80,100 +72,175 @@ return {
   end,
   config = function()
     local dap = require("dap")
+    local dapui = require("dapui")
     local mason_registry = require("mason-registry")
     dap.set_log_level(vim.env.DAP_LOG_LEVEL or "INFO")
 
-    -- This env variable comes from my personal .bashrc file
+    dap.listeners.after.event_initialized["dapui_config"] = function()
+      -- Increase performance? Prevent bufresize autocmds from processing all the dap window events
+      if utils.is_available("bufresize.nvim") then require("bufresize").block_register() end
+      if utils.is_available("neo-tree.nvim") then vim.cmd("Neotree close") end
+      dapui.open()
+
+      -- Keep DAP windows dimensions in proportion when nvim is resized
+      if utils.is_available("bufresize.nvim") then
+        require("bufresize").unblock_register()
+        require("bufresize").register()
+      end
+    end
+
+    dap.listeners.before.event_terminated["dapui_config"] = function()
+      if utils.is_available("bufresize.nvim") then require("bufresize").block_register() end
+      dapui.close()
+      if utils.is_available("bufresize.nvim") then
+        require("bufresize").unblock_register()
+        require("bufresize").register()
+      end
+    end
+
+    dap.listeners.before.event_exited["dapui_config"] = function()
+      if utils.is_available("bufresize.nvim") then require("bufresize").block_register() end
+      dapui.close()
+      if utils.is_available("bufresize.nvim") then
+        require("bufresize").unblock_register()
+        require("bufresize").register()
+      end
+    end
+
+    ---╔══════════════════════════════════════╗
+    ---║               Adapters               ║
+    ---╚══════════════════════════════════════╝
+
+    ---This env variable comes from my personal .bashrc file
     local system_node_version = vim.env.SYSTEM_DEFAULT_NODE_VERSION or "latest"
-    -- Bypass volta's context detection to prevent running the debugger with unsupported node versions
+    ---Bypass volta's context detection to prevent running the debugger with unsupported node versions
     local node_path = utils.cmd({ "volta", "run", "--node", system_node_version, "which", "node" }):gsub("\n", "")
 
-    local firefox_dap = mason_registry.get_package("firefox-debug-adapter")
-    local python_dap = mason_registry.get_package("debugpy")
+    ---https://github.com/mxsdev/nvim-dap-vscode-js?tab=readme-ov-file#debugger
+    local vscode_js_debug_path = vim.fn.stdpath("data") .. "/debuggers/vscode-js-debug"
 
-    if node_path and firefox_dap and python_dap then
-      local vscode_js_debug_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug"
-      local firefox_dap_executable = firefox_dap:get_install_path() .. "/dist/adapter.bundle.js"
-      local python_dap_executable = python_dap:get_install_path() .. "/venv/bin/python"
-
+    if node_path and utils.is_available("nvim-dap-vscode-js") and vim.fn.isdirectory(vscode_js_debug_path) then
+      ---https://github.com/mxsdev/nvim-dap-vscode-js?tab=readme-ov-file#setup
       require("dap-vscode-js").setup({
         node_path = node_path,
         debugger_path = vscode_js_debug_path,
         adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
         log_file_level = vim.log.levels[vim.env.DAP_LOG_LEVEL or "INFO"],
       })
+    end
 
-      require("dap-python").setup(python_dap_executable)
+    local firefox_dap = mason_registry.get_package("firefox-debug-adapter")
 
+    if node_path and firefox_dap then
+      local firefox_dap_executable = firefox_dap:get_install_path() .. "/dist/adapter.bundle.js"
+
+      ---https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#javascript-firefox
       dap.adapters.firefox = {
         type = "executable",
         command = node_path,
         args = { firefox_dap_executable },
       }
+    end
 
-      local js_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact" }
-      for _, language in ipairs(js_filetypes) do
-        dap.configurations[language] = {
-          {
-            name = "DAP: Debug with PWA Chrome",
-            type = "pwa-chrome",
-            request = "launch",
-            url = "http://localhost:3000",
-            sourceMaps = true,
-          },
-          {
-            name = "DAP: Debug with PWA Edge",
-            type = "pwa-msedge",
-            request = "launch",
-            url = "http://localhost:3000",
-            sourceMaps = true,
-          },
-          {
-            name = "DAP: Debug with Firefox",
-            type = "firefox",
-            request = "launch",
-            reAttach = true,
-            url = "http://localhost:3000",
-            webRoot = "${workspaceFolder}",
-            sourceMaps = true,
-            skipFiles = {
-              "${workspaceFolder}/<node_internals>/**",
-              "${workspaceFolder}/node_modules/**",
-            },
-          },
-          ---While vscode supports typescript files as entrypoints to your debugger
-          ---`nvim-dap-vscode-js` needs a loader like `ts-node`. A different approach
-          ---could be using `vscode-node-debug2` but it is archived.
-          {
-            name = "DAP: Debug with Node (ts-node)",
-            type = "pwa-node",
-            request = "launch",
-            cwd = "${workspaceFolder}",
-            runtimeExecutable = "node",
-            runtimeArgs = { "--loader", "ts-node/esm" },
-            args = { "${file}" },
-            sourceMaps = true,
-            protocol = "inspector",
-            skipFiles = { "<node_internals>/**", "node_modules/**" },
-            resolveSourceMapLocations = {
-              "${workspaceFolder}/**",
-              "!**/node_modules/**",
-            },
-          },
-        }
-      end
+    local python_dap = mason_registry.get_package("debugpy")
 
-      ---https://github.com/stevearc/overseer.nvim/blob/master/doc/third_party.md#dap
-      require("overseer").patch_dap(true)
-      require("dap.ext.vscode").json_decode = require("overseer.json").decode
+    if python_dap then
+      local python_dap_executable = python_dap:get_install_path() .. "/venv/bin/python"
 
-      ---@diagnostic disable-next-line: unused-local
-      vscode_type_to_ft = {
-        ["pwa-chrome"] = js_filetypes,
-        ["pwa-msedge"] = js_filetypes,
-        ["pwa-node"] = js_filetypes,
-        ["firefox"] = js_filetypes,
+      ---https://github.com/mfussenegger/nvim-dap-python?tab=readme-ov-file#usage
+      require("dap-python").setup(python_dap_executable)
+    end
+
+    local cpp_tools_executable = vim.fn.stdpath("data")
+      .. "/debuggers/cpp_tools/extension/debugAdapters/bin/OpenDebugAD7"
+
+    ---https://github.com/mfussenegger/nvim-dap/wiki/C-C---Rust-(gdb-via--vscode-cpptools)
+    if vim.fn.executable(cpp_tools_executable) == 1 then
+      dap.adapters.cppdbg = {
+        id = "cppdbg",
+        type = "executable",
+        command = cpp_tools_executable,
       }
     end
+
+    ---╔══════════════════════════════════════╗
+    ---║           Configurations             ║
+    ---╚══════════════════════════════════════╝
+
+    local js_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact" }
+    for _, language in ipairs(js_filetypes) do
+      dap.configurations[language] = {
+        {
+          name = "DAP: Debug with PWA Chrome",
+          type = "pwa-chrome",
+          request = "launch",
+          url = "http://localhost:3000",
+          sourceMaps = true,
+        },
+        {
+          name = "DAP: Debug with PWA Edge",
+          type = "pwa-msedge",
+          request = "launch",
+          url = "http://localhost:3000",
+          sourceMaps = true,
+        },
+        {
+          name = "DAP: Debug with Firefox",
+          type = "firefox",
+          request = "launch",
+          reAttach = true,
+          url = "http://localhost:3000",
+          webRoot = "${workspaceFolder}",
+          sourceMaps = true,
+          skipFiles = {
+            "${workspaceFolder}/<node_internals>/**",
+            "${workspaceFolder}/node_modules/**",
+          },
+        },
+        ---While vscode supports typescript files as entrypoints to your debugger
+        ---`nvim-dap-vscode-js` needs a loader like `ts-node`. A different approach
+        ---could be using `vscode-node-debug2` but it is archived.
+        {
+          name = "DAP: Debug with Node (ts-node)",
+          type = "pwa-node",
+          request = "launch",
+          cwd = "${workspaceFolder}",
+          runtimeExecutable = "node",
+          runtimeArgs = { "--loader", "ts-node/esm" },
+          args = { "${file}" },
+          sourceMaps = true,
+          protocol = "inspector",
+          skipFiles = { "<node_internals>/**", "node_modules/**" },
+          resolveSourceMapLocations = {
+            "${workspaceFolder}/**",
+            "!**/node_modules/**",
+          },
+        },
+      }
+    end
+
+    dap.configurations.c = {
+      {
+        name = "Launch file",
+        type = "cppdbg",
+        request = "launch",
+        program = function() return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file") end,
+        cwd = "${workspaceFolder}",
+        stopAtEntry = true,
+        preLaunchTask = "C/C++: gcc build active file",
+      },
+    }
+
+    ---https://github.com/stevearc/overseer.nvim/blob/master/doc/third_party.md#dap
+    require("overseer").patch_dap(true)
+    require("dap.ext.vscode").json_decode = require("overseer.json").decode
+
+    ---@diagnostic disable-next-line: unused-local
+    vscode_type_to_ft = {
+      ["pwa-chrome"] = js_filetypes,
+      ["pwa-msedge"] = js_filetypes,
+      ["pwa-node"] = js_filetypes,
+      ["firefox"] = js_filetypes,
+    }
   end,
 }

@@ -1,1 +1,1 @@
-return { "tsc-watch", "tsc-build" }
+return { "tsc-watch", "tsc-build", "gcc_build_active_file" }
