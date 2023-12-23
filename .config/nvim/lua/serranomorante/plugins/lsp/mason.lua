@@ -1,4 +1,44 @@
 local events = require("serranomorante.events")
+local utils = require("serranomorante.utils")
+
+---@type MasonEnsureInstall
+local javascript = {
+  formatter = { "prettierd" },
+  linter = { "eslint_d" },
+  lsp = { "tsserver" },
+  dap = {
+    "firefox-debug-adapter",
+    ---Uncomment next line if you want to use `dapDebugServer` instead of `vsDebugServerBundle`
+    -- { "js-debug-adapter", version = "v1.82.0" },
+  },
+}
+---@type MasonEnsureInstall
+local lua = { formatter = { "stylua" }, lsp = { "lua_ls" } }
+---@type MasonEnsureInstall
+local go = {
+  formatter = { "gofumpt", "goimports", "gomodifytags" },
+  lsp = { "gopls" },
+  extra = { "iferr", "impl" },
+}
+---@type MasonEnsureInstall
+local json = { lsp = { "jsonls" } }
+---@type MasonEnsureInstall
+local c = { lsp = { "clangd" } }
+---@type MasonEnsureInstall
+local python = {
+  formatter = { "isort", "black" },
+  linter = { "mypy", "pylint" },
+  lsp = { "pyright", "ruff_lsp" },
+  dap = { "debugpy" },
+}
+---@type MasonEnsureInstall
+local rust = { lsp = { "rust_analyzer" } }
+---@type MasonEnsureInstall
+local bash = { lsp = { "bashls" } }
+---@type MasonEnsureInstall
+local markdown = { lsp = { "marksman" } }
+---@type MasonEnsureInstall
+local toml = { lsp = { "taplo" } }
 
 return {
   -- mason-tool-installer.nvim should be in charge of installs/updates and not mason.nvim
@@ -44,44 +84,7 @@ return {
       })
     end,
     opts = {
-      ensure_installed = {
-        -- Formatters
-        "stylua", -- lua
-        "prettierd", -- javascript/typescript
-        "isort", -- python
-        "black", -- python
-        "gofumpt", -- go
-        "goimports", -- go
-        "gomodifytags", -- go
-
-        -- Linters
-        "mypy", -- python
-        "pylint", -- python
-        "eslint_d", -- javascript/typescript
-
-        -- LSP servers
-        "lua_ls", -- lua
-        "tsserver", -- javascript/typescript
-        "jsonls", -- json
-        "pyright", -- python
-        "ruff_lsp", -- python
-        "gopls", -- go
-        "taplo", -- toml
-        "rust_analyzer", -- rust
-        "clangd", -- c/c++
-        "marksman", -- markdown
-        "bashls", -- bash
-
-        -- Others
-        "iferr", -- go
-        "impl", -- go
-
-        -- DAP
-        "firefox-debug-adapter",
-        "debugpy",
-        ---Uncomment next line if you want to use `dapDebugServer` instead of `vsDebugServerBundle`
-        -- { "js-debug-adapter", version = "v1.82.0" },
-      },
+      ensure_installed = utils.mason_merge_tools(javascript, lua, go, json, c, python, rust, bash, markdown, toml),
     },
     config = function(_, opts)
       local mason_tool_installer = require("mason-tool-installer")

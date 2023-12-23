@@ -255,4 +255,20 @@ function M.del_buffer_autocmd(augroup, bufnr)
   if cmds_found then vim.tbl_map(function(cmd) vim.api.nvim_del_autocmd(cmd.id) end, cmds) end
 end
 
+---@alias MasonEnsureInstall table<"formatter"|"lsp"|"linter"|"dap"|"extra", string[]>
+
+---Merge several arrays into 1 array for `mason-tool-installer.nvim`
+---@param ... MasonEnsureInstall
+function M.mason_merge_tools(...)
+  local merge = {}
+  for _, v in ipairs({ ... }) do
+    if vim.tbl_isarray(v.formatter) then vim.list_extend(merge, v.formatter) end
+    if vim.tbl_isarray(v.lsp) then vim.list_extend(merge, v.lsp) end
+    if vim.tbl_isarray(v.linter) then vim.list_extend(merge, v.linter) end
+    if vim.tbl_isarray(v.dap) then vim.list_extend(merge, v.dap) end
+    if vim.tbl_isarray(v.extra) then vim.list_extend(merge, v.extra) end
+  end
+  return merge
+end
+
 return M
