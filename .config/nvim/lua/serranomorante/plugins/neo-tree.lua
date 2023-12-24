@@ -146,10 +146,12 @@ return {
   },
   config = function(_, opts)
     if utils.is_available("nightfox.nvim") then
-      local palette = require("nightfox.palette").load("nightfox")
+      if vim.g.colors_name == "nightfox" then
+        local palette = require("nightfox.palette").load("nightfox")
 
-      -- Dim the neo-tree.nvim indent separator
-      vim.api.nvim_set_hl(0, "NeoTreeIndentMarker", { fg = palette.bg2 })
+        -- Dim the neo-tree.nvim indent separator
+        vim.api.nvim_set_hl(0, "NeoTreeIndentMarker", { fg = palette.bg2 })
+      end
     end
 
     require("neo-tree").setup(opts)

@@ -42,7 +42,6 @@ local get_delta_previewer = function(previewers, mode, worktree)
   return delta
 end
 
--- Thanks to AstroNvim config
 return {
   { "nvim-lua/plenary.nvim" },
 
