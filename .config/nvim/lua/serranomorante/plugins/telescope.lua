@@ -143,6 +143,11 @@ return {
         desc = "Registers",
       },
       {
+        "<leader>f'",
+        function() require("telescope.builtin").marks() end,
+        desc = "Find marks",
+      },
+      {
         "<leader>fc",
         function() require("telescope.builtin").grep_string() end,
         desc = "Find word under cursor (C-Space fuzzy)",
