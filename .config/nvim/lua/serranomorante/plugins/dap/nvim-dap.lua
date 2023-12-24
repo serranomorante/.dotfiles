@@ -71,6 +71,7 @@ return {
     vim.fn.sign_define("DapStopped", { text = "󰁕 ", texthl = "DapStopped" })
   end,
   config = function()
+    require("cmp_dap")
     local dap = require("dap")
     local dapui = require("dapui")
     local mason_registry = require("mason-registry")

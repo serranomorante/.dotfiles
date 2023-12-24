@@ -2,13 +2,6 @@ local utils = require("serranomorante.utils")
 
 return {
   {
-    "Exafunction/codeium.nvim",
-    cmd = "Codeium",
-    enabled = false,
-    config = function() require("codeium").setup({}) end,
-  },
-
-  {
     "L3MON4D3/LuaSnip",
     event = "User CustomInsertEnter",
     build = vim.fn.has("win32") == 0
@@ -30,7 +23,8 @@ return {
     end,
   },
 
-  -- Autocompletion
+  { "rcarriga/cmp-dap", lazy = true },
+
   {
     "hrsh7th/nvim-cmp",
     event = "User CustomInsertEnter",
@@ -40,7 +34,6 @@ return {
       { "hrsh7th/cmp-nvim-lua" },
       { "onsails/lspkind.nvim" },
       { "hrsh7th/cmp-nvim-lsp-signature-help" },
-      { "rcarriga/cmp-dap" },
     },
     config = function()
       local cmp = require("cmp")

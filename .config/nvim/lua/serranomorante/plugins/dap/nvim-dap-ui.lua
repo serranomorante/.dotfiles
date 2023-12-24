@@ -3,6 +3,7 @@ local utils = require("serranomorante.utils")
 return {
   "rcarriga/nvim-dap-ui",
   lazy = true,
+  dependencies = "mfussenegger/nvim-dap",
   keys = {
     {
       "<leader>dE",
