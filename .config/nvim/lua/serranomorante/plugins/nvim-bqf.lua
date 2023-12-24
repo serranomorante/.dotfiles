@@ -2,6 +2,8 @@ return {
   "kevinhwang91/nvim-bqf",
   dependencies = {
     {
+      ---`junegunn/fzf` vim plugin is necessary because `nvim-bqf` uses `fzf#run(...)`
+      ---https://github.com/junegunn/fzf/blob/master/README-VIM.md#summary
       "junegunn/fzf",
       build = function() vim.fn["fzf#install"]() end,
     },

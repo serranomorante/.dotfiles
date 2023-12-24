@@ -21,7 +21,8 @@ M.DirectionKeysOpposite = {
   down = "k",
 }
 
---- Check if a plugin is defined in lazy. Useful with lazy loading when a plugin is not necessarily loaded yet
+---Check if a plugin spec exists in lazy config.
+---This will not load the plugin.
 ---@param plugin string # The plugin to search for
 ---@return boolean available # Whether the plugin is available
 function M.is_available(plugin)

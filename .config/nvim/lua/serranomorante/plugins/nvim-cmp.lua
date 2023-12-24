@@ -10,7 +10,7 @@ return {
 
   {
     "L3MON4D3/LuaSnip",
-    event = "InsertEnter",
+    event = "User CustomInsertEnter",
     build = vim.fn.has("win32") == 0
         and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build\n'; make install_jsregexp"
       or nil,
@@ -33,7 +33,7 @@ return {
   -- Autocompletion
   {
     "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
+    event = "User CustomInsertEnter",
     dependencies = {
       { "L3MON4D3/LuaSnip" },
       { "saadparwaiz1/cmp_luasnip" },

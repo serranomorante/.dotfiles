@@ -14,7 +14,6 @@ return {
       "p00f/clangd_extensions.nvim",
       "b0o/SchemaStore.nvim",
       "williamboman/mason-lspconfig.nvim",
-      "nvim-telescope/telescope.nvim",
     },
     init = function()
       -- See: https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/guides/under-the-hood.md
@@ -54,32 +53,37 @@ return {
         if utils.is_available("telescope.nvim") then
           if client.supports_method("textDocument/references") then
             opts.desc = "Show LSP references"
-            vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
+            vim.keymap.set("n", "gr", function() require("telescope.builtin").lsp_references() end, opts)
           end
 
           if client.supports_method("textDocument/definition") then
             opts.desc = "Show LSP definitions"
-            vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
+            vim.keymap.set("n", "gd", function() require("telescope.builtin").lsp_definitions() end, opts)
           end
 
           if client.supports_method("textDocument/implementation") then
             opts.desc = "Show LSP implementations"
-            vim.keymap.set("n", "gI", "<cmd>Telescope lsp_implementations<CR>", opts)
+            vim.keymap.set("n", "gI", function() require("telescope.builtin").lsp_implementations() end, opts)
           end
 
           if client.supports_method("textDocument/typeDefinition") then
             opts.desc = "Show LSP type definitions"
-            vim.keymap.set("n", "gy", "<cmd>Telescope lsp_type_definitions<CR>", opts)
+            vim.keymap.set("n", "gy", function() require("telescope.builtin").lsp_type_definitions() end, opts)
           end
 
           opts.desc = "Show buffer diagnostics"
-          vim.keymap.set("n", "<leader>ld", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
+          vim.keymap.set(
+            "n",
+            "<leader>ld",
+            function() require("telescope.builtin").diagnostics({ bufnr = 0 }) end,
+            opts
+          )
 
           opts.desc = "Show workspace diagnostics"
-          vim.keymap.set("n", "<leader>lD", "<cmd>Telescope diagnostics<CR>", opts)
+          vim.keymap.set("n", "<leader>lD", function() require("telescope.builtin").diagnostics() end, opts)
 
           opts.desc = "Document symbols"
-          vim.keymap.set("n", "<leader>ls", "<cmd>Telescope lsp_document_symbols<CR>", opts)
+          vim.keymap.set("n", "<leader>ls", function() require("telescope.builtin").lsp_document_symbols() end, opts)
         end
 
         if client.supports_method("textDocument/declaration") then

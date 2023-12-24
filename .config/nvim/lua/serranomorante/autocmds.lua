@@ -132,6 +132,17 @@ autocmd({ "BufReadPost", "BufNewFile", "BufWritePost" }, {
   end,
 })
 
+autocmd("InsertEnter", {
+  desc = "Triggers new InsertEnter user event that omits prompt buffers",
+  group = augroup("insert_enter_user_event", { clear = true }),
+  callback = function(args)
+    local buftype = vim.api.nvim_get_option_value("buftype", { buf = args.buf })
+    if buftype == "prompt" then return end
+    events.event("InsertEnter")
+    vim.api.nvim_del_augroup_by_name("insert_enter_user_event")
+  end,
+})
+
 autocmd("BufEnter", {
   desc = "Disable New Line Comment",
   group = general,
