@@ -1,20 +1,7 @@
 return {
-  -- nvim-ts-context-commentstring migration guide
-  -- https://github.com/JoosepAlviste/nvim-ts-context-commentstring/issues/82
-  {
-    "JoosepAlviste/nvim-ts-context-commentstring",
-    lazy = true,
-    init = function() vim.opt.updatetime = 100 end,
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    opts = {
-      enable_autocmd = false,
-    },
-    config = function(_, opts) require("ts_context_commentstring").setup(opts) end,
-  },
-
   {
     "windwp/nvim-ts-autotag",
-    event = "User CustomFile",
+    ft = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
     dependencies = "nvim-treesitter/nvim-treesitter",
     opts = { enable_close_on_slash = true },
     config = function(_, opts) require("nvim-ts-autotag").setup(opts) end,
