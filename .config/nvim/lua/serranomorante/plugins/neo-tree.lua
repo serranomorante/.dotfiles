@@ -6,12 +6,12 @@ return {
   cmd = "Neotree",
   keys = {
     {
-      "<leader>e",
+      "<leader>ee",
       "<cmd>Neotree toggle<cr>",
       desc = "Toggle neo-tree",
     },
     {
-      "<leader>o",
+      "<leader>eE",
       function()
         if vim.bo.filetype == "neo-tree" then
           -- The next code is heavily dependant on the

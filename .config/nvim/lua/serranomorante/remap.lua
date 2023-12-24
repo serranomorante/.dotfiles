@@ -22,7 +22,7 @@ vim.keymap.set("x", "<leader>p", '"_dP', { desc = "Paste without losing previous
 -- Replace the highlighted word
 vim.keymap.set(
   "n",
-  "<leader>s",
+  "<leader>sr",
   [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
   { desc = "Replace highlighted word" }
 )
