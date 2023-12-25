@@ -1,4 +1,5 @@
 local utils = require("serranomorante.utils")
+local tools_by_filetype = require("serranomorante.plugins.lsp.mason-tools.by_filetype")
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
@@ -13,7 +14,6 @@ return {
       "hrsh7th/cmp-nvim-lsp",
       "p00f/clangd_extensions.nvim",
       "b0o/SchemaStore.nvim",
-      "williamboman/mason-lspconfig.nvim",
     },
     init = function()
       -- See: https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/guides/under-the-hood.md
@@ -40,6 +40,7 @@ return {
       if utils.is_available("neodev.nvim") then require("neodev") end
       local lspconfig = require("lspconfig")
       local cmp_nvim_lsp = require("cmp_nvim_lsp")
+      vim.lsp.set_log_level(vim.env.DAP_LOG_LEVEL or "INFO")
 
       local on_init = function(client)
         -- Disable semanticTokensProvider
@@ -123,9 +124,7 @@ return {
         opts.desc = "Restart LSP"
         vim.keymap.set("n", "<leader>rs", string.format("<cmd>LspRestart %s<CR>", client.id), opts)
 
-        if utils.is_available("mason-lspconfig.nvim") then
-          vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP information" })
-        end
+        vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP information" })
 
         -- Toggle inlay hints with keymap
         if client.supports_method("textDocument/inlayHint") then
@@ -177,114 +176,125 @@ return {
       local capabilities =
         vim.tbl_deep_extend("force", lspconfig.util.default_config, cmp_nvim_lsp.default_capabilities())
 
-      local servers = require("mason-lspconfig").get_installed_servers()
+      local servers = utils.get_from_tools(tools_by_filetype, "lsp", true)
 
-      local skip_server_setup = { "tsserver", "lua_ls", "clangd", "jsonls", "ruff_lsp" }
+      local custom = {
+        ["tsserver"] = function()
+          require("typescript-tools").setup({
+            on_init = on_init,
+            capabilities = capabilities,
+            on_attach = on_attach,
+            settings = {
+              code_lens = "all",
+              expose_as_code_action = { "fix_all", "add_missing_imports", "remove_unused" },
+              tsserver_file_preferences = {
+                includeInlayParameterNameHints = "all",
+                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHints = true,
+                includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayEnumMemberValueHints = true,
+              },
+            },
+          })
+        end,
+        ["clangd"] = function()
+          lspconfig["clangd"].setup({
+            on_init = on_init,
+            capabilities = vim.tbl_deep_extend("force", capabilities, { offsetEncoding = "utf-16" }),
+            on_attach = on_attach,
+          })
+        end,
+        ["jsonls"] = function()
+          if utils.is_available("SchemaStore.nvim") then
+            lspconfig["jsonls"].setup({
+              on_init = on_init,
+              on_attach = on_attach,
+              capabilities = capabilities,
+              settings = {
+                json = { schemas = require("schemastore").json.schemas(), validate = { enable = true } },
+              },
+            })
+          else
+            lspconfig["jsonls"].setup({
+              on_init = on_init,
+              on_attach = on_attach,
+              capabilities = capabilities,
+            })
+          end
+        end,
+        ["ruff_lsp"] = function()
+          lspconfig["ruff_lsp"].setup({
+            on_init = on_init,
+            on_attach = function(client, bufnr)
+              -- Disable hover in favor of Pyright
+              client.server_capabilities.hoverProvider = false
+              on_attach(client, bufnr)
+            end,
+            capabilities = capabilities,
+          })
+        end,
+        ["lua_ls"] = function()
+          lspconfig["lua_ls"].setup({
+            on_init = on_init,
+            capabilities = capabilities,
+            on_attach = on_attach,
+            settings = {
+              Lua = {
+                runtime = {
+                  version = "LuaJIT",
+                },
+                diagnostics = {
+                  globals = { "vim" },
+                },
+                completion = {
+                  callSnippet = "Replace",
+                },
+                workspace = {
+                  library = {
+                    vim.env.VIMRUNTIME,
+                  },
+                },
+                codeLens = {
+                  enable = true,
+                },
+                hint = {
+                  enable = true,
+                },
+              },
+            },
+          })
+        end,
+      }
 
       for _, server in ipairs(servers) do
-        if not vim.tbl_contains(skip_server_setup, server) then
+        if not vim.tbl_contains(vim.tbl_keys(custom), server) then
           lspconfig[server].setup({
             on_init = on_init,
             on_attach = on_attach,
             capabilities = capabilities,
           })
+        else
+          custom[server]()
         end
       end
 
-      -- Per server configurations
-      require("typescript-tools").setup({
-        on_init = on_init,
-        capabilities = capabilities,
-        on_attach = on_attach,
-        settings = {
-          code_lens = "all",
-          expose_as_code_action = { "fix_all", "add_missing_imports", "remove_unused" },
-          tsserver_file_preferences = {
-            includeInlayParameterNameHints = "all",
-            includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-            includeInlayFunctionParameterTypeHints = true,
-            includeInlayVariableTypeHints = true,
-            includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-            includeInlayPropertyDeclarationTypeHints = true,
-            includeInlayFunctionLikeReturnTypeHints = true,
-            includeInlayEnumMemberValueHints = true,
-          },
-        },
-      })
+      ---Forces nvim-lspconfig to launch the language server
+      ---See `:h lspconfig-setup` "autostart"
+      local function setup_servers() vim.api.nvim_exec_autocmds("FileType", {}) end
 
-      lspconfig["clangd"].setup({
-        on_init = on_init,
-        capabilities = vim.tbl_deep_extend("force", capabilities, { offsetEncoding = "utf-16" }),
-        on_attach = on_attach,
-      })
-
-      if utils.is_available("SchemaStore.nvim") then
-        lspconfig["jsonls"].setup({
-          on_init = on_init,
-          on_attach = on_attach,
-          capabilities = capabilities,
-          settings = {
-            json = { schemas = require("schemastore").json.schemas(), validate = { enable = true } },
-          },
-        })
-      else
-        lspconfig["jsonls"].setup({
-          on_init = on_init,
-          on_attach = on_attach,
-          capabilities = capabilities,
-        })
-      end
-
-      lspconfig["ruff_lsp"].setup({
-        on_init = on_init,
-        on_attach = function(client, bufnr)
-          -- Disable hover in favor of Pyright
-          client.server_capabilities.hoverProvider = false
-          on_attach(client, bufnr)
-        end,
-        capabilities = capabilities,
-      })
-
-      -- configure lua server (with special settings)
-      lspconfig["lua_ls"].setup({
-        on_init = on_init,
-        capabilities = capabilities,
-        on_attach = on_attach,
-        settings = {
-          Lua = {
-            runtime = {
-              version = "LuaJIT",
-            },
-            diagnostics = {
-              globals = { "vim" },
-            },
-            completion = {
-              callSnippet = "Replace",
-            },
-            workspace = {
-              library = {
-                vim.env.VIMRUNTIME,
-              },
-            },
-            codeLens = {
-              enable = true,
-            },
-            hint = {
-              enable = true,
-            },
-          },
-        },
-      })
-
-      -- Thanks AstroNvim!
-      if utils.is_available("mason-lspconfig.nvim") then
+      if utils.is_available("mason-tool-installer.nvim") then
         vim.api.nvim_create_autocmd("User", {
-          desc = "set up LSP servers after mason-lspconfig",
-          pattern = "CustomMasonLspSetup",
+          desc = "Set up LSP servers after mason-tool-installer",
+          pattern = "MasonToolsUpdateCompleted",
           once = true,
-          callback = function() vim.api.nvim_exec_autocmds("FileType", {}) end,
+          callback = function() setup_servers() end,
         })
       end
+
+      setup_servers()
     end,
   },
 }

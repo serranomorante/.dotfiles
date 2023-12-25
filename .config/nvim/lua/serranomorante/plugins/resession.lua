@@ -33,16 +33,17 @@ return {
   config = function(_, opts)
     local resession = require("resession")
     resession.setup(opts)
-
-    ---`schedule_wrap` fixes: https://github.com/stevearc/resession.nvim/issues/44#issue-2006411201
+    ---fixes: https://github.com/stevearc/resession.nvim/issues/44#issue-2006411201
     ---also: https://github.com/AstroNvim/AstroNvim/issues/2378#issue-2005950553
-    local autoload_session = vim.schedule_wrap(function()
+    resession.add_hook("post_load", function() vim.api.nvim_exec_autocmds("BufReadPost", {}) end)
+
+    local autoload_session = function()
       -- Only load the session if nvim was started with no args
       if vim.fn.argc(-1) == 0 then
         -- Save these to a different directory, so our manual sessions don't get polluted
         resession.load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true, reset = true })
       end
-    end)
+    end
 
     if vim.v.vim_did_enter then autoload_session() end
     vim.api.nvim_create_autocmd({ "VimEnter", "DirChanged" }, {

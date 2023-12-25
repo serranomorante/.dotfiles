@@ -1,3 +1,5 @@
+local lspconfig_names_map = require("serranomorante.plugins.lsp.mason-tools.lspconfig_names_map")
+
 local M = {}
 
 M.Direction = {
@@ -306,6 +308,28 @@ function M.toggle_buffer_pin(buf)
   if next_pinned_state == false then vim.b[bufnr].buffer_pinned_index = nil end
   vim.g.pinned_buffers = pinned_buffers
   return next_pinned_state
+end
+
+---Get a list of tools from a specific tool type: lsp, dap, etc.
+---@param base table<string, MasonEnsureInstall> The base list of tools
+---@param tool_type string The type to extract tools from
+---@param with_map boolean? If the name of the tool should be map (lua-language-server -> lua_ls)
+---@return string[]
+function M.get_from_tools(base, tool_type, with_map)
+  local should_map = with_map or false
+  local types = {}
+  for _, v in pairs(base) do
+    if vim.tbl_isarray(v[tool_type]) then
+      for _, tool in ipairs(v[tool_type]) do
+        if should_map and lspconfig_names_map[tool] ~= nil then
+          table.insert(types, lspconfig_names_map[tool])
+        else
+          table.insert(types, tool)
+        end
+      end
+    end
+  end
+  return types
 end
 
 return M

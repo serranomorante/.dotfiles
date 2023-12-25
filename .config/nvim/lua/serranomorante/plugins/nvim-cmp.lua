@@ -3,7 +3,7 @@ local utils = require("serranomorante.utils")
 return {
   {
     "L3MON4D3/LuaSnip",
-    event = "User CustomInsertEnter",
+    lazy = true,
     build = vim.fn.has("win32") == 0
         and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build\n'; make install_jsregexp"
       or nil,
@@ -27,9 +27,8 @@ return {
 
   {
     "hrsh7th/nvim-cmp",
-    event = "User CustomInsertEnter",
+    event = "InsertEnter",
     dependencies = {
-      { "L3MON4D3/LuaSnip" },
       { "saadparwaiz1/cmp_luasnip" },
       { "hrsh7th/cmp-nvim-lua" },
       { "onsails/lspkind.nvim" },

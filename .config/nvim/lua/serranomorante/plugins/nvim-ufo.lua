@@ -1,6 +1,6 @@
 return {
   "kevinhwang91/nvim-ufo",
-  event = { "User CustomFile", "InsertEnter" },
+  event = { "User CustomFile", "User CustomInsertEnter" },
   keys = {
     {
       "zR",
