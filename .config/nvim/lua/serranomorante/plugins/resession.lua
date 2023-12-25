@@ -25,6 +25,9 @@ return {
       quickfix = {
         enable_in_tab = true,
       },
+      pin_buffers = {
+        enable_in_tab = true,
+      },
     },
   },
   config = function(_, opts)
@@ -41,15 +44,12 @@ return {
       end
     end)
 
-    if vim.v.vim_did_enter then
-      autoload_session()
-    else
-      vim.api.nvim_create_autocmd("VimEnter", {
-        desc = "Load a dir-specific session when you open Neovim",
-        group = vim.api.nvim_create_augroup("autoload_session", { clear = true }),
-        callback = autoload_session,
-      })
-    end
+    if vim.v.vim_did_enter then autoload_session() end
+    vim.api.nvim_create_autocmd({ "VimEnter", "DirChanged" }, {
+      desc = "Load a dir-specific session when you open Neovim",
+      group = vim.api.nvim_create_augroup("autoload_session", { clear = true }),
+      callback = autoload_session,
+    })
 
     vim.api.nvim_create_autocmd("VimLeavePre", {
       desc = "Save a dir-specific session when you close Neovim",

@@ -317,7 +317,22 @@ return {
         },
         pickers = {
           buffers = {
-            sort_mru = true,
+            ---Sort buffer list with "harpoon-ish" behaviour.
+            ---https://github.com/nvim-telescope/telescope.nvim/pull/2793#issue-2000972124
+            sort_buffers = function(bufnr_a, bufnr_b)
+              if vim.b[bufnr_a].is_buffer_pinned and vim.b[bufnr_b].is_buffer_pinned then
+                ---Keep the pinned order. The lower the number the top of the priority
+                return vim.b[bufnr_a].buffer_pinned_index < vim.b[bufnr_b].buffer_pinned_index
+              elseif vim.b[bufnr_a].is_buffer_pinned then
+                return true
+              elseif vim.b[bufnr_b].is_buffer_pinned then
+                return false
+              end
+
+              ---Same as passing `sort_mru=true`
+              return vim.fn.getbufinfo(bufnr_a)[1].lastused > vim.fn.getbufinfo(bufnr_b)[1].lastused
+            end,
+
             mappings = {
               n = {
                 ["dd"] = actions.delete_buffer,
