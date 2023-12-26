@@ -96,7 +96,32 @@ return {
     opts = {
       -- only change the pwd for the current vim Tab
       change_directory_command = "tcd",
+      update_on_change = false,
     },
+    config = function(_, opts)
+      local git_worktree = require("git-worktree")
+      git_worktree.setup(opts)
+
+      ---https://github.com/ThePrimeagen/git-worktree.nvim?tab=readme-ov-file#hooks
+      -- op = Operations.Switch, Operations.Create, Operations.Delete
+      -- metadata = table of useful values (structure dependent on op)
+      --      Switch
+      --          path = path you switched to
+      --          prev_path = previous worktree path
+      --      Create
+      --          path = path where worktree created
+      --          branch = branch name
+      --          upstream = upstream remote name
+      --      Delete
+      --          path = path where worktree deleted
+      git_worktree.on_tree_change(function(op, metadata)
+        if op == git_worktree.Operations.Switch then
+          if utils.is_available("resession.nvim") then
+            require("resession").load(metadata.path, { dir = "dirsession", silence_errors = true })
+          end
+        end
+      end)
+    end,
   },
 
   -- telescope.nvim
@@ -317,6 +342,7 @@ return {
         },
         pickers = {
           buffers = {
+            only_cwd = true,
             ---Sort buffer list with "harpoon-ish" behaviour.
             ---https://github.com/nvim-telescope/telescope.nvim/pull/2793#issue-2000972124
             sort_buffers = function(bufnr_a, bufnr_b)
