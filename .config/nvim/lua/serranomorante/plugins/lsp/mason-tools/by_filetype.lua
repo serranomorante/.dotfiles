@@ -2,8 +2,8 @@
 ---@type table<string, MasonEnsureInstall>
 local tools_by_filetype = {
   javascript = {
-    formatter = { "prettierd" },
-    linter = { "eslint_d" },
+    formatters = { "prettierd" },
+    linters = { "eslint_d" },
     lsp = { "typescript-language-server" },
     dap = {
       "firefox-debug-adapter",
@@ -11,17 +11,17 @@ local tools_by_filetype = {
       -- { "js-debug-adapter", version = "v1.82.0" },
     },
   },
-  lua = { formatter = { "stylua" }, lsp = { "lua-language-server" } },
+  lua = { formatters = { "stylua" }, lsp = { "lua-language-server" } },
   go = {
-    formatter = { "gofumpt", "goimports", "gomodifytags" },
+    formatters = { "gofumpt", "goimports", "gomodifytags" },
     lsp = { "gopls" },
     extra = { "iferr", "impl" },
   },
   json = { lsp = { "json-lsp" } },
   c = { lsp = { "clangd" } },
   python = {
-    formatter = { "isort", "black" },
-    linter = { "mypy", "pylint" },
+    formatters = { "isort", "black" },
+    linters = { "mypy", "pylint" },
     lsp = { "pyright", "ruff-lsp" },
     dap = { "debugpy" },
   },
