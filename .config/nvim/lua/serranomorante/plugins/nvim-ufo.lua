@@ -28,7 +28,6 @@ return {
       desc = "Peek folded lines under cursor",
     },
   },
-  dependencies = "kevinhwang91/promise-async",
   opts = {
     preview = {
       win_config = {

@@ -45,9 +45,8 @@ return {
         },
       })
 
-      -- Thanks Astro!
       local border_opts = {
-        border = "rounded",
+        border = "single",
         winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
       }
 

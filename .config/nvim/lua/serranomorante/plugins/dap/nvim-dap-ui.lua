@@ -29,7 +29,7 @@ return {
       desc = "Toggle Debugger UI",
     },
   },
-  opts = { floating = { border = "rounded" }, expand_lines = false, render = { max_value_lines = 10 } },
+  opts = { floating = { border = "single" }, expand_lines = false, render = { max_value_lines = 10 } },
   init = function()
     vim.api.nvim_create_autocmd("BufWinEnter", {
       desc = "Set options on DAP windows",

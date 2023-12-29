@@ -32,7 +32,7 @@ vim.keymap.set("n", "ss", "<cmd>split<CR><C-w>w", { desc = "Horizontal split" })
 vim.keymap.set("n", "sv", "<cmd>vsplit<CR><C-w>w", { desc = "Vertical split" })
 
 -- Close window
-vim.keymap.set("n", "<C-q>", "<C-w>q")
+vim.keymap.set("n", "<C-q>", "<cmd>close<CR>")
 
 -- Tabs navigation
 vim.keymap.set("n", "te", "<cmd>tabedit<CR>", { desc = "New tab" })

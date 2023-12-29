@@ -43,9 +43,6 @@ local get_delta_previewer = function(previewers, mode, worktree)
 end
 
 return {
-  { "nvim-lua/plenary.nvim" },
-
-  -- git-worktree.nvim
   {
     -- https://github.com/ThePrimeagen/git-worktree.nvim/pull/106
     "brandoncc/git-worktree.nvim",
@@ -56,10 +53,27 @@ return {
         "<leader>pf",
         function()
           local Job = require("plenary.job")
-
+          if vim.env.TMUX ~= nil then
+            Job:new({
+              command = "tmux",
+              args = {
+                "split-window",
+                "-v",
+                "-t",
+                "{bottom-right}",
+              },
+              cwd = vim.fn.getcwd(),
+            }):start()
+          end
+        end,
+        desc = "Open workspace directory",
+      },
+      {
+        "<leader>pF",
+        function()
+          local Job = require("plenary.job")
           local current_file = vim.fn.resolve(vim.fn.expand("%"))
           local file_directory = vim.fn.fnamemodify(current_file, ":p:h")
-          -- local branch_name = utils.branch_name(nil, file_directory)
 
           if vim.env.TMUX ~= nil then
             Job:new({
@@ -74,7 +88,7 @@ return {
             }):start()
           end
         end,
-        desc = "Open tmux pane inside worktree",
+        desc = "Open file directory",
       },
       {
         "<leader>pw",

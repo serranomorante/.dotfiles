@@ -47,11 +47,6 @@ return {
       desc = "Reveal file in neo-tree",
     },
   },
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-    "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-    "MunifTanjim/nui.nvim",
-  },
   opts = {
     enable_git_status = false,
     enable_diagnostics = false,
