@@ -74,3 +74,48 @@ vim.keymap.set("n", "<leader>aa", function()
   local is_pinned = utils.toggle_buffer_pin()
   vim.notify(is_pinned and "Buffer pin" or "Removed buffer pin", vim.log.levels.INFO)
 end, { desc = "Toggles the pin state of a buffer" })
+
+if vim.env.TMUX and utils.is_available("plenary.nvim") then
+  local Job = require("plenary.job")
+
+  local panes_count = utils.cmd({ "tmux", "display-message", "-p", "#{window_panes}" })
+  if panes_count == nil then return end
+
+  local args = { "split-window" }
+  local only_one_pane = string.find(panes_count, "1")
+
+  ---`{bottom-right}` splits to bottom if there's only 1 pane in the current window
+  ---with this conditional I make sure to avoid that
+  if only_one_pane then
+    local horizontal_split = "-h"
+    local pane_size = { "-l", "30%" }
+    table.insert(args, horizontal_split)
+    vim.list_extend(args, pane_size)
+  else
+    local vertical_split = "-v"
+    local target_pane = { "-t", "{bottom-right}" }
+    table.insert(args, vertical_split)
+    vim.list_extend(args, target_pane)
+  end
+
+  vim.keymap.set("n", "<leader>pf", function()
+    local project_directory = vim.fn.getcwd()
+
+    Job:new({
+      command = "tmux",
+      args = args,
+      cwd = project_directory,
+    }):start()
+  end, { desc = "Open project directory" })
+
+  vim.keymap.set("n", "<leader>pF", function()
+    local current_file = vim.fn.resolve(vim.fn.expand("%"))
+    local file_directory = vim.fn.fnamemodify(current_file, ":p:h")
+
+    Job:new({
+      command = "tmux",
+      args = args,
+      cwd = file_directory,
+    }):start()
+  end, { desc = "Open file directory" })
+end

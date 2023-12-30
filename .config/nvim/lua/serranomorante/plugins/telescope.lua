@@ -44,52 +44,10 @@ end
 
 return {
   {
-    -- https://github.com/ThePrimeagen/git-worktree.nvim/pull/106
+    ---https://github.com/ThePrimeagen/git-worktree.nvim/pull/106
     "brandoncc/git-worktree.nvim",
     branch = "catch-and-handle-telescope-related-error",
-    lazy = true,
     keys = {
-      {
-        "<leader>pf",
-        function()
-          local Job = require("plenary.job")
-          if vim.env.TMUX ~= nil then
-            Job:new({
-              command = "tmux",
-              args = {
-                "split-window",
-                "-v",
-                "-t",
-                "{bottom-right}",
-              },
-              cwd = vim.fn.getcwd(),
-            }):start()
-          end
-        end,
-        desc = "Open workspace directory",
-      },
-      {
-        "<leader>pF",
-        function()
-          local Job = require("plenary.job")
-          local current_file = vim.fn.resolve(vim.fn.expand("%"))
-          local file_directory = vim.fn.fnamemodify(current_file, ":p:h")
-
-          if vim.env.TMUX ~= nil then
-            Job:new({
-              command = "tmux",
-              args = {
-                "split-window",
-                "-v",
-                "-t",
-                "{bottom-right}",
-              },
-              cwd = file_directory,
-            }):start()
-          end
-        end,
-        desc = "Open file directory",
-      },
       {
         "<leader>pw",
         function()
@@ -104,11 +62,12 @@ return {
             end)
           end)
         end,
-        desc = "Create new worktree",
+        ---Creating a worktree through telescope will sometimes select "origin/branch..."
+        desc = "Create worktree (without telescope)",
       },
     },
     opts = {
-      -- only change the pwd for the current vim Tab
+      ---Only change the pwd for the current vim Tab
       change_directory_command = "tcd",
       update_on_change = false,
     },
@@ -138,7 +97,6 @@ return {
     end,
   },
 
-  -- telescope.nvim
   {
     "nvim-telescope/telescope.nvim",
     dependencies = {
