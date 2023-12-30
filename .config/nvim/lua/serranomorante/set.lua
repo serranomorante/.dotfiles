@@ -1,5 +1,7 @@
 local utils = require("serranomorante.utils")
 
+vim.g.mapleader = " "
+
 ---@type string
 ---@diagnostic disable-next-line: assign-type-mismatch
 local cache_path = vim.fn.stdpath("cache")
