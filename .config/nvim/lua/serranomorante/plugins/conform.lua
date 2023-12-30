@@ -8,7 +8,7 @@ return {
       "<leader>lf",
       function()
         require("conform").format({
-          lsp_fallback = false,
+          lsp_fallback = true, -- Make it compatible with `clang-format`
           async = false,
           timeout_ms = 10000,
         })
