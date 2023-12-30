@@ -30,7 +30,6 @@ return {
     event = "InsertEnter",
     dependencies = {
       { "saadparwaiz1/cmp_luasnip" },
-      { "hrsh7th/cmp-nvim-lua" },
       { "onsails/lspkind.nvim" },
       { "hrsh7th/cmp-nvim-lsp-signature-help" },
     },
@@ -38,12 +37,7 @@ return {
       local cmp = require("cmp")
       local luasnip = require("luasnip")
       local lspkind = require("lspkind")
-
-      lspkind.init({
-        symbol_map = {
-          Codeium = "",
-        },
-      })
+      lspkind.init({})
 
       local border_opts = {
         border = "single",
@@ -79,8 +73,6 @@ return {
             end,
           },
           { name = "nvim_lsp_signature_help" },
-          { name = "nvim_lua" },
-          { name = "codeium" },
         },
         mapping = {
           ["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
@@ -122,14 +114,12 @@ return {
         },
         formatting = {
           format = lspkind.cmp_format({
-            with_text = true,
+            mode = "symbol_text",
             menu = {
               buffer = "[buf]",
               nvim_lsp = "[LSP]",
-              nvim_lua = "[api]",
               path = "[path]",
               luasnip = "[snip]",
-              codeium = "[codeium]",
             },
           }),
         },
@@ -148,9 +138,6 @@ return {
           { name = "dap" },
         },
       })
-
-      -- Setup `codeium.nvim` after `cmp`
-      if utils.is_available("codeium.nvim") then require("codeium") end
     end,
   },
 }
