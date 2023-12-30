@@ -19,7 +19,6 @@ return {
       "<leader>du",
       function()
         if utils.is_available("bufresize.nvim") then require("bufresize").block_register() end
-        if utils.is_available("neo-tree.nvim") then vim.cmd("Neotree close") end
         require("dapui").toggle()
         if utils.is_available("bufresize.nvim") then
           require("bufresize").unblock_register()

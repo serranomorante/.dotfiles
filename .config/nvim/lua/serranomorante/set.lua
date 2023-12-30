@@ -56,9 +56,6 @@ vim.g.mapleader = " "
 
 vim.g.markdown_fenced_languages = { "html", "javascript", "typescript", "css", "scss", "vim", "lua", "json", "yaml" }
 
--- Global variable to neo-tree window width
-vim.g.neo_tree_width = 30
-
 vim.g.max_file = { size = 1024 * 100, lines = 10000 } -- set global limits for large files
 vim.g.codelens_enabled = true
 
