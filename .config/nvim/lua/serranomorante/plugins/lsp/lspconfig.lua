@@ -40,7 +40,7 @@ return {
       if utils.is_available("neodev.nvim") then require("neodev") end
       local lspconfig = require("lspconfig")
       local cmp_nvim_lsp = require("cmp_nvim_lsp")
-      vim.lsp.set_log_level(vim.env.DAP_LOG_LEVEL or "INFO")
+      vim.lsp.set_log_level(vim.env.LSP_LOG_LEVEL or "INFO")
 
       local on_init = function(client)
         -- Disable semanticTokensProvider
