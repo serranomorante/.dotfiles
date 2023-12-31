@@ -10,7 +10,9 @@ gems="gems"
 wait_shell_init=0.3
 wait_shell_cmd=0.001
 
-tmux new-session -d -n $foam -s $session_name # create session, name window and detach
+# create session, name window and detach
+# tell new-session to use the size of your terminal: https://unix.stackexchange.com/a/569731
+tmux new-session -d -n $foam -s $session_name -x "$(tput cols)" -y "$(tput lines)"
 
 # setup "foam" window
 # ---------------------
@@ -46,7 +48,7 @@ sleep $wait_shell_cmd
 
 tmux send-keys -t "$session_name:$gems" "vim" Enter
 
-tmux split-window -t $session_name -h -l 20%
+tmux split-window -t $session_name:$gems -h -l 30%
 
 sleep $wait_shell_init
 
