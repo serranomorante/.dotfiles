@@ -55,7 +55,8 @@ return {
         if utils.is_available("telescope.nvim") then
           if client.supports_method("textDocument/references") then
             opts.desc = "Show LSP references"
-            vim.keymap.set("n", "gr", function() require("telescope.builtin").lsp_references() end, opts)
+            local options = { show_line = false }
+            vim.keymap.set("n", "gr", function() require("telescope.builtin").lsp_references(options) end, opts)
           end
 
           if client.supports_method("textDocument/definition") then
