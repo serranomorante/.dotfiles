@@ -271,7 +271,12 @@ function M.mason_merge_tools(...)
     if vim.tbl_isarray(v.dap) then vim.list_extend(merge, v.dap) end
     if vim.tbl_isarray(v.extra) then vim.list_extend(merge, v.extra) end
   end
-  return merge
+
+  local unique_merge = {}
+  for _, v in ipairs(merge) do
+    if not vim.list_contains(unique_merge, v) then table.insert(unique_merge, v) end
+  end
+  return unique_merge
 end
 
 ---Toggle the pinned state of a buffer.
@@ -321,11 +326,8 @@ function M.get_from_tools(base, tool_type, with_map)
   for _, v in pairs(base) do
     if vim.tbl_isarray(v[tool_type]) then
       for _, tool in ipairs(v[tool_type]) do
-        if should_map and lspconfig_names_map[tool] ~= nil then
-          table.insert(types, lspconfig_names_map[tool])
-        else
-          table.insert(types, tool)
-        end
+        local tool_name = should_map and lspconfig_names_map[tool] or tool
+        if tool_name and not vim.list_contains(types, tool_name) then table.insert(types, tool_name) end
       end
     end
   end
