@@ -27,7 +27,7 @@ local tools_by_filetype = {
   },
   rust = { lsp = { "rust-analyzer" } },
   bash = { lsp = { "bash-language-server" } },
-  markdown = { lsp = { "marksman" } },
+  markdown = { lsp = { "marksman" }, formatters = { "prettierd" } },
   toml = { lsp = { "taplo" } },
 }
 

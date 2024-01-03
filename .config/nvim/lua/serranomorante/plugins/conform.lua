@@ -28,6 +28,7 @@ return {
       go = tools_by_filetype.go.formatters,
       json = { tools_by_filetype.javascript.formatters },
       jsonc = { tools_by_filetype.javascript.formatters },
+      markdown = { tools_by_filetype.markdown.formatters },
     },
   },
 }
