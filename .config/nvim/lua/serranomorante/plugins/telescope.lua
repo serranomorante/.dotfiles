@@ -267,8 +267,8 @@ return {
 
       local opts = {
         defaults = {
+          wrap_results = true,
           git_worktrees = vim.g.git_worktrees,
-          path_display = { "shorten" },
           sorting_strategy = "ascending",
           layout_config = {
             horizontal = {
@@ -282,7 +282,6 @@ return {
             height = 0.80,
             preview_cutoff = 120,
           },
-
           mappings = {
             i = {
               ["<C-l>"] = actions.cycle_history_next,
