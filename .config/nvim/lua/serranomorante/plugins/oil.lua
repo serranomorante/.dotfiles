@@ -28,6 +28,7 @@ return {
       ["<C-p>"] = false, -- "actions.preview"
       ["<C-c>"] = "actions.close",
       ["<C-l>"] = false, -- "actions.refresh"
+      ["r"] = "actions.refresh",
       ["-"] = "actions.parent",
       ["_"] = "actions.open_cwd",
       ["`"] = "actions.cd",
