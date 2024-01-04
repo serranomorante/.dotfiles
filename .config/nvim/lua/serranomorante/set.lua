@@ -2,6 +2,8 @@ local utils = require("serranomorante.utils")
 
 vim.g.mapleader = " "
 
+vim.opt.guicursor = ""
+
 ---@type string
 ---@diagnostic disable-next-line: assign-type-mismatch
 local cache_path = vim.fn.stdpath("cache")
@@ -11,7 +13,6 @@ if not utils.is_directory(undodir) then vim.fn.mkdir(undodir, "p") end
 if not utils.is_directory(shadadir) then vim.fn.mkdir(shadadir, "p") end
 
 vim.opt.viewoptions:remove("curdir")
-vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25-Cursor,r-cr-o:hor20,a:blinkon1"
 
 vim.opt.diffopt:append("linematch:60") -- enable linematch diff algorithm
 
