@@ -1,29 +1,4 @@
-local utils = require("serranomorante.utils")
-local autocmd = vim.api.nvim_create_autocmd
-local augroup = vim.api.nvim_create_augroup
-
 return {
-  {
-    "kwkarlwang/bufresize.nvim",
-    event = "VeryLazy",
-    config = true,
-    init = function()
-      ---Make bufresize aware of tab bar toggling
-      autocmd({ "TabNewEntered", "TabClosed" }, {
-        desc = "Resize after tab open/close shifts the view",
-        group = augroup("tab_bufresize", { clear = true }),
-        callback = function()
-          local tabpages = vim.api.nvim_list_tabpages()
-          local is_first_tab_to_enter = #tabpages == 1
-          local is_last_tab_to_leave = #tabpages == 2
-
-          if is_first_tab_to_enter then require("bufresize").register() end
-          if is_last_tab_to_leave then require("bufresize").register() end
-        end,
-      })
-    end,
-  },
-
   {
     "mrjones2014/smart-splits.nvim",
     keys = {
@@ -51,34 +26,22 @@ return {
       -- Resize splits keymaps
       {
         "<C-Left>",
-        function()
-          require("smart-splits").resize_left()
-          if utils.is_available("bufresize.nvim") then require("bufresize").register() end
-        end,
+        function() require("smart-splits").resize_left() end,
         desc = "Resize left",
       },
       {
         "<C-Down>",
-        function()
-          require("smart-splits").resize_down()
-          if utils.is_available("bufresize.nvim") then require("bufresize").register() end
-        end,
+        function() require("smart-splits").resize_down() end,
         desc = "Resize down",
       },
       {
         "<C-Up>",
-        function()
-          require("smart-splits").resize_up()
-          if utils.is_available("bufresize.nvim") then require("bufresize").register() end
-        end,
+        function() require("smart-splits").resize_up() end,
         desc = "Resize up",
       },
       {
         "<C-Right>",
-        function()
-          require("smart-splits").resize_right()
-          if utils.is_available("bufresize.nvim") then require("bufresize").register() end
-        end,
+        function() require("smart-splits").resize_right() end,
         desc = "Resize right",
       },
       -- Swap splits keymaps
@@ -108,9 +71,6 @@ return {
       ignored_filetypes = {
         "nofile",
         "prompt",
-        "neo-tree",
-        "harpoon",
-        "NvimTree",
       },
     },
   },

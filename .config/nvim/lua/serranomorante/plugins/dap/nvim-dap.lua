@@ -77,34 +77,10 @@ return {
     local mason_registry = require("mason-registry")
     dap.set_log_level(vim.env.DAP_LOG_LEVEL or "INFO")
 
-    ---Open dapui (with bufresize.nvim compatibility)
-    local function open_dapui()
-      -- Increase performance? Prevent bufresize autocmds from processing all the dap window events
-      if utils.is_available("bufresize.nvim") then require("bufresize").block_register() end
-      if utils.is_available("neo-tree.nvim") then vim.cmd("Neotree close") end
-      dapui.open()
-
-      -- Keep DAP windows dimensions in proportion when nvim is resized
-      if utils.is_available("bufresize.nvim") then
-        require("bufresize").unblock_register()
-        require("bufresize").register()
-      end
-    end
-
-    ---Close dapui (with bufresize.nvim compatibility)
-    local function close_dapui()
-      if utils.is_available("bufresize.nvim") then require("bufresize").block_register() end
-      dapui.close()
-      if utils.is_available("bufresize.nvim") then
-        require("bufresize").unblock_register()
-        require("bufresize").register()
-      end
-    end
-
-    dap.listeners.before.attach["dapui_config"] = open_dapui
-    dap.listeners.before.launch["dapui_config"] = open_dapui
-    dap.listeners.before.event_terminated["dapui_config"] = close_dapui
-    dap.listeners.before.event_exited["dapui_config"] = close_dapui
+    dap.listeners.before.attach["dapui_config"] = dapui.open
+    dap.listeners.before.launch["dapui_config"] = dapui.open
+    dap.listeners.before.event_terminated["dapui_config"] = dapui.close
+    dap.listeners.before.event_exited["dapui_config"] = dapui.close
 
     ---╔══════════════════════════════════════╗
     ---║               Adapters               ║

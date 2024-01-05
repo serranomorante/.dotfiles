@@ -18,8 +18,6 @@ return {
       filetypes = {
         "help",
         "lazy",
-        "neo-tree",
-        "Trouble",
       },
     },
   },

@@ -1,5 +1,3 @@
-local utils = require("serranomorante.utils")
-
 return {
   "rcarriga/nvim-dap-ui",
   lazy = true,
@@ -17,14 +15,7 @@ return {
     { "<leader>dE", function() require("dapui").eval() end, desc = "Evaluate Input" },
     {
       "<leader>du",
-      function()
-        if utils.is_available("bufresize.nvim") then require("bufresize").block_register() end
-        require("dapui").toggle()
-        if utils.is_available("bufresize.nvim") then
-          require("bufresize").unblock_register()
-          require("bufresize").register()
-        end
-      end,
+      function() require("dapui").toggle() end,
       desc = "Toggle Debugger UI",
     },
   },
