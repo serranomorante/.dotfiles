@@ -14,6 +14,11 @@ return {
       desc = "Blame line",
     },
     {
+      "<leader>gL",
+      function() require("gitsigns").blame_line({ full = true }) end,
+      desc = "Blame full buffer",
+    },
+    {
       "<leader>gd",
       function() require("gitsigns").diffthis() end,
       desc = "Diff this",
@@ -39,9 +44,31 @@ return {
       desc = "Reset hunk",
     },
     {
+      "<leader>gh",
+      ":Gitsigns reset_hunk<CR>",
+      desc = "Reset hunk (partial)",
+      mode = "v",
+    },
+    {
+      "<leader>gS",
+      function() require("gitsigns").stage_buffer() end,
+      desc = "Stage buffer",
+    },
+    {
       "<leader>gs",
       function() require("gitsigns").stage_hunk() end,
       desc = "Stage hunk",
+    },
+    {
+      "<leader>gs",
+      ":Gitsigns stage_hunk<CR>",
+      desc = "Stage hunk (partial)",
+      mode = "v",
+    },
+    {
+      "<leader>gu",
+      function() require("gitsigns").undo_stage_hunk() end,
+      desc = "Unstage hunk",
     },
   },
 }
