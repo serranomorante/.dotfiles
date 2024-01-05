@@ -90,11 +90,6 @@ function M.file_worktree(file, worktrees)
   if not worktrees then return end
   file = file or vim.fn.resolve(vim.fn.expand("%"))
 
-  if string.find(file, "neo-tree", 1, true) then
-    -- Not valid file, use a directory
-    file = vim.fn.fnamemodify(file, ":p:h")
-  end
-
   for _, worktree in ipairs(worktrees) do
     if
       M.cmd({
