@@ -294,7 +294,11 @@ return {
 
       ---Forces nvim-lspconfig to launch the language server
       ---See `:h lspconfig-setup` "autostart"
-      local function setup_servers() vim.api.nvim_exec_autocmds("FileType", {}) end
+      local function setup_servers()
+        vim.api.nvim_exec_autocmds("FileType", {
+          buffer = vim.api.nvim_get_current_buf(),
+        })
+      end
 
       if utils.is_available("mason-tool-installer.nvim") then
         vim.api.nvim_create_autocmd("User", {
