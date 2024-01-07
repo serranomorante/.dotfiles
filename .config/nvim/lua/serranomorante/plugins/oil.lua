@@ -28,7 +28,7 @@ return {
       ["<C-p>"] = false, -- "actions.preview"
       ["<C-c>"] = "actions.close",
       ["<C-l>"] = false, -- "actions.refresh"
-      ["r"] = "actions.refresh",
+      ["<leader>rr"] = "actions.refresh",
       ["-"] = "actions.parent",
       ["_"] = "actions.open_cwd",
       ["`"] = "actions.cd",
@@ -37,7 +37,7 @@ return {
       ["gx"] = "actions.open_external",
       ["g."] = "actions.toggle_hidden",
       ["g\\"] = "actions.toggle_trash",
-      ["yy"] = "actions.copy_entry_path",
+      ["<leader>yy"] = "actions.copy_entry_path",
     },
   },
 }
