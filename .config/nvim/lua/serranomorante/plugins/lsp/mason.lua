@@ -21,7 +21,6 @@ return {
   },
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
-    lazy = false,
     dependencies = "williamboman/mason.nvim",
     cmd = { "MasonToolsInstall", "MasonToolsUpdate", "MasonToolsClean" },
     init = function()
@@ -34,6 +33,7 @@ return {
       })
     end,
     opts = {
+      run_on_start = false,
       ensure_installed = utils.mason_merge_tools(
         tools_by_filetype.c,
         tools_by_filetype.go,
@@ -47,10 +47,5 @@ return {
         tools_by_filetype.javascript
       ),
     },
-    config = function(_, opts)
-      local mason_tool_installer = require("mason-tool-installer")
-      mason_tool_installer.setup(opts)
-      if vim.v.vim_did_enter then mason_tool_installer.run_on_start() end
-    end,
   },
 }
