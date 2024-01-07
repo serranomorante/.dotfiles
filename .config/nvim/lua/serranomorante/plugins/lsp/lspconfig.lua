@@ -124,7 +124,13 @@ return {
         vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
 
         opts.desc = "Restart LSP"
-        vim.keymap.set("n", "<leader>rs", string.format("<cmd>LspRestart %s<CR>", client.id), opts)
+        vim.keymap.set("n", "<leader>rs", function()
+          local buf = vim.api.nvim_get_current_buf()
+          local clients = vim.lsp.get_clients({ bufnr = buf })
+          for _, c in pairs(clients) do
+            vim.cmd("LspRestart " .. c.id)
+          end
+        end, opts)
 
         vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP information" })
 
@@ -186,6 +192,7 @@ return {
             on_init = on_init,
             capabilities = capabilities,
             on_attach = on_attach,
+            single_file_support = false,
             settings = {
               code_lens = "all",
               publish_diagnostic_on = "change",
