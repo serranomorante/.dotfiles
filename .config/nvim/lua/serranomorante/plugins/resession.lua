@@ -9,7 +9,9 @@ return {
     },
     {
       "<leader>sl",
-      function() require("resession").load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true }) end,
+      function()
+        require("resession").load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true, reset = true })
+      end,
       desc = "Session load",
     },
     {
@@ -23,6 +25,7 @@ return {
       ---Only save buffers in the current tabpage directory
       ---https://github.com/stevearc/resession.nvim?tab=readme-ov-file#use-tab-scoped-sessions
       local dir = vim.fn.getcwd(-1, vim.api.nvim_tabpage_get_number(tabpage))
+      dir = dir:sub(-1) ~= "/" and dir .. "/" or dir
       return vim.startswith(vim.api.nvim_buf_get_name(bufnr), dir)
     end,
     extensions = {
