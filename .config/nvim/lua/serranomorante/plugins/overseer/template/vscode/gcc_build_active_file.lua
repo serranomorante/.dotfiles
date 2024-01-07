@@ -1,21 +1,22 @@
 local utils = require("serranomorante.utils")
 if not utils.is_available("overseer.nvim") then return {} end
 local overseer = require("overseer")
+local variables = require("overseer.template.vscode.variables")
 
+---Emulates the default `C/C++: gcc build active file` vscode task on lua
 return {
   name = "C/C++: gcc build active file",
   builder = function()
-    -- Full path to current file (see :help expand())
-    local file = vim.fn.expand("%:p")
-    local filename = vim.fn.expand("%:p:r")
+    local precalculated_vars = variables.precalculate_vars()
+
     return {
       cmd = { "/usr/bin/gcc" },
       args = {
         "-fdiagnostics-color=always",
         "-g",
-        file,
+        precalculated_vars.file,
         "-o",
-        filename,
+        precalculated_vars.fileDirname .. "/" .. precalculated_vars.fileBasenameNoExtension,
       },
       components = {
         { "on_output_quickfix", open = true },

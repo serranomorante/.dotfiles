@@ -195,11 +195,18 @@ return {
     dap.configurations.c = {
       {
         name = "Launch file",
+        request = "launch",
+        type = "cppdbg",
+        cwd = "${workspaceFolder}",
+        program = "${fileDirname}/${fileBasenameNoExtension}",
+        preLaunchTask = "C/C++: gcc build active file",
+      },
+      {
+        name = "Launch file by custom path",
         type = "cppdbg",
         request = "launch",
         program = function() return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file") end,
         cwd = "${workspaceFolder}",
-        stopAtEntry = true,
         preLaunchTask = "C/C++: gcc build active file",
       },
     }
@@ -208,12 +215,15 @@ return {
     require("overseer").patch_dap(true)
     require("dap.ext.vscode").json_decode = require("overseer.json").decode
 
+    ---Only needed if your debugging type doesn't match your language type.
+    ---For example, python is not necessary on this table because its debugging type is "python"
     ---@diagnostic disable-next-line: unused-local
     vscode_type_to_ft = {
       ["pwa-chrome"] = js_filetypes,
       ["pwa-msedge"] = js_filetypes,
       ["pwa-node"] = js_filetypes,
       ["firefox"] = js_filetypes,
+      ["cppdbg"] = { "c" },
     }
   end,
 }
