@@ -99,6 +99,7 @@ return {
         debugger_path = vscode_js_debug_path,
         adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
         log_file_level = vim.log.levels[vim.env.DAP_LOG_LEVEL or "INFO"],
+        log_console_level = false, -- too much noise
       })
     end
 
