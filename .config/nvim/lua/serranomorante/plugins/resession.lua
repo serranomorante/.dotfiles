@@ -29,6 +29,7 @@ return {
       return vim.startswith(vim.api.nvim_buf_get_name(bufnr), dir)
     end,
     extensions = {
+      ---Used to disable the builtin quickfix extension
       quickfix = {
         enable_in_tab = true,
       },
