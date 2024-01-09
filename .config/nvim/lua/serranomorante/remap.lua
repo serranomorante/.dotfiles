@@ -49,8 +49,10 @@ end, { desc = "Focus split on new tab" })
 vim.keymap.set("n", "<t", "<cmd>tabmove -1<CR>", { desc = "Move tab left" })
 vim.keymap.set("n", ">t", "<cmd>tabmove +1<CR>", { desc = "Move tab right" })
 
-vim.keymap.set("n", "<leader>qf", function() utils.toggle_qf("q") end, { desc = "Toggle quickfix" })
-vim.keymap.set("n", "<leader>ql", function() utils.toggle_qf("l") end, { desc = "Toggle location list" })
+vim.keymap.set("n", "<leader>qf", "<cmd>botright copen<CR>", { desc = "Open quickfix list" })
+vim.keymap.set("n", "<leader>ql", "<cmd>botright lopen<CR>", { desc = "Open location list" })
+vim.keymap.set("n", "<leader>qn", "<cmd>cnewer<CR>", { desc = "Go to next quickfix list" })
+vim.keymap.set("n", "<leader>qp", "<cmd>colder<CR>", { desc = "Go to previous quickfix list" })
 
 vim.keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
 
