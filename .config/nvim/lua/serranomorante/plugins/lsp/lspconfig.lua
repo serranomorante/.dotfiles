@@ -196,7 +196,7 @@ return {
             settings = {
               code_lens = "all",
               publish_diagnostic_on = "change",
-              complete_function_calls = true,
+              complete_function_calls = false,
               expose_as_code_action = { "fix_all", "add_missing_imports", "remove_unused" },
               tsserver_file_preferences = {
                 includeInlayParameterNameHints = "all",
