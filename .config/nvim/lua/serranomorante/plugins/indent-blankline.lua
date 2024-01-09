@@ -9,7 +9,12 @@ return {
       char = "▏",
       priority = 11, -- Fix visibility on folded lines
     },
-    scope = { enabled = false },
+    scope = {
+      enabled = true,
+      include = { node_type = { ["*"] = { "function_declaration" } } },
+      show_start = false,
+      show_end = false,
+    },
     exclude = {
       buftypes = {
         "nofile",
@@ -28,6 +33,7 @@ return {
 
         -- Dim the color of the indent separator char
         vim.api.nvim_set_hl(0, "IblIndent", { fg = palette.bg0 })
+        vim.api.nvim_set_hl(0, "IblScope", { fg = palette.bg3 })
       end
     end
     require("ibl").setup(opts)
