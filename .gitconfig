@@ -26,7 +26,7 @@
 
 [pager]
 	diff = LESS='LRc --mouse' delta
-	; show = LESS='LRc --mouse' delta
+	show = LESS='LRc --mouse' delta
 	; stash = LESS='LRc --mouse' delta
 	; log = LESS='LRc --mouse' delta
 	; reflog = LESS='LRc --mouse' delta
