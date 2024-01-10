@@ -17,6 +17,7 @@ return {
     },
     preview = {
       winblend = 0,
+      buf_label = false,
     },
   },
 }
