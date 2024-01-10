@@ -21,6 +21,19 @@ return {
   },
   opts = {
     load_detail = false,
+    ---Remove `cmdheight` and `diff` options
+    options = {
+      "binary",
+      "bufhidden",
+      "buflisted",
+      "filetype",
+      "modifiable",
+      "previewwindow",
+      "readonly",
+      "scrollbind",
+      "winfixheight",
+      "winfixwidth",
+    },
     tab_buf_filter = function(tabpage, bufnr)
       ---Only save buffers in the current tabpage directory
       ---https://github.com/stevearc/resession.nvim?tab=readme-ov-file#use-tab-scoped-sessions
