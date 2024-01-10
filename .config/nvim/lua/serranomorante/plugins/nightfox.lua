@@ -16,6 +16,10 @@ return {
           Folded = { bg = "bg0" },
           ---Differentiate CodeLens from comments
           LspCodeLens = { bg = "bg0" },
+          ---Improve nvim-dap highlights for breakpoints
+          DapBreakpoint = { fg = "red" },
+          DapLogPoint = { fg = "magenta" },
+          DapStopped = { fg = "cyan" },
         },
       },
     }
