@@ -37,8 +37,23 @@ return {
       desc = "Conditional Breakpoint (S-F9)",
     },
     {
+      "<leader>d0",
+      function()
+        vim.ui.input({
+          prompt = "Hit condition: ",
+        }, function(hit_condition)
+          if hit_condition then require("dap").set_breakpoint(nil, hit_condition) end
+        end)
+      end,
+      desc = "Hit condition",
+    },
+    {
       "<leader>dl",
-      function() require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: ")) end,
+      function()
+        vim.ui.input({ prompt = "Log message {foo}: " }, function(message)
+          if message then require("dap").set_breakpoint(nil, nil, message) end
+        end)
+      end,
       desc = "Log Point",
     },
     { "<leader>di", function() require("dap").step_into() end, desc = "Step Into (F11)" },
