@@ -4,6 +4,7 @@ return {
   "lukas-reineke/indent-blankline.nvim",
   event = "User CustomFile",
   main = "ibl",
+  dependencies = "nvim-treesitter/nvim-treesitter", -- because I'm using scope
   opts = {
     indent = {
       char = "▏",

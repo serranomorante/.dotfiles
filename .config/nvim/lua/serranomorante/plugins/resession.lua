@@ -1,7 +1,8 @@
+local utils = require("serranomorante.utils")
+
 return {
   "stevearc/resession.nvim",
   event = "VeryLazy",
-  dependencies = "LeonHeidelbach/trailblazer.nvim",
   keys = {
     {
       "<leader>ss",
@@ -54,26 +55,26 @@ return {
   },
   config = function(_, opts)
     local resession = require("resession")
-    local trailblazer = require("trailblazer")
-    local trailblazer_common = require("trailblazer.trails.common")
-    local focus_win_and_buf = trailblazer_common.focus_win_and_buf
-
     resession.setup(opts)
+
+    if utils.is_available("trailblazer.nvim") then
+      resession.add_hook("post_load", function()
+        local trailblazer = require("trailblazer")
+        local trailblazer_common = require("trailblazer.trails.common")
+        local focus_win_and_buf = trailblazer_common.focus_win_and_buf
+        ---Patch trailblazer
+        trailblazer_common.focus_win_and_buf = function() return true end
+        vim.schedule(function()
+          trailblazer.load_trailblazer_state_from_file()
+          ---Unpatch trailblazer
+          trailblazer_common.focus_win_and_buf = focus_win_and_buf
+        end)
+      end)
+    end
+
     ---fixes: https://github.com/stevearc/resession.nvim/issues/44#issue-2006411201
     ---also: https://github.com/AstroNvim/AstroNvim/issues/2378#issue-2005950553
-    resession.add_hook("post_load", function()
-      vim.api.nvim_exec_autocmds("BufReadPost", {})
-      ---Unpatch trailblazer
-      vim.schedule(function()
-        trailblazer.load_trailblazer_state_from_file()
-        trailblazer_common.focus_win_and_buf = focus_win_and_buf
-      end)
-    end)
-
-    resession.add_hook("pre_load", function()
-      ---Patch trailblazer
-      trailblazer_common.focus_win_and_buf = function() return true end
-    end)
+    resession.add_hook("post_load", function() vim.api.nvim_exec_autocmds("BufReadPost", {}) end)
 
     local autoload_session = function()
       -- Only load the session if nvim was started with no args
@@ -96,7 +97,7 @@ return {
       callback = function()
         -- Only save the session if nvim was started with no args
         if vim.fn.argc(-1) == 0 then
-          trailblazer.save_trailblazer_state_to_file()
+          if utils.is_available("trailblazer.nvim") then require("trailblazer").save_trailblazer_state_to_file() end
           resession.save_tab(vim.fn.getcwd(), { dir = "dirsession", notify = false })
         end
       end,

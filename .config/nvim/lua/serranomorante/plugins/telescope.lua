@@ -82,13 +82,15 @@ return {
     "nvim-telescope/telescope.nvim",
     lazy = true,
     dependencies = {
-      { "nvim-telescope/telescope-live-grep-args.nvim" },
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-telescope/telescope-live-grep-args.nvim",
+      "debugloop/telescope-undo.nvim",
       {
         "nvim-telescope/telescope-fzf-native.nvim",
         enabled = vim.fn.executable("make") == 1,
         build = "make",
       },
-      { "debugloop/telescope-undo.nvim" },
     },
     keys = {
       {

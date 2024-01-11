@@ -1,6 +1,6 @@
 return {
   "RRethy/vim-illuminate",
-  event = "User CustomFile",
+  event = "LspAttach",
   opts = {
     delay = 200,
     min_count_to_highlight = 2,
