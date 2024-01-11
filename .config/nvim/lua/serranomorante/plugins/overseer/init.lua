@@ -26,9 +26,14 @@ return {
 
     ---Register vscode custom tasks
     local vscode_bundle = require(utils.join_paths(template_path, "vscode"))
-
     for _, name in ipairs(vscode_bundle) do
       overseer.register_template(require(utils.join_paths(template_path, "vscode", name)))
+    end
+
+    ---Register common editor tasks
+    local editor_bundle = require(utils.join_paths(template_path, "editor"))
+    for _, name in ipairs(editor_bundle) do
+      overseer.register_template(require(utils.join_paths(template_path, "editor", name)))
     end
   end,
 }
