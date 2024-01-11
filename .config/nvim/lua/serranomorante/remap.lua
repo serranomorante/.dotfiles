@@ -79,45 +79,87 @@ end, { desc = "Toggles the pin state of a buffer" })
 
 if vim.env.TMUX and utils.is_available("plenary.nvim") then
   local Job = require("plenary.job")
+  local command = { "tmux", "display-message", "-p", "#{window_panes}:#{?window_zoomed_flag,Z, }" }
 
-  local panes_count = utils.cmd({ "tmux", "display-message", "-p", "#{window_panes}" })
-  if panes_count == nil then return end
+  ---Generate command args dynamically base on current tmux window layout
+  local function generate_args(window_layout)
+    local args = { "split-window" }
+    local only_one_pane = vim.startswith(window_layout, "1") -- this assumes no more than 9 panes
 
-  local args = { "split-window" }
-  local only_one_pane = string.find(panes_count, "1")
+    ---`{bottom-right}` splits to bottom if there's only 1 pane in the current window
+    ---with this conditional I make sure to avoid that
+    if only_one_pane then
+      local horizontal_split = "-h"
+      local pane_size = { "-l", "30%" }
+      table.insert(args, horizontal_split)
+      vim.list_extend(args, pane_size)
+    else
+      local vertical_split = "-v"
+      local target_pane = { "-t", "{bottom-right}" }
+      table.insert(args, vertical_split)
+      vim.list_extend(args, target_pane)
+    end
 
-  ---`{bottom-right}` splits to bottom if there's only 1 pane in the current window
-  ---with this conditional I make sure to avoid that
-  if only_one_pane then
-    local horizontal_split = "-h"
-    local pane_size = { "-l", "30%" }
-    table.insert(args, horizontal_split)
-    vim.list_extend(args, pane_size)
-  else
-    local vertical_split = "-v"
-    local target_pane = { "-t", "{bottom-right}" }
-    table.insert(args, vertical_split)
-    vim.list_extend(args, target_pane)
+    return args
+  end
+
+  ---Handles if tmux window is zoomed
+  local function handle_zoom(on_exit)
+    Job:new({
+      command = "tmux",
+      args = { "resize-pane", "-Z" },
+      on_exit = on_exit,
+    }):start()
   end
 
   vim.keymap.set("n", "<leader>pf", function()
     local project_directory = vim.fn.getcwd()
+    local window_layout = utils.cmd(command)
+    if window_layout == nil then return end
+    local is_zoom = string.find(window_layout, "Z")
 
-    Job:new({
-      command = "tmux",
-      args = args,
-      cwd = project_directory,
-    }):start()
+    if is_zoom then
+      handle_zoom(
+        function()
+          Job:new({
+            command = "tmux",
+            args = generate_args(window_layout),
+            cwd = project_directory,
+          }):start()
+        end
+      )
+    else
+      Job:new({
+        command = "tmux",
+        args = generate_args(window_layout),
+        cwd = project_directory,
+      }):start()
+    end
   end, { desc = "Open project directory" })
 
   vim.keymap.set("n", "<leader>pF", function()
     local current_file = vim.fn.resolve(vim.fn.expand("%"))
     local file_directory = vim.fn.fnamemodify(current_file, ":p:h")
+    local window_layout = utils.cmd(command)
+    if window_layout == nil then return end
+    local is_zoom = string.find(window_layout, "Z")
 
-    Job:new({
-      command = "tmux",
-      args = args,
-      cwd = file_directory,
-    }):start()
+    if is_zoom then
+      handle_zoom(
+        function()
+          Job:new({
+            command = "tmux",
+            args = generate_args(window_layout),
+            cwd = file_directory,
+          }):start()
+        end
+      )
+    else
+      Job:new({
+        command = "tmux",
+        args = generate_args(window_layout),
+        cwd = file_directory,
+      }):start()
+    end
   end, { desc = "Open file directory" })
 end
