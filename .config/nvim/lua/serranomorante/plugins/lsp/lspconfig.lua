@@ -194,6 +194,7 @@ return {
               publish_diagnostic_on = "change",
               complete_function_calls = false,
               expose_as_code_action = { "fix_all", "add_missing_imports", "remove_unused" },
+              separate_diagnostic_server = false,
               tsserver_file_preferences = {
                 includeInlayParameterNameHints = "all",
                 includeInlayParameterNameHintsWhenArgumentMatchesName = true,
