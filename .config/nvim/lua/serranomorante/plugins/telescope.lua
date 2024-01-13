@@ -362,8 +362,6 @@ return {
       conditional_func(telescope.load_extension, utils.is_available("telescope-undo.nvim"), "undo")
       -- https://github.com/ThePrimeagen/git-worktree.nvim
       conditional_func(telescope.load_extension, utils.is_available("git-worktree.nvim"), "git_worktree")
-      -- https://github.com/rmagatti/auto-session#-session-lens
-      conditional_func(telescope.load_extension, utils.is_available("auto-sessions"), "session-lens")
     end,
   },
 }
