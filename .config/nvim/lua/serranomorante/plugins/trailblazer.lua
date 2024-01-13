@@ -2,7 +2,7 @@ local utils = require("serranomorante.utils")
 
 return {
   "LeonHeidelbach/trailblazer.nvim",
-  lazy = true,
+  event = "User CustomFile",
   dependencies = "nvim-treesitter/nvim-treesitter",
   keys = {
     {
@@ -18,8 +18,8 @@ return {
   },
   opts = function()
     local opts = {
-      auto_save_trailblazer_state_on_exit = false, -- we are manually doing it on `resession.nvim`
-      auto_load_trailblazer_state_on_enter = false, -- we are manually doing it on `resession.nvim`
+      auto_save_trailblazer_state_on_exit = false, -- we are manually doing it on `persistence.nvim`
+      auto_load_trailblazer_state_on_enter = false, -- we are manually doing it on `persistence.nvim`
       trail_options = {
         mark_symbol = "",
         newest_mark_symbol = "",
@@ -92,5 +92,29 @@ return {
     opts.hl_groups = hl_groups
 
     return opts
+  end,
+  config = function(_, opts)
+    local trailblazer = require("trailblazer")
+    trailblazer.setup(opts)
+    ---Patch trailblazer before loading session
+    ---https://github.com/LeonHeidelbach/trailblazer.nvim/discussions/51#discussioncomment-8108342
+    local trailblazer_common = require("trailblazer.trails.common")
+    local focus_win_and_buf = trailblazer_common.focus_win_and_buf
+    trailblazer_common.focus_win_and_buf = function() return true end
+    vim.schedule(function()
+      ---Load session
+      trailblazer.load_trailblazer_state_from_file()
+      ---Unpatch trailblazer
+      trailblazer_common.focus_win_and_buf = focus_win_and_buf
+    end)
+
+    vim.api.nvim_create_autocmd("VimLeavePre", {
+      desc = "Save a dir-specific session when you close Neovim",
+      group = vim.api.nvim_create_augroup("autosave_session", { clear = true }),
+      callback = function()
+        ---Only save the session if nvim was started with no args
+        if vim.fn.argc(-1) == 0 then trailblazer.save_trailblazer_state_to_file() end
+      end,
+    })
   end,
 }
