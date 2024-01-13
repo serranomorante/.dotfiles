@@ -71,12 +71,6 @@ vim.keymap.set("n", "<leader>zl", function()
   end, timeout)
 end, { desc = "Temporary show available folds" })
 
----https://github.com/nvim-telescope/telescope.nvim/pull/2793#issue-2000972124
-vim.keymap.set("n", "<leader>aa", function()
-  local is_pinned = utils.toggle_buffer_pin()
-  vim.notify(is_pinned and "Buffer pin" or "Removed buffer pin", vim.log.levels.INFO)
-end, { desc = "Toggles the pin state of a buffer" })
-
 if vim.env.TMUX and utils.is_available("plenary.nvim") then
   local Job = require("plenary.job")
   local command = { "tmux", "display-message", "-p", "#{window_panes}:#{?window_zoomed_flag,Z, }" }

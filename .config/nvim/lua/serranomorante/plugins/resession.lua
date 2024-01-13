@@ -48,9 +48,6 @@ return {
       quickfix = {
         enable_in_tab = true,
       },
-      pin_buffers = {
-        enable_in_tab = true,
-      },
     },
   },
   config = function(_, opts)
