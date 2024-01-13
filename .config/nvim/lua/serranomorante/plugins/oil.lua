@@ -16,8 +16,14 @@ return {
     },
   },
   opts = {
+    columns = {
+      { "size", highlight = "Pmenu" },
+      { "mtime", highlight = "Comment" },
+      "icon",
+    },
     ---https://github.com/stevearc/oil.nvim/issues/201#issuecomment-1771146785
     cleanup_delay_ms = false,
+    skip_confirm_for_simple_edits = true,
     ---Copied here for readability
     keymaps = {
       ["g?"] = "actions.show_help",
