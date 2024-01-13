@@ -12,7 +12,13 @@ return {
     },
     scope = {
       enabled = true,
-      include = { node_type = { ["*"] = { "function_declaration" } } },
+      ---Exclude everything except function declaration
+      ---https://github.com/lukas-reineke/indent-blankline.nvim/discussions/826#discussioncomment-8104129
+      exclude = {
+        node_type = {
+          ["*"] = { "statement_block", "for_statement", "for_in_statement", "catch_clause", "jsx_element" },
+        },
+      },
       show_start = false,
       show_end = false,
     },
