@@ -1,8 +1,8 @@
 return {
   "kevinhwang91/nvim-ufo",
-  event = { "User CustomFile", "User CustomInsertEnter" },
+  event = "User CustomFile",
   cmd = "UfoInspect",
-  dependencies = "kevinhwang91/promise-async",
+  dependencies = { "kevinhwang91/promise-async", "neovim/nvim-lspconfig", "nvim-treesitter/nvim-treesitter" },
   keys = {
     {
       "zR",

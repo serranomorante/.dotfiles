@@ -42,32 +42,13 @@ autocmd("BufWinEnter", {
 })
 
 autocmd({ "BufReadPost", "BufNewFile", "BufWritePost" }, {
-  desc = "Adds support for worktrees in gitsigns.nvim",
+  desc = "Execute `CustomFile` user event on valid buffers",
   group = augroup("file_user_events", { clear = true }),
   callback = function(args)
     local current_file = vim.fn.resolve(vim.fn.expand("%"))
-
     if not (current_file == "" or vim.api.nvim_get_option_value("buftype", { buf = args.buf }) == "nofile") then
       events.event("File")
-
-      local worktree = utils.file_worktree()
-
-      if worktree or utils.cmd({ "git", "-C", vim.fn.fnamemodify(current_file, ":p:h"), "rev-parse" }, false) then
-        events.event("GitFile")
-        vim.api.nvim_del_augroup_by_name("file_user_events")
-      end
     end
-  end,
-})
-
-autocmd("InsertEnter", {
-  desc = "Triggers new InsertEnter user event that omits prompt buffers",
-  group = augroup("insert_enter_user_event", { clear = true }),
-  callback = function(args)
-    local buftype = vim.api.nvim_get_option_value("buftype", { buf = args.buf })
-    if buftype == "prompt" then return end
-    events.event("InsertEnter")
-    vim.api.nvim_del_augroup_by_name("insert_enter_user_event")
   end,
 })
 
