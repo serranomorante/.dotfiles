@@ -110,7 +110,7 @@ return {
 
     vim.api.nvim_create_autocmd("VimLeavePre", {
       desc = "Save a dir-specific session when you close Neovim",
-      group = vim.api.nvim_create_augroup("autosave_session", { clear = true }),
+      group = vim.api.nvim_create_augroup("trailblazer_autosave_session", { clear = true }),
       callback = function()
         ---Only save the session if nvim was started with no args
         if vim.fn.argc(-1) == 0 then trailblazer.save_trailblazer_state_to_file() end

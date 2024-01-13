@@ -1,5 +1,3 @@
-local utils = require("serranomorante.utils")
-
 return {
   "stevearc/resession.nvim",
   event = "VeryLazy",
@@ -69,13 +67,13 @@ return {
     if vim.v.vim_did_enter then autoload_session() end
     vim.api.nvim_create_autocmd("VimEnter", {
       desc = "Load a dir-specific session when you open Neovim",
-      group = vim.api.nvim_create_augroup("autoload_session", { clear = true }),
+      group = vim.api.nvim_create_augroup("resession_autoload_session", { clear = true }),
       callback = autoload_session,
     })
 
     vim.api.nvim_create_autocmd("VimLeavePre", {
       desc = "Save a dir-specific session when you close Neovim",
-      group = vim.api.nvim_create_augroup("autosave_session", { clear = true }),
+      group = vim.api.nvim_create_augroup("resession_autosave_session", { clear = true }),
       callback = function()
         -- Only save the session if nvim was started with no args
         if vim.fn.argc(-1) == 0 then resession.save_tab(vim.fn.getcwd(), { dir = "dirsession", notify = false }) end
