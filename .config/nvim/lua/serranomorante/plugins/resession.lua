@@ -1,4 +1,6 @@
+local utils = require("serranomorante.utils")
 local autosave_timer
+
 return {
   "stevearc/resession.nvim",
   event = "VeryLazy",
@@ -35,12 +37,15 @@ return {
       "winfixheight",
       "winfixwidth",
     },
+    buf_filter = function(bufnr)
+      ---Because `tab_buf_filter` is not enough to filter all files outside cwd
+      return utils.buf_inside_cwd(bufnr) and require("resession").default_buf_filter(bufnr)
+    end,
     tab_buf_filter = function(tabpage, bufnr)
       ---Only save buffers in the current tabpage directory
       ---https://github.com/stevearc/resession.nvim?tab=readme-ov-file#use-tab-scoped-sessions
-      local dir = vim.fn.getcwd(-1, vim.api.nvim_tabpage_get_number(tabpage))
-      dir = dir:sub(-1) ~= "/" and dir .. "/" or dir
-      return vim.startswith(vim.api.nvim_buf_get_name(bufnr), dir)
+      local cwd = vim.fn.getcwd(-1, vim.api.nvim_tabpage_get_number(tabpage))
+      return utils.buf_inside_cwd(bufnr, cwd)
     end,
     extensions = {
       ---Used to disable the builtin quickfix extension

@@ -222,28 +222,14 @@ function M.get_from_tools(base, tool_type, with_map)
   return types
 end
 
----Get current cwd as escaped string
-function M.get_escaped_cwd()
-  local pattern = "/"
-  if vim.fn.has("win32") == 1 then pattern = "[\\:]" end
-  local name = vim.fn.getcwd():gsub(pattern, "%%")
-  return name
-end
-
----Remove all buffers outside current tab cwd
----@param force? boolean
-function M.tab_buffer_only(force)
-  local tab_cwd = vim.fn.getcwd(-1, vim.api.nvim_tabpage_get_number(0))
-  tab_cwd = tab_cwd:sub(-1) ~= "/" and tab_cwd .. "/" or tab_cwd
-
-  local current_buffer = vim.api.nvim_get_current_buf()
-  for _, buffer in ipairs(vim.api.nvim_list_bufs()) do
-    local is_tab_buffer = vim.startswith(vim.api.nvim_buf_get_name(buffer), tab_cwd)
-    if not is_tab_buffer and current_buffer ~= buffer then vim.api.nvim_buf_delete(buffer, { force = force }) end
-  end
-
-  local is_tab_buffer = vim.startswith(vim.api.nvim_buf_get_name(current_buffer), tab_cwd)
-  if not is_tab_buffer then vim.api.nvim_buf_delete(current_buffer, { force = force }) end
+---Check if buffer belongs to a cwd
+---@param bufnr integer
+---@param cwd string? Uses current if no cwd is passed
+---@return boolean
+function M.buf_inside_cwd(bufnr, cwd)
+  local dir = cwd or vim.fn.getcwd()
+  dir = dir:sub(-1) ~= "/" and dir .. "/" or dir
+  return vim.startswith(vim.api.nvim_buf_get_name(bufnr), dir)
 end
 
 return M
