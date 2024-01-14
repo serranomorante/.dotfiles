@@ -47,6 +47,9 @@ return {
       quickfix = {
         enable_in_tab = true,
       },
+      dap = {
+        enable_in_tab = true,
+      },
     },
   },
   config = function(_, opts)
