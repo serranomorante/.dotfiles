@@ -65,17 +65,10 @@ return {
     ---also: https://github.com/AstroNvim/AstroNvim/issues/2378#issue-2005950553
     resession.add_hook("post_load", function() vim.api.nvim_exec_autocmds("BufReadPost", {}) end)
 
-    ---Autoload session and start a timer for autosave
-    local autoload_session = function()
-      ---Only load the session if nvim was started with no args
-      if vim.fn.argc(-1) == 0 then
-        ---Save these to a different directory, so our manual sessions don't get polluted
-        resession.load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true, reset = true })
-      end
-
-      ---Start autosave session timer.
-      ---I don't use the resession autosave opt because it uses `VimLeavePre` under the hook
-      local seconds = 10
+    ---Start autosave session timer.
+    ---Replicate resession's autosave here without using `VimLeavePre`
+    local function spin_up_autosave()
+      local ms = 10 * 1000
       if autosave_timer then
         autosave_timer:close()
         autosave_timer = nil
@@ -83,17 +76,34 @@ return {
       ---@diagnostic disable-next-line: undefined-field
       autosave_timer = assert(vim.uv.new_timer())
       autosave_timer:start(
-        seconds * 1000,
-        seconds * 1000,
-        vim.schedule_wrap(function() resession.save_tab(vim.fn.getcwd(), { dir = "dirsession", notify = false }) end)
+        ms,
+        ms,
+        vim.schedule_wrap(function()
+          if vim.fn.getcmdwintype() ~= "" then return end -- don't save on cmd window
+          resession.save_tab(vim.fn.getcwd(), { dir = "dirsession", notify = false })
+        end)
       )
     end
 
-    if vim.v.vim_did_enter then autoload_session() end
-    vim.api.nvim_create_autocmd("VimEnter", {
-      desc = "Load a dir-specific session when you open Neovim",
-      group = vim.api.nvim_create_augroup("resession_autoload_session", { clear = true }),
-      callback = autoload_session,
-    })
+    ---Autoload session
+    local autoload_session = function()
+      ---Only load the session if nvim was started with no args
+      if vim.fn.argc(-1) == 0 then
+        ---Save these to a different directory, so our manual sessions don't get polluted
+        resession.load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true, reset = true })
+      end
+    end
+
+    if vim.v.vim_did_enter then
+      autoload_session()
+    else
+      vim.api.nvim_create_autocmd("VimEnter", {
+        desc = "Load a dir-specific session when you open Neovim",
+        group = vim.api.nvim_create_augroup("resession_autoload_session", { clear = true }),
+        callback = autoload_session,
+      })
+    end
+
+    spin_up_autosave()
   end,
 }
