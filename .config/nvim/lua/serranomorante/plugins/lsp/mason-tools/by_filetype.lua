@@ -9,6 +9,7 @@ local tools_by_filetype = {
       "firefox-debug-adapter",
       ---Uncomment next line if you want to use `dapDebugServer` instead of `vsDebugServerBundle`
       -- { "js-debug-adapter", version = "v1.82.0" },
+      "js-debug-adapter",
     },
   },
   lua = { formatters = { "stylua" }, lsp = { "lua-language-server" } },

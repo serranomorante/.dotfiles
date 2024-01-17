@@ -2,18 +2,21 @@ local utils = require("serranomorante.utils")
 
 ---Debuggers can exist on one of 2 folders: `mason` or `debuggers`
 ---Mason: installed automatically. Usually for stable versions of packages.
----Debuggers: installed manually. Usually for nightly versions of packages.
----`debuggers` is a custom folder on my system for vscode extensions like `cpp_tools`.
+---Debuggers: installed manually. Usually for nightly versions of packages. This is
+---a custom folder on my system for things like `cpp_tools` or `vscode-js-debug`
+
+---Why not `mxsdev/nvim-dap-vscode-js`?
+---I prefer dapDebugServer from `vscode-js-debug` just to reduce the number of plugins
+---I have to worry about. Yes, breakpoints sometimes don't bound until you refresh your
+---browser (client-side debug) which solved by using `nvim-dap-vscode-js` plugin but
+---I'm willing to make that trade-off.
 
 ---`h: dap.ext.vscode.load_launchjs`
 local vscode_type_to_ft
 
 return {
   "mfussenegger/nvim-dap",
-  dependencies = {
-    "mxsdev/nvim-dap-vscode-js",
-    "mfussenegger/nvim-dap-python",
-  },
+  dependencies = "mfussenegger/nvim-dap-python",
   keys = {
     { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint (F9)" },
     { "<leader>dB", function() require("dap").clear_breakpoints() end, desc = "Clear Breakpoints" },
@@ -93,57 +96,83 @@ return {
     ---Bypass volta's context detection to prevent running the debugger with unsupported node versions
     local node_path = utils.cmd({ "volta", "run", "--node", system_node_version, "which", "node" }):gsub("\n", "")
 
-    ---https://github.com/mxsdev/nvim-dap-vscode-js?tab=readme-ov-file#debugger
-    local vscode_js_debug_path = vim.fn.stdpath("data") .. "/debuggers/vscode-js-debug"
+    local vscode_js_debug_dap = mason_registry.get_package("js-debug-adapter")
 
-    if node_path and utils.is_available("nvim-dap-vscode-js") and vim.fn.isdirectory(vscode_js_debug_path) then
-      ---https://github.com/mxsdev/nvim-dap-vscode-js?tab=readme-ov-file#setup
-      require("dap-vscode-js").setup({
-        node_path = node_path,
-        debugger_path = vscode_js_debug_path,
-        adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
-        log_file_level = vim.log.levels[vim.env.DAP_LOG_LEVEL or "INFO"],
-        log_console_level = false, -- too much noise
-      })
+    if node_path and vscode_js_debug_dap then
+      local dap_executable = vscode_js_debug_dap:get_install_path() .. "/js-debug/src/dapDebugServer.js"
+
+      for _, type in ipairs({
+        "node",
+        "chrome",
+        "pwa-node",
+        "pwa-chrome",
+        "pwa-msedge",
+        "node-terminal",
+        "pwa-extensionHost",
+      }) do
+        local host = "localhost"
+        dap.adapters[type] = {
+          type = "server",
+          host = host,
+          port = "${port}",
+          executable = {
+            command = node_path,
+            args = { dap_executable, "${port}", host },
+          },
+        }
+      end
     end
 
     local firefox_dap = mason_registry.get_package("firefox-debug-adapter")
 
     if node_path and firefox_dap then
-      local firefox_dap_executable = firefox_dap:get_install_path() .. "/dist/adapter.bundle.js"
+      local dap_executable = firefox_dap:get_install_path() .. "/dist/adapter.bundle.js"
 
       ---https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#javascript-firefox
       dap.adapters.firefox = {
         type = "executable",
         command = node_path,
-        args = { firefox_dap_executable },
+        args = { dap_executable },
       }
     end
 
     local python_dap = mason_registry.get_package("debugpy")
 
     if python_dap then
-      local python_dap_executable = python_dap:get_install_path() .. "/venv/bin/python"
+      local dap_executable = python_dap:get_install_path() .. "/venv/bin/python"
 
       ---https://github.com/mfussenegger/nvim-dap-python?tab=readme-ov-file#usage
-      require("dap-python").setup(python_dap_executable)
+      require("dap-python").setup(dap_executable)
     end
 
-    local cpp_tools_executable = vim.fn.stdpath("data")
-      .. "/debuggers/cpp_tools/extension/debugAdapters/bin/OpenDebugAD7"
+    local dap_executable = vim.fn.stdpath("data") .. "/debuggers/cpp_tools/extension/debugAdapters/bin/OpenDebugAD7"
 
     ---https://github.com/mfussenegger/nvim-dap/wiki/C-C---Rust-(gdb-via--vscode-cpptools)
-    if vim.fn.executable(cpp_tools_executable) == 1 then
+    if vim.fn.executable(dap_executable) == 1 then
       dap.adapters.cppdbg = {
         id = "cppdbg",
         type = "executable",
-        command = cpp_tools_executable,
+        command = dap_executable,
       }
     end
 
     ---╔══════════════════════════════════════╗
     ---║           Configurations             ║
     ---╚══════════════════════════════════════╝
+
+    local function url_prompt(default)
+      default = default or "http://localhost:3000"
+      local co = coroutine.running()
+      return coroutine.create(function()
+        vim.ui.input({ prompt = "Enter URL: ", default = default }, function(url)
+          if url == nil or url == "" then
+            return
+          else
+            coroutine.resume(co, url)
+          end
+        end)
+      end)
+    end
 
     local js_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact" }
     for _, language in ipairs(js_filetypes) do
@@ -152,22 +181,22 @@ return {
           name = "DAP: Debug with PWA Chrome",
           type = "pwa-chrome",
           request = "launch",
-          url = "http://localhost:3000",
           sourceMaps = true,
-        },
-        {
-          name = "DAP: Debug with PWA Edge",
-          type = "pwa-msedge",
-          request = "launch",
-          url = "http://localhost:3000",
-          sourceMaps = true,
+          url = url_prompt,
+          ---These 2 options are important for nextjs apps
+          webRoot = vim.fn.getcwd(),
+          userDataDir = false,
+          resolveSourceMapLocations = {
+            "${workspaceFolder}/**",
+            "!**/node_modules/**",
+          },
         },
         {
           name = "DAP: Debug with Firefox",
           type = "firefox",
           request = "launch",
           reAttach = true,
-          url = "http://localhost:3000",
+          url = url_prompt,
           webRoot = "${workspaceFolder}",
           sourceMaps = true,
           skipFiles = {
@@ -177,7 +206,7 @@ return {
         },
         ---While vscode supports typescript files as entrypoints to your debugger
         ---`nvim-dap-vscode-js` needs a loader like `ts-node`. A different approach
-        ---could be using `vscode-node-debug2` but it is archived.
+        ---could be using `vscode-node-debug2` but it is deprecated.
         {
           name = "DAP: Debug with Node (ts-node)",
           type = "pwa-node",
@@ -189,6 +218,25 @@ return {
           sourceMaps = true,
           protocol = "inspector",
           skipFiles = { "<node_internals>/**", "node_modules/**" },
+          resolveSourceMapLocations = {
+            "${workspaceFolder}/**",
+            "!**/node_modules/**",
+          },
+        },
+        {
+          name = "DAP: Debug with Node (pick process)",
+          type = "node2",
+          request = "attach",
+          processId = require("dap.utils").pick_process,
+        },
+        {
+          name = "Next.js: debug server-side",
+          type = "pwa-node",
+          request = "launch",
+          cwd = "${workspaceFolder}",
+          runtimeExecutable = "npm",
+          runtimeArgs = { "run-script", "dev" },
+          sourceMaps = true,
           resolveSourceMapLocations = {
             "${workspaceFolder}/**",
             "!**/node_modules/**",
@@ -224,10 +272,14 @@ return {
     ---For example, python is not necessary on this table because its debugging type is "python"
     ---@diagnostic disable-next-line: unused-local
     vscode_type_to_ft = {
+      ["node"] = js_filetypes,
+      ["chrome"] = js_filetypes,
+      ["firefox"] = js_filetypes,
+      ["pwa-node"] = js_filetypes,
       ["pwa-chrome"] = js_filetypes,
       ["pwa-msedge"] = js_filetypes,
-      ["pwa-node"] = js_filetypes,
-      ["firefox"] = js_filetypes,
+      ["node-terminal"] = js_filetypes,
+      ["pwa-extensionHost"] = js_filetypes,
       ["cppdbg"] = { "c" },
     }
   end,
