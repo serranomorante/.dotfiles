@@ -1,5 +1,4 @@
 local utils = require("serranomorante.utils")
-local autosave_timer
 
 return {
   "stevearc/resession.nvim",
@@ -36,6 +35,7 @@ return {
       "scrollbind",
       "winfixheight",
       "winfixwidth",
+      "cmdheight",
     },
     buf_filter = function(bufnr)
       ---Because `tab_buf_filter` is not enough to filter all files outside cwd
@@ -65,26 +65,6 @@ return {
     ---also: https://github.com/AstroNvim/AstroNvim/issues/2378#issue-2005950553
     resession.add_hook("post_load", function() vim.api.nvim_exec_autocmds("BufReadPost", {}) end)
 
-    ---Start autosave session timer.
-    ---Replicate resession's autosave here without using `VimLeavePre`
-    local function spin_up_autosave()
-      local ms = 120 * 1000
-      if autosave_timer then
-        autosave_timer:close()
-        autosave_timer = nil
-      end
-      ---@diagnostic disable-next-line: undefined-field
-      autosave_timer = assert(vim.uv.new_timer())
-      autosave_timer:start(
-        ms,
-        ms,
-        vim.schedule_wrap(function()
-          if vim.fn.getcmdwintype() ~= "" then return end -- don't save on cmd window
-          resession.save_tab(vim.fn.getcwd(), { dir = "dirsession", notify = false })
-        end)
-      )
-    end
-
     ---Autoload session
     local autoload_session = function()
       ---Only load the session if nvim was started with no args
@@ -103,7 +83,5 @@ return {
         callback = autoload_session,
       })
     end
-
-    spin_up_autosave()
   end,
 }
