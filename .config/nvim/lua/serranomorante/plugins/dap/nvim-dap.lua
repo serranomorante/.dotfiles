@@ -1,3 +1,4 @@
+local events = require("serranomorante.events")
 local utils = require("serranomorante.utils")
 
 ---Debuggers can exist on one of 2 folders: `mason` or `debuggers`
@@ -5,18 +6,11 @@ local utils = require("serranomorante.utils")
 ---Debuggers: installed manually. Usually for nightly versions of packages. This is
 ---a custom folder on my system for things like `cpp_tools` or `vscode-js-debug`
 
----Why not `mxsdev/nvim-dap-vscode-js`?
----I prefer dapDebugServer from `vscode-js-debug` just to reduce the number of plugins
----I have to worry about. Yes, breakpoints sometimes don't bound until you refresh your
----browser (client-side debug) which solved by using `nvim-dap-vscode-js` plugin but
----I'm willing to make that trade-off.
-
 ---`h: dap.ext.vscode.load_launchjs`
 local vscode_type_to_ft
 
 return {
   "mfussenegger/nvim-dap",
-  dependencies = "mfussenegger/nvim-dap-python",
   keys = {
     { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint (F9)" },
     { "<leader>dB", function() require("dap").clear_breakpoints() end, desc = "Clear Breakpoints" },
@@ -87,6 +81,9 @@ return {
     dap.listeners.before.attach["dapui_config"] = dapui.open
     dap.listeners.before.launch["dapui_config"] = dapui.open
 
+    local python_filetypes = { "python" }
+    local js_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact" }
+
     ---╔══════════════════════════════════════╗
     ---║               Adapters               ║
     ---╚══════════════════════════════════════╝
@@ -123,28 +120,6 @@ return {
       end
     end
 
-    local firefox_dap = mason_registry.get_package("firefox-debug-adapter")
-
-    if node_path and firefox_dap then
-      local dap_executable = firefox_dap:get_install_path() .. "/dist/adapter.bundle.js"
-
-      ---https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#javascript-firefox
-      dap.adapters.firefox = {
-        type = "executable",
-        command = node_path,
-        args = { dap_executable },
-      }
-    end
-
-    local python_dap = mason_registry.get_package("debugpy")
-
-    if python_dap then
-      local dap_executable = python_dap:get_install_path() .. "/venv/bin/python"
-
-      ---https://github.com/mfussenegger/nvim-dap-python?tab=readme-ov-file#usage
-      require("dap-python").setup(dap_executable)
-    end
-
     local dap_executable = vim.fn.stdpath("data") .. "/debuggers/cpp_tools/extension/debugAdapters/bin/OpenDebugAD7"
 
     ---https://github.com/mfussenegger/nvim-dap/wiki/C-C---Rust-(gdb-via--vscode-cpptools)
@@ -154,6 +129,14 @@ return {
         type = "executable",
         command = dap_executable,
       }
+    end
+
+    if vim.tbl_contains(js_filetypes, vim.api.nvim_get_option_value("filetype", { buf = 0 })) then
+      events.event("LoadDapJsOverrides")
+    end
+
+    if vim.tbl_contains(python_filetypes, vim.api.nvim_get_option_value("filetype", { buf = 0 })) then
+      events.event("LoadDapPyOverrides")
     end
 
     ---╔══════════════════════════════════════╗
@@ -174,7 +157,6 @@ return {
       end)
     end
 
-    local js_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact" }
     for _, language in ipairs(js_filetypes) do
       dap.configurations[language] = {
         {
@@ -222,12 +204,6 @@ return {
             "${workspaceFolder}/**",
             "!**/node_modules/**",
           },
-        },
-        {
-          name = "DAP: Debug with Node (pick process)",
-          type = "node2",
-          request = "attach",
-          processId = require("dap.utils").pick_process,
         },
         {
           name = "Next.js: debug server-side",
