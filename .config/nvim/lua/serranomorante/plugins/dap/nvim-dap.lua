@@ -81,8 +81,9 @@ return {
     dap.listeners.before.attach["dapui_config"] = dapui.open
     dap.listeners.before.launch["dapui_config"] = dapui.open
 
-    local python_filetypes = { "python" }
-    local js_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact" }
+    local c_fts = { "c" }
+    local python_fts = { "python" }
+    local javascript_fts = { "typescript", "javascript", "javascriptreact", "typescriptreact" }
 
     ---╔══════════════════════════════════════╗
     ---║               Adapters               ║
@@ -131,14 +132,6 @@ return {
       }
     end
 
-    if vim.tbl_contains(js_filetypes, vim.api.nvim_get_option_value("filetype", { buf = 0 })) then
-      events.event("LoadDapJsOverrides")
-    end
-
-    if vim.tbl_contains(python_filetypes, vim.api.nvim_get_option_value("filetype", { buf = 0 })) then
-      events.event("LoadDapPyOverrides")
-    end
-
     ---╔══════════════════════════════════════╗
     ---║           Configurations             ║
     ---╚══════════════════════════════════════╝
@@ -157,7 +150,7 @@ return {
       end)
     end
 
-    for _, language in ipairs(js_filetypes) do
+    for _, language in ipairs(javascript_fts) do
       dap.configurations[language] = {
         {
           name = "DAP: Debug with PWA Chrome",
@@ -171,19 +164,6 @@ return {
           resolveSourceMapLocations = {
             "${workspaceFolder}/**",
             "!**/node_modules/**",
-          },
-        },
-        {
-          name = "DAP: Debug with Firefox",
-          type = "firefox",
-          request = "launch",
-          reAttach = true,
-          url = url_prompt,
-          webRoot = "${workspaceFolder}",
-          sourceMaps = true,
-          skipFiles = {
-            "${workspaceFolder}/<node_internals>/**",
-            "${workspaceFolder}/node_modules/**",
           },
         },
         ---While vscode supports typescript files as entrypoints to your debugger
@@ -244,19 +224,35 @@ return {
     require("overseer").patch_dap(true)
     require("dap.ext.vscode").json_decode = require("overseer.json").decode
 
+    ---Load dap plugins that can override previous adapters & configs
+    ---@param buf integer?
+    local load_dap_plugins = function(buf)
+      local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf or 0 })
+      if vim.tbl_contains(javascript_fts, filetype) then events.event("LoadDapJsOverrides") end
+      if vim.tbl_contains(python_fts, filetype) then events.event("LoadDapPyOverrides") end
+    end
+
+    vim.api.nvim_create_autocmd("FileType", {
+      desc = "Lazy-load dap plugins by filetype",
+      group = vim.api.nvim_create_augroup("dap_filetype_overrides", { clear = true }),
+      callback = function(args) load_dap_plugins(args.buf) end,
+    })
+
+    load_dap_plugins()
+
     ---Only needed if your debugging type doesn't match your language type.
     ---For example, python is not necessary on this table because its debugging type is "python"
     ---@diagnostic disable-next-line: unused-local
     vscode_type_to_ft = {
-      ["node"] = js_filetypes,
-      ["chrome"] = js_filetypes,
-      ["firefox"] = js_filetypes,
-      ["pwa-node"] = js_filetypes,
-      ["pwa-chrome"] = js_filetypes,
-      ["pwa-msedge"] = js_filetypes,
-      ["node-terminal"] = js_filetypes,
-      ["pwa-extensionHost"] = js_filetypes,
-      ["cppdbg"] = { "c" },
+      ["node"] = javascript_fts,
+      ["chrome"] = javascript_fts,
+      ["firefox"] = javascript_fts,
+      ["pwa-node"] = javascript_fts,
+      ["pwa-chrome"] = javascript_fts,
+      ["pwa-msedge"] = javascript_fts,
+      ["node-terminal"] = javascript_fts,
+      ["pwa-extensionHost"] = javascript_fts,
+      ["cppdbg"] = c_fts,
     }
   end,
 }
