@@ -16,6 +16,9 @@ return {
     },
   },
   opts = {
+    view_options = {
+      show_hidden = true,
+    },
     win_options = {
       winhighlight = "Normal:NormalFloat",
     },
