@@ -44,31 +44,26 @@ end
 
 return {
   {
-    ---https://github.com/ThePrimeagen/git-worktree.nvim/pull/106
-    "brandoncc/git-worktree.nvim",
-    branch = "catch-and-handle-telescope-related-error",
+    "serranomorante/git-worktree.nvim",
+    dependencies = "nvim-telescope/telescope.nvim",
     keys = {
       {
-        "<leader>pw",
-        function()
-          vim.ui.input({ prompt = "Git branch: " }, function(branch)
-            local data = {}
-            data.git_branch = branch
-
-            vim.ui.input({ prompt = "Unique path: " }, function(path)
-              data.unique_path = path
-
-              require("git-worktree").create_worktree(data.unique_path, data.git_branch)
-            end)
-          end)
-        end,
-        ---Creating a worktree through telescope will sometimes select "origin/branch..."
-        desc = "Create worktree (without telescope)",
+        "<leader>gw",
+        function() require("telescope").extensions.git_worktree.git_worktrees() end,
+        desc = "Git worktrees",
+      },
+      {
+        "<leader>gW",
+        function() require("telescope").extensions.git_worktree.create_git_worktree() end,
+        desc = "Create git worktree",
       },
     },
-    opts = function(_, opts)
-      opts.update_on_change = false
-      opts.clearjumps_on_change = false
+    opts = function()
+      local opts = {
+        update_on_change = false,
+        clearjumps_on_change = false,
+        base_directory = "../.bare/",
+      }
 
       if vim.env.TMUX then
         ---Open worktree on new tmux session
@@ -77,6 +72,89 @@ return {
 
       return opts
     end,
+    config = function(_, opts)
+      require("git-worktree").setup(opts)
+
+      local telescope_opts = {
+        extensions = {
+          git_worktree = {
+            mappings = {
+              ["i"] = {
+                ["<C-d>"] = false,
+              },
+              ["n"] = {
+                ["<C-d>"] = false,
+                ["dd"] = require("telescope").extensions.git_worktree.actions.delete_worktree,
+              },
+            },
+          },
+        },
+      }
+
+      local telescope = require("telescope")
+      telescope.setup(telescope_opts)
+      telescope.load_extension("git_worktree")
+    end,
+  },
+  {
+    "nvim-telescope/telescope-live-grep-args.nvim",
+    dependencies = "nvim-telescope/telescope.nvim",
+    keys = {
+      {
+        "<leader>fv",
+        function() require("telescope-live-grep-args.shortcuts").grep_visual_selection() end,
+        mode = "v",
+        desc = "Find visual selection (C-Space fuzzy)",
+      },
+      {
+        "<leader>fg",
+        function() require("telescope").extensions.live_grep_args.live_grep_args() end,
+        desc = "Live grep (rg, C-Space fuzzy)",
+      },
+    },
+    config = function()
+      local actions = require("telescope-live-grep-args.actions")
+      local telescope = require("telescope")
+      local telescope_actions = require("telescope.actions")
+      local telescope_opts = {
+        extensions = {
+          live_grep_args = {
+            mappings = {
+              i = {
+                ["<C-k>"] = actions.quote_prompt(),
+                ["<C-i>"] = actions.quote_prompt({ postfix = " --iglob " }),
+                ["<C-Space>"] = telescope_actions.to_fuzzy_refine,
+              },
+            },
+          },
+        },
+      }
+      telescope.setup(telescope_opts)
+      telescope.load_extension("live_grep_args")
+    end,
+  },
+  {
+    "debugloop/telescope-undo.nvim",
+    dependencies = "nvim-telescope/telescope.nvim",
+    keys = {
+      {
+        "<leader>uu",
+        function() require("telescope").extensions.undo.undo() end,
+        desc = "Undo history",
+      },
+    },
+    config = function()
+      local telescope = require("telescope")
+      local telescope_opts = {
+        extensions = {
+          undo = {
+            use_delta = true,
+          },
+        },
+      }
+      telescope.setup(telescope_opts)
+      telescope.load_extension("undo")
+    end,
   },
   {
     "nvim-telescope/telescope.nvim",
@@ -84,8 +162,6 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
-      "nvim-telescope/telescope-live-grep-args.nvim",
-      "debugloop/telescope-undo.nvim",
       {
         "nvim-telescope/telescope-fzf-native.nvim",
         enabled = vim.fn.executable("make") == 1,
@@ -134,12 +210,6 @@ return {
         desc = "Find word under cursor (C-Space fuzzy)",
       },
       {
-        "<leader>fv",
-        function() require("telescope-live-grep-args.shortcuts").grep_visual_selection() end,
-        mode = "v",
-        desc = "Find visual selection (C-Space fuzzy)",
-      },
-      {
         "<leader>ff",
         function() require("telescope.builtin").find_files({ path_display = { "truncate" } }) end,
         desc = "Find files (fuzzy)",
@@ -168,26 +238,6 @@ return {
           })
         end,
         desc = "Live grep (hidden, C-Space fuzzy)",
-      },
-      {
-        "<leader>fg",
-        function() require("telescope").extensions.live_grep_args.live_grep_args() end,
-        desc = "Live grep (rg, C-Space fuzzy)",
-      },
-      {
-        "<leader>uu",
-        function() require("telescope").extensions.undo.undo() end,
-        desc = "Undo history",
-      },
-      {
-        "<leader>gw",
-        function() require("telescope").extensions.git_worktree.git_worktrees() end,
-        desc = "Git worktrees",
-      },
-      {
-        "<leader>gW",
-        function() require("telescope").extensions.git_worktree.create_git_worktree() end,
-        desc = "Create git worktree",
       },
       {
         "<leader>gc",
@@ -247,7 +297,6 @@ return {
       local actions = require("telescope.actions")
       local action_state = require("telescope.actions.state")
       local action_set = require("telescope.actions.set")
-      local lga_actions = require("telescope-live-grep-args.actions")
 
       local opts = {
         defaults = {
@@ -278,20 +327,6 @@ return {
               ["sv"] = actions.select_vertical, -- default: ["<C-v>"]
               ["te"] = actions.select_tab, -- default: ["<C-t>"]
               ["Q"] = actions.send_selected_to_qflist + actions.open_qflist, -- default: ["<M-q>"]
-            },
-          },
-        },
-        extensions = {
-          undo = {
-            use_delta = true,
-          },
-          live_grep_args = {
-            mappings = {
-              i = {
-                ["<C-k>"] = lga_actions.quote_prompt(),
-                ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
-                ["<C-Space>"] = actions.to_fuzzy_refine,
-              },
             },
           },
         },
@@ -357,11 +392,6 @@ return {
       telescope.setup(opts)
       local conditional_func = utils.conditional_func
       conditional_func(telescope.load_extension, utils.is_available("telescope-fzf-native.nvim"), "fzf")
-      -- https://github.com/nvim-telescope/telescope-live-grep-args.nvim
-      conditional_func(telescope.load_extension, utils.is_available("live_grep_args"))
-      conditional_func(telescope.load_extension, utils.is_available("telescope-undo.nvim"), "undo")
-      -- https://github.com/ThePrimeagen/git-worktree.nvim
-      conditional_func(telescope.load_extension, utils.is_available("git-worktree.nvim"), "git_worktree")
     end,
   },
 }
