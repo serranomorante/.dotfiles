@@ -4,7 +4,7 @@ local tools_by_filetype = {
   javascript = {
     formatters = { "prettierd" },
     linters = { "eslint_d" },
-    lsp = { "typescript-language-server" },
+    lsp = { "typescript-language-server", "tailwindcss-language-server" },
     dap = {
       "firefox-debug-adapter",
       ---Uncomment next line if you want to use `dapDebugServer` instead of `vsDebugServerBundle`
