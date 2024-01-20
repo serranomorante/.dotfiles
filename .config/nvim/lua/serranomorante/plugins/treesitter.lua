@@ -11,6 +11,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     dependencies = "nvim-treesitter/nvim-treesitter-textobjects",
     event = "User CustomFile",
+    tag = "v0.9.2",
     cmd = {
       "TSBufDisable",
       "TSBufEnable",
@@ -29,17 +30,6 @@ return {
     build = ":TSUpdate",
     opts = {
       ensure_installed = {
-        -- HACK: force install of shipped neovim parsers since TSUpdate doesn't correctly update them
-        -- Source: AstroNvim
-        "bash",
-        "c",
-        "lua",
-        "markdown",
-        "markdown_inline",
-        "python",
-        "query",
-        "vim",
-        "vimdoc",
         "fish", -- shell
         "javascript", -- typescript
         "jsdoc", -- typescript
