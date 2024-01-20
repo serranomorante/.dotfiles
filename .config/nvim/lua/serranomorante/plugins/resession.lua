@@ -68,7 +68,7 @@ return {
     ---Start autosave session timer.
     ---Replicate resession's autosave here without using `VimLeavePre`
     local function spin_up_autosave()
-      local ms = 10 * 1000
+      local ms = 120 * 1000
       if autosave_timer then
         autosave_timer:close()
         autosave_timer = nil
