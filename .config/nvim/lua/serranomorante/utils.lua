@@ -182,7 +182,7 @@ function M.del_buffer_autocmd(augroup, bufnr)
   if cmds_found then vim.tbl_map(function(cmd) vim.api.nvim_del_autocmd(cmd.id) end, cmds) end
 end
 
----@alias MasonEnsureInstall table<"formatters"|"lsp"|"linters"|"dap"|"extra", string[]>
+---@alias MasonEnsureInstall table<"formatters"|"lsp"|"linters"|"dap"|"extra", string[]|table[]>
 
 ---Merge several arrays into 1 array for `mason-tool-installer.nvim`
 ---@param ... MasonEnsureInstall
