@@ -4,7 +4,7 @@ local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
 return {
-  { "pmizio/typescript-tools.nvim", commit = "13d9dda2fc1ff82ca5a8ced0e1b46e93debac792", lazy = true },
+  { "pmizio/typescript-tools.nvim", lazy = true },
 
   {
     "neovim/nvim-lspconfig",
