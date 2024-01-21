@@ -83,5 +83,14 @@ return {
         callback = autoload_session,
       })
     end
+
+    vim.api.nvim_create_autocmd("VimLeavePre", {
+      desc = "Save a dir-specific session when you close Neovim",
+      group = vim.api.nvim_create_augroup("resession_autosave_session", { clear = true }),
+      callback = function()
+        -- Only save the session if nvim was started with no args
+        if vim.fn.argc(-1) == 0 then resession.save_tab(vim.fn.getcwd(), { dir = "dirsession", notify = false }) end
+      end,
+    })
   end,
 }
