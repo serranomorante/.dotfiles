@@ -93,10 +93,11 @@ return {
     local system_node_version = vim.env.SYSTEM_DEFAULT_NODE_VERSION or "latest"
     ---Bypass volta's context detection to prevent running the debugger with unsupported node versions
     local node_path = utils.cmd({ "volta", "run", "--node", system_node_version, "which", "node" }):gsub("\n", "")
+    if node_path then vim.g.node_system_executable = node_path end
 
     local vscode_js_debug_dap = mason_registry.get_package("js-debug-adapter")
 
-    if node_path and vscode_js_debug_dap then
+    if vim.g.node_system_executable and vscode_js_debug_dap then
       local dap_executable = vscode_js_debug_dap:get_install_path() .. "/js-debug/src/dapDebugServer.js"
 
       for _, type in ipairs({
@@ -114,7 +115,7 @@ return {
           host = host,
           port = "${port}",
           executable = {
-            command = node_path,
+            command = vim.g.node_system_executable,
             args = { dap_executable, "${port}", host },
           },
         }
