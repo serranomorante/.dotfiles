@@ -11,7 +11,6 @@ return {
     "nvim-treesitter/nvim-treesitter",
     dependencies = "nvim-treesitter/nvim-treesitter-textobjects",
     event = "User CustomFile",
-    tag = "v0.9.2",
     cmd = {
       "TSBufDisable",
       "TSBufEnable",
