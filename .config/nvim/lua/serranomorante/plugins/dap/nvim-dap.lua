@@ -162,10 +162,6 @@ return {
           ---These 2 options are important for nextjs apps
           webRoot = vim.fn.getcwd(),
           userDataDir = false,
-          resolveSourceMapLocations = {
-            "${workspaceFolder}/**",
-            "!**/node_modules/**",
-          },
         },
         ---While vscode supports typescript files as entrypoints to your debugger
         ---`nvim-dap-vscode-js` needs a loader like `ts-node`. A different approach
@@ -181,10 +177,6 @@ return {
           sourceMaps = true,
           protocol = "inspector",
           skipFiles = { "<node_internals>/**", "node_modules/**" },
-          resolveSourceMapLocations = {
-            "${workspaceFolder}/**",
-            "!**/node_modules/**",
-          },
         },
         {
           name = "Next.js: debug server-side",
@@ -194,10 +186,6 @@ return {
           runtimeExecutable = "npm",
           runtimeArgs = { "run-script", "dev" },
           sourceMaps = true,
-          resolveSourceMapLocations = {
-            "${workspaceFolder}/**",
-            "!**/node_modules/**",
-          },
         },
       }
     end
