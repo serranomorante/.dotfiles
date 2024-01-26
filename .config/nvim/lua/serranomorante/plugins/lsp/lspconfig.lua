@@ -275,6 +275,14 @@ return {
             },
           })
         end,
+        ["tailwindcss"] = function()
+          lspconfig["tailwindcss"].setup({
+            on_init = on_init,
+            on_attach = on_attach,
+            capabilities = capabilities,
+            filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+          })
+        end,
       }
 
       for _, server in ipairs(servers) do
