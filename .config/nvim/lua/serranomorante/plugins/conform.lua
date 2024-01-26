@@ -30,5 +30,6 @@ return {
       jsonc = { tools_by_filetype.javascript.formatters },
       markdown = { tools_by_filetype.markdown.formatters },
     },
+    log_level = vim.log.levels[vim.env.CONFORM_LOG_LEVEL or "ERROR"]
   },
 }
