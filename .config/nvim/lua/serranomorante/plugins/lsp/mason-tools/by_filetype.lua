@@ -2,7 +2,7 @@
 ---@type table<string, MasonEnsureInstall>
 local tools_by_filetype = {
   javascript = {
-    formatters = { "prettierd" },
+    formatters = { "eslint_d", "prettierd" },
     linters = { "eslint_d" },
     lsp = { "typescript-language-server", "tailwindcss-language-server" },
     dap = {
