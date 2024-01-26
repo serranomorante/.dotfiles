@@ -78,7 +78,6 @@ return {
               },
               ["n"] = {
                 ["<C-d>"] = false,
-                ["dd"] = require("telescope").extensions.git_worktree.actions.delete_worktree,
               },
             },
           },
@@ -272,6 +271,9 @@ return {
           else
             local current_file = vim.fn.resolve(vim.fn.expand("%"))
             local file_directory = vim.fn.fnamemodify(current_file, ":p:h")
+
+            ---Fix crash by removing `oil:` from path
+            if vim.startswith(file_directory, "oil:") then file_directory = file_directory:gsub("oil:", "") end
 
             -- Make `git_bcommits` compatible with git worktrees in bare repos
             options = vim.tbl_deep_extend("force", options, {
