@@ -47,6 +47,8 @@ return {
     "serranomorante/git-worktree.nvim",
     dependencies = "nvim-telescope/telescope.nvim",
     keys = {
+      ---I use this plugin as a convenient way of listing and switching between my worktrees.
+      ---For create/delete operations I just use shell commands like `git worktree add/remove`
       {
         "<leader>gw",
         function() require("telescope").extensions.git_worktree.git_worktrees() end,
