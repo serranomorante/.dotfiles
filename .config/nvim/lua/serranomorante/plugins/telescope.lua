@@ -52,17 +52,11 @@ return {
         function() require("telescope").extensions.git_worktree.git_worktrees() end,
         desc = "Git worktrees",
       },
-      {
-        "<leader>gW",
-        function() require("telescope").extensions.git_worktree.create_git_worktree() end,
-        desc = "Create git worktree",
-      },
     },
     opts = function()
       local opts = {
         update_on_change = false,
         clearjumps_on_change = false,
-        base_directory = "../.bare/",
       }
 
       if vim.env.TMUX then
