@@ -1,6 +1,7 @@
 return {
   "mxsdev/nvim-dap-vscode-js",
   dependencies = "mfussenegger/nvim-dap",
+  enabled = false,
   event = "User CustomLoadDapJsOverrides",
   config = function()
     ---https://github.com/mxsdev/nvim-dap-vscode-js?tab=readme-ov-file#debugger
