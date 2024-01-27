@@ -255,7 +255,7 @@ return {
           local delta = get_delta_previewer(previewers, "status", worktree)
 
           ---specify the path of the repo
-          local cwd = nil
+          local cwd = vim.fn.getcwd()
           ---if we should use the current buffer git root
           local use_file_path = true
           ---if we should use git root as cwd or the cwd

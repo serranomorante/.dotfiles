@@ -82,13 +82,15 @@ end
 --- Thanks AstroNvim!!
 --- https://astronvim.com/Recipes/detached_git_worktrees
 ---
----@param file string? the file to check, defaults to the current file
+---@param path string? the file to check, defaults to the current file
 ---@param worktrees table<string, string>[]? an array like table of worktrees with entries `toplevel` and `gitdir`, default retrieves from `vim.g.git_worktrees`
 ---@return table<string, string>|nil # a table specifying the `toplevel` and `gitdir` of a worktree or nil if not found
-function M.file_worktree(file, worktrees)
+function M.file_worktree(path, worktrees)
   worktrees = worktrees or vim.g.git_worktrees
   if not worktrees then return end
-  file = file or vim.fn.resolve(vim.fn.expand("%"))
+  path = path or vim.fn.resolve(vim.fn.expand("%"))
+
+  if vim.startswith(path, "oil:") then path = path:gsub("oil:", "") end
 
   for _, worktree in ipairs(worktrees) do
     if
@@ -100,7 +102,7 @@ function M.file_worktree(file, worktrees)
         worktree.gitdir,
         "ls-files",
         "--error-unmatch",
-        file,
+        path,
       }, false)
     then
       return worktree
