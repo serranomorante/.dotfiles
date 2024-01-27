@@ -297,11 +297,32 @@ return {
       {
         "<leader>gt",
         function()
-          local worktree = utils.file_worktree()
           local previewers = require("telescope.previewers")
+          local current_file = vim.fn.resolve(vim.fn.expand("%"))
+          local worktree = utils.file_worktree(current_file)
           local delta = get_delta_previewer(previewers, "status", worktree)
 
+          ---specify the path of the repo
+          local cwd = nil
+          ---if we should use the current buffer git root
+          local use_file_path = true
+          ---if we should use git root as cwd or the cwd
+          local use_git_root = true
+
+          if vim.startswith(current_file, "oil:") then
+            cwd = current_file:gsub("oil:", "")
+            use_file_path = false
+          end
+
+          if not vim.fn.isdirectory(current_file) then cwd = vim.fn.fnamemodify(current_file, ":p:h") end
+
+          ---Make this previewer compatible with git worktrees in bare repos
+          if worktree ~= nil then use_git_root = false end
+
           local options = {
+            cwd = cwd,
+            use_file_path = use_file_path,
+            use_git_root = use_git_root,
             previewer = delta,
             git_icons = {
               unmerged = TELESCOPE_GIT_ICONS.CONFLICT,
@@ -312,27 +333,6 @@ return {
               changed = TELESCOPE_GIT_ICONS.CHANGE,
             },
           }
-
-          if worktree ~= nil then
-            options = vim.tbl_deep_extend("force", options, {
-              -- if we should use git root as cwd or the cwd
-              use_git_root = false,
-            })
-          else
-            local current_file = vim.fn.resolve(vim.fn.expand("%"))
-            local file_directory = vim.fn.fnamemodify(current_file, ":p:h")
-
-            ---Fix crash by removing `oil:` from path
-            if vim.startswith(file_directory, "oil:") then file_directory = file_directory:gsub("oil:", "") end
-
-            -- Make `git_bcommits` compatible with git worktrees in bare repos
-            options = vim.tbl_deep_extend("force", options, {
-              -- if we should use the current buffer git root
-              use_file_path = true,
-              -- specify the path of the repo
-              cwd = file_directory,
-            })
-          end
 
           require("telescope.builtin").git_status(options)
         end,
