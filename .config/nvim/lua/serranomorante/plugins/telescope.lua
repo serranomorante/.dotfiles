@@ -82,54 +82,6 @@ end
 
 return {
   {
-    "serranomorante/git-worktree.nvim",
-    dependencies = "nvim-telescope/telescope.nvim",
-    keys = {
-      ---I use this plugin as a convenient way of listing and switching between my worktrees.
-      ---For create/delete operations I just use shell commands like `git worktree add/remove`
-      {
-        "<leader>gw",
-        function() require("telescope").extensions.git_worktree.git_worktrees() end,
-        desc = "Git worktrees",
-      },
-    },
-    opts = function()
-      local opts = {
-        update_on_change = false,
-        clearjumps_on_change = false,
-      }
-
-      if vim.env.TMUX then
-        ---Open worktree on new tmux session
-        opts.change_directory_command = "silent !tmux neww ~/.config/tmux/scripts/tmux-sessionizer"
-      end
-
-      return opts
-    end,
-    config = function(_, opts)
-      require("git-worktree").setup(opts)
-
-      local telescope_opts = {
-        extensions = {
-          git_worktree = {
-            mappings = {
-              ["i"] = {
-                ["<C-d>"] = false,
-              },
-              ["n"] = {
-                ["<C-d>"] = false,
-              },
-            },
-          },
-        },
-      }
-
-      local telescope = require("telescope")
-      telescope.setup(telescope_opts)
-      telescope.load_extension("git_worktree")
-    end,
-  },
-  {
     "nvim-telescope/telescope-live-grep-args.nvim",
     dependencies = "nvim-telescope/telescope.nvim",
     keys = {
