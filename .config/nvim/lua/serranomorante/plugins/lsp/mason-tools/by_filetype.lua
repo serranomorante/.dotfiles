@@ -17,7 +17,7 @@ local tools_by_filetype = {
     lsp = { "gopls" },
     extra = { "iferr", "impl" },
   },
-  json = { lsp = { "json-lsp" } },
+  json = { lsp = { "json-lsp" }, formatters = { "prettierd" } },
   c = { lsp = { "clangd" } },
   python = {
     formatters = { "isort", "black" },

@@ -26,10 +26,10 @@ return {
       typescriptreact = { tools_by_filetype.javascript.formatters },
       python = tools_by_filetype.python.formatters,
       go = tools_by_filetype.go.formatters,
-      json = { tools_by_filetype.javascript.formatters },
-      jsonc = { tools_by_filetype.javascript.formatters },
+      json = { tools_by_filetype.json.formatters },
+      jsonc = { tools_by_filetype.json.formatters },
       markdown = { tools_by_filetype.markdown.formatters },
     },
-    log_level = vim.log.levels[vim.env.CONFORM_LOG_LEVEL or "ERROR"]
+    log_level = vim.log.levels[vim.env.CONFORM_LOG_LEVEL or "ERROR"],
   },
 }

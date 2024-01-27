@@ -2,7 +2,11 @@ local utils = require("serranomorante.utils")
 
 local GIT_STATUS_ENUM = {
   NEW = "??",
+  CHANGED = " M",
   DELETED = " D",
+  NEW_STAGED = "A ",
+  CHANGED_STAGED = "M ",
+  DELETED_STAGED = "D ",
 }
 
 local TELESCOPE_GIT_ICONS = {
@@ -46,9 +50,22 @@ local get_delta_previewer = function(previewers, mode, worktree)
       elseif mode == "status" then
         local value = worktree_match and ("%s/%s"):format(worktree_match.toplevel, entry.value) or entry.value
 
-        if entry.status == GIT_STATUS_ENUM.NEW then
+        local function mark_if_staged(base, status)
+          local is_staged = vim.list_contains({
+            GIT_STATUS_ENUM.NEW_STAGED,
+            GIT_STATUS_ENUM.CHANGED_STAGED,
+            GIT_STATUS_ENUM.DELETED_STAGED,
+          }, status)
+          if is_staged then vim.list_extend(base, { "--staged" }) end
+        end
+
+        if entry.status == GIT_STATUS_ENUM.NEW or entry.status == GIT_STATUS_ENUM.NEW_STAGED then
           vim.list_extend(args, { "/dev/null", value })
-        elseif entry.status == GIT_STATUS_ENUM.DELETED then
+        elseif entry.status == GIT_STATUS_ENUM.CHANGED or entry.status == GIT_STATUS_ENUM.CHANGED_STAGED then
+          mark_if_staged(args, entry.status)
+          vim.list_extend(args, { value })
+        elseif entry.status == GIT_STATUS_ENUM.DELETED or entry.status == GIT_STATUS_ENUM.DELETED_STAGED then
+          mark_if_staged(args, entry.status)
           vim.list_extend(args, { "--", value })
         else
           table.insert(args, value)
