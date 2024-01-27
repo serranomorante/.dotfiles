@@ -26,6 +26,7 @@ return {
 
     local C = require("nightfox.lib.color")
     local palette = require("nightfox.palette").load("nightfox")
+    local spec = require("nightfox.spec").load("nightfox")
     ---Improve nightfox colors on diff view
     local DiffViewAdd = C(palette.bg0):blend(C(palette.green.dim), 0.25):to_css()
     local DiffViewChange = C(palette.bg0):blend(C(palette.blue.dim), 0.10):to_css()
@@ -40,6 +41,17 @@ return {
         },
       },
     }
+
+    local groups = {
+      nightfox = {
+        TelescopeResultsDiffAdd = { fg = spec.git.add },
+        TelescopeResultsDiffChange = { fg = spec.git.changed },
+        TelescopeResultsDiffDelete = { fg = spec.git.removed },
+        TelescopeResultsDiffUntracked = { fg = spec.palette.text },
+      },
+    }
+
+    opts.groups = vim.tbl_deep_extend("force", opts.groups, groups)
 
     return opts
   end,

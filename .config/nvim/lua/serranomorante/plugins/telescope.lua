@@ -1,5 +1,19 @@
 local utils = require("serranomorante.utils")
 
+local GIT_STATUS_ENUM = {
+  NEW = "??",
+  DELETED = " D",
+}
+
+local TELESCOPE_GIT_ICONS = {
+  CONFLICT = "",
+  ADD = "",
+  CHANGE = "",
+  DELETE = "",
+  RENAMED = "➜",
+  UNTRACKED = "◌",
+}
+
 --- A delta previewer for git status, commits and bcommits
 ---
 --- You should copy this `.gitconfig` pager change for scroll (<C-d> and <C-u>) to work
@@ -27,15 +41,22 @@ local get_delta_previewer = function(previewers, mode, worktree)
         table.insert(args, vim.fn.expand("#:p"))
       elseif mode == "commits" then
         table.insert(args, entry.value .. "^!")
-      -- git status
+      ---Git status
+      ---Make it compatible with bare repos (like `.dotfiles`)
       elseif mode == "status" then
         local value = worktree_match and ("%s/%s"):format(worktree_match.toplevel, entry.value) or entry.value
-        table.insert(args, value)
+
+        if entry.status == GIT_STATUS_ENUM.NEW then
+          vim.list_extend(args, { "/dev/null", value })
+        elseif entry.status == GIT_STATUS_ENUM.DELETED then
+          vim.list_extend(args, { "--", value })
+        else
+          table.insert(args, value)
+        end
       -- fallback
       else
         table.insert(args, entry.value .. "^!")
       end
-
       return args
     end,
   })
@@ -263,7 +284,17 @@ return {
           local previewers = require("telescope.previewers")
           local delta = get_delta_previewer(previewers, "status", worktree)
 
-          local options = { previewer = delta }
+          local options = {
+            previewer = delta,
+            git_icons = {
+              unmerged = TELESCOPE_GIT_ICONS.CONFLICT,
+              untracked = TELESCOPE_GIT_ICONS.UNTRACKED,
+              renamed = TELESCOPE_GIT_ICONS.RENAMED,
+              deleted = TELESCOPE_GIT_ICONS.DELETE,
+              added = TELESCOPE_GIT_ICONS.ADD,
+              changed = TELESCOPE_GIT_ICONS.CHANGE,
+            },
+          }
 
           if worktree ~= nil then
             options = vim.tbl_deep_extend("force", options, {
