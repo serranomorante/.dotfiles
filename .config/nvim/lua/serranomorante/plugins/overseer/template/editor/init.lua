@@ -1,1 +1,0 @@
-return { "eslint_d" }
