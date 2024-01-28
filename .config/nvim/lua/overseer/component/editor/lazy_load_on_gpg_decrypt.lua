@@ -55,6 +55,11 @@ return {
           return
         end
 
+        ---Close the terminal to prevent showing decrypted content on the screen
+        local winbuf = vim.api.nvim_win_get_buf(0)
+        local buftype = vim.api.nvim_get_option_value("buftype", { buf = winbuf })
+        if buftype == "terminal" then vim.api.nvim_win_close(0, true) end
+
         local plugin_name = params.plugin
 
         if utils.is_available(plugin_name) then
