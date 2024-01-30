@@ -1,12 +1,13 @@
+local constants = require("serranomorante.constants")
+
 return {
   {
     "windwp/nvim-ts-autotag",
-    ft = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
+    ft = constants.javascript_filetypes,
     dependencies = "nvim-treesitter/nvim-treesitter",
     opts = { enable_close_on_slash = true },
     config = function(_, opts) require("nvim-ts-autotag").setup(opts) end,
   },
-
   {
     "nvim-treesitter/nvim-treesitter",
     dependencies = "nvim-treesitter/nvim-treesitter-textobjects",

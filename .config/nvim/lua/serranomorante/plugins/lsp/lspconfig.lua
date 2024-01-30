@@ -1,4 +1,5 @@
 local utils = require("serranomorante.utils")
+local constants = require("serranomorante.constants")
 local tools_by_filetype = require("serranomorante.plugins.lsp.mason-tools.by_filetype")
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
@@ -286,7 +287,7 @@ return {
             on_init = on_init,
             on_attach = on_attach,
             capabilities = capabilities,
-            filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+            filetypes = constants.javascript_filetypes,
           })
         end,
       }
