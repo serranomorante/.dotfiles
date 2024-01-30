@@ -1,3 +1,5 @@
+local events = require("serranomorante.events")
+local constants = require("serranomorante.constants")
 local lspconfig_names_map = require("serranomorante.plugins.lsp.mason-tools.lspconfig_names_map")
 
 local M = {}
@@ -246,6 +248,20 @@ function M.plugin_opts(plugin)
     if spec then opts = lazy_plugin.values(spec, "opts") end
   end
   return opts
+end
+
+---Load plugins by custom filetype event and lazy_type
+---@param lazy_type "LSP" | "DAP"
+---@param buffer integer?
+M.load_plugin_by_filetype = function(lazy_type, buffer)
+  local buf = buffer or 0
+  local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
+  if vim.tbl_contains(constants.javascript_filetypes, filetype) then events.event("LoadJavascript" .. lazy_type) end
+  if vim.tbl_contains(constants.python_filetypes, filetype) then events.event("LoadPython" .. lazy_type) end
+  if vim.tbl_contains(constants.c_filetypes, filetype) then events.event("LoadC" .. lazy_type) end
+  if vim.tbl_contains(constants.markdown_filetypes, filetype) then events.event("LoadMarkdown" .. lazy_type) end
+  if vim.tbl_contains(constants.lua_filetypes, filetype) then events.event("LoadLua" .. lazy_type) end
+  if vim.tbl_contains(constants.json_filetypes, filetype) then events.event("LoadJson" .. lazy_type) end
 end
 
 return M
