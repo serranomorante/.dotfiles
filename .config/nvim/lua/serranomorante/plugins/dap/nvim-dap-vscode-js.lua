@@ -2,7 +2,7 @@ return {
   "mxsdev/nvim-dap-vscode-js",
   dependencies = "mfussenegger/nvim-dap",
   enabled = false,
-  event = "User CustomLoadDapJsOverrides",
+  event = "User CustomLoadJavascriptDAP",
   config = function()
     ---https://github.com/mxsdev/nvim-dap-vscode-js?tab=readme-ov-file#debugger
     local vscode_js_debug_dir = vim.fn.stdpath("data") .. "/debuggers/vscode-js-debug"

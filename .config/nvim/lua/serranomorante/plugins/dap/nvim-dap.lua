@@ -1,4 +1,4 @@
-local events = require("serranomorante.events")
+local constants = require("serranomorante.constants")
 local utils = require("serranomorante.utils")
 
 ---Debuggers can exist on one of 2 folders: `mason` or `debuggers`
@@ -81,10 +81,6 @@ return {
     dap.listeners.before.attach["dapui_config"] = dapui.open
     dap.listeners.before.launch["dapui_config"] = dapui.open
 
-    local c_fts = { "c" }
-    local python_fts = { "python" }
-    local javascript_fts = { "typescript", "javascript", "javascriptreact", "typescriptreact" }
-
     ---╔══════════════════════════════════════╗
     ---║               Adapters               ║
     ---╚══════════════════════════════════════╝
@@ -151,7 +147,7 @@ return {
       end)
     end
 
-    for _, language in ipairs(javascript_fts) do
+    for _, language in ipairs(constants.javascript_filetypes) do
       dap.configurations[language] = {
         {
           name = "DAP: Debug with PWA Chrome",
@@ -213,35 +209,27 @@ return {
     require("overseer").patch_dap(true)
     require("dap.ext.vscode").json_decode = require("overseer.json").decode
 
-    ---Load dap plugins that can override previous adapters & configs
-    ---@param buf integer?
-    local load_dap_plugins = function(buf)
-      local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf or 0 })
-      if vim.tbl_contains(javascript_fts, filetype) then events.event("LoadDapJsOverrides") end
-      if vim.tbl_contains(python_fts, filetype) then events.event("LoadDapPyOverrides") end
-    end
-
     vim.api.nvim_create_autocmd("FileType", {
-      desc = "Lazy-load dap plugins by filetype",
-      group = vim.api.nvim_create_augroup("dap_filetype_overrides", { clear = true }),
-      callback = function(args) load_dap_plugins(args.buf) end,
+      desc = "Lazy-load DAP plugins by filetype",
+      group = vim.api.nvim_create_augroup("dap_filetype_load", { clear = true }),
+      callback = function(args) utils.load_plugin_by_filetype("DAP", args.buf) end,
     })
 
-    load_dap_plugins()
+    utils.load_plugin_by_filetype("DAP")
 
     ---Only needed if your debugging type doesn't match your language type.
     ---For example, python is not necessary on this table because its debugging type is "python"
     ---@diagnostic disable-next-line: unused-local
     vscode_type_to_ft = {
-      ["node"] = javascript_fts,
-      ["chrome"] = javascript_fts,
-      ["firefox"] = javascript_fts,
-      ["pwa-node"] = javascript_fts,
-      ["pwa-chrome"] = javascript_fts,
-      ["pwa-msedge"] = javascript_fts,
-      ["node-terminal"] = javascript_fts,
-      ["pwa-extensionHost"] = javascript_fts,
-      ["cppdbg"] = c_fts,
+      ["node"] = constants.javascript_filetypes,
+      ["chrome"] = constants.javascript_filetypes,
+      ["firefox"] = constants.javascript_filetypes,
+      ["pwa-node"] = constants.javascript_filetypes,
+      ["pwa-chrome"] = constants.javascript_filetypes,
+      ["pwa-msedge"] = constants.javascript_filetypes,
+      ["node-terminal"] = constants.javascript_filetypes,
+      ["pwa-extensionHost"] = constants.javascript_filetypes,
+      ["cppdbg"] = constants.c_filetypes,
     }
   end,
 }
