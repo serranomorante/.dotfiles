@@ -80,6 +80,17 @@ local get_delta_previewer = function(previewers, mode, worktree)
   return delta
 end
 
+---Custom path_display function
+---https://github.com/nvim-telescope/telescope.nvim/issues/2014#issuecomment-1873229658
+---@param _ table
+---@param path string
+local function filename_first(_, path)
+  local tail = vim.fs.basename(path)
+  local parent = vim.fs.dirname(path)
+  if parent == "." then return tail end
+  return string.format("%s\t\t%s", tail, parent)
+end
+
 return {
   {
     "nvim-telescope/telescope-live-grep-args.nvim",
@@ -144,6 +155,19 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     lazy = true,
+    init = function()
+      ---Color everything after two tabs in the telescope result window
+      ---https://github.com/nvim-telescope/telescope.nvim/issues/2014#issuecomment-1873229658
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "TelescopeResults",
+        callback = function(ctx)
+          vim.api.nvim_buf_call(ctx.buf, function()
+            vim.fn.matchadd("TelescopeParent", "\t\t.*$")
+            vim.api.nvim_set_hl(0, "TelescopeParent", { link = "Comment" })
+          end)
+        end,
+      })
+    end,
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
@@ -196,7 +220,7 @@ return {
       },
       {
         "<leader>ff",
-        function() require("telescope.builtin").find_files({ path_display = { "truncate" } }) end,
+        function() require("telescope.builtin").find_files() end,
         desc = "Find files (fuzzy)",
       },
       {
@@ -205,7 +229,6 @@ return {
           require("telescope.builtin").find_files({
             hidden = true,
             no_ignore = true,
-            path_display = { "truncate" },
           })
         end,
         desc = "Find files (hidden, fuzzy)",
@@ -329,7 +352,17 @@ return {
           },
         },
         pickers = {
+          grep_string = {
+            path_display = filename_first,
+          },
+          live_grep = {
+            path_display = filename_first,
+          },
+          find_files = {
+            path_display = filename_first,
+          },
           buffers = {
+            path_display = filename_first,
             only_cwd = true,
             sort_mru = true,
             mappings = {
@@ -339,6 +372,7 @@ return {
             },
           },
           git_status = {
+            path_display = filename_first,
             mappings = {
               n = {
                 ---Fix selection not working for `.dotfiles` bare repo
