@@ -53,12 +53,20 @@ return {
 
       cmp.setup({
         enabled = function()
+          local buf = vim.api.nvim_get_current_buf()
           local dap_prompt = utils.is_available("cmp-dap") -- add interoperability with cmp-dap
             and vim.tbl_contains(
               { "dap-repl", "dapui_watches", "dapui_hover" },
-              vim.api.nvim_get_option_value("filetype", { buf = 0 })
+              vim.api.nvim_get_option_value("filetype", { buf = buf })
             )
-          if vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "prompt" and not dap_prompt then return false end
+
+          ---Disable for any prompts other than nvim-dap
+          if vim.api.nvim_get_option_value("buftype", { buf = buf }) == "prompt" and not dap_prompt then
+            return false
+          end
+
+          ---Disable for very large files
+          if vim.b[buf].large_buf then return false end
           return true
         end,
         snippet = { -- configure how nvim-cmp interacts with snippet engine
@@ -124,6 +132,9 @@ return {
           }),
         },
         preselect = cmp.PreselectMode.None,
+        performance = {
+          max_view_entries = 7,
+        },
       })
 
       cmp.setup.filetype("gitcommit", {
