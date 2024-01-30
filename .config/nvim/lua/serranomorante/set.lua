@@ -55,6 +55,9 @@ vim.opt.foldenable = true -- enable fold for nvim-ufo
 vim.opt.foldopen:remove({ "hor" })
 vim.opt.fillchars:append({ eob = " ", fold = " ", foldopen = " ", foldsep = " ", foldclose = "+" })
 
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+
 vim.g.markdown_fenced_languages = { "html", "javascript", "typescript", "css", "scss", "vim", "lua", "json", "yaml" }
 
 vim.g.max_file = { size = 1024 * 100, lines = 10000 } -- set global limits for large files

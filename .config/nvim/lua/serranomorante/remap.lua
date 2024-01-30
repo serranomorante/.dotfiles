@@ -28,8 +28,8 @@ vim.keymap.set(
 )
 
 -- Horizontal and vertical splits
-vim.keymap.set("n", "ss", "<cmd>split<CR><C-w>w", { desc = "Horizontal split" })
-vim.keymap.set("n", "sv", "<cmd>vsplit<CR><C-w>w", { desc = "Vertical split" })
+vim.keymap.set("n", "ss", "<cmd>split<CR>", { desc = "Horizontal split" })
+vim.keymap.set("n", "sv", "<cmd>vsplit<CR>", { desc = "Vertical split" })
 
 -- Close window
 vim.keymap.set("n", "<C-q>", "<cmd>close<CR>")

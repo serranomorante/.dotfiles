@@ -35,6 +35,7 @@ return {
       ["<C-p>"] = false, -- "actions.preview"
       ["<C-c>"] = "actions.close",
       ["<C-l>"] = false, -- "actions.refresh"
+      ["<C-h>"] = false,
       ["<leader>rr"] = "actions.refresh",
       ["-"] = "actions.parent",
       ["_"] = "actions.open_cwd",
