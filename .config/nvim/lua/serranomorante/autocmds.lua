@@ -49,6 +49,17 @@ autocmd({ "BufReadPost", "BufNewFile", "BufWritePost" }, {
     if not (current_file == "" or vim.api.nvim_get_option_value("buftype", { buf = args.buf }) == "nofile") then
       events.event("File")
     end
+
+    ---Lazy load LSP plugins
+    utils.load_plugin_by_filetype("LSP", args.buf)
+
+    ---https://github.com/AstroNvim/AstroNvim/commit/ba0fbdf974eb63639e43d6467f7232929b8b9b4c
+    vim.schedule(function()
+      if vim.bo[args.buf].filetype then
+        vim.api.nvim_exec_autocmds("FileType", { buffer = args.buf, modeline = false })
+      end
+      vim.api.nvim_exec_autocmds("CursorMoved", { modeline = false })
+    end)
   end,
 })
 

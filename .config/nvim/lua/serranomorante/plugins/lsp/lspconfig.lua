@@ -3,17 +3,72 @@ local tools_by_filetype = require("serranomorante.plugins.lsp.mason-tools.by_fil
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
-return {
-  { "pmizio/typescript-tools.nvim", lazy = true },
+local on_init = nil
+local on_attach = nil
+local capabilities = nil
 
+return {
+  {
+    "pmizio/typescript-tools.nvim",
+    dependencies = "neovim/nvim-lspconfig",
+    event = "User CustomLoadJavascriptLSP",
+    opts = {
+      on_init = on_init,
+      capabilities = capabilities,
+      on_attach = on_attach,
+      single_file_support = false,
+      settings = {
+        code_lens = "all",
+        publish_diagnostic_on = "change",
+        complete_function_calls = false,
+        expose_as_code_action = { "fix_all", "add_missing_imports", "remove_unused" },
+        separate_diagnostic_server = false,
+        tsserver_file_preferences = {
+          includeInlayParameterNameHints = "all",
+          includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+          includeInlayFunctionParameterTypeHints = true,
+          includeInlayVariableTypeHints = true,
+          includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+          includeInlayPropertyDeclarationTypeHints = true,
+          includeInlayFunctionLikeReturnTypeHints = true,
+          includeInlayEnumMemberValueHints = true,
+        },
+      },
+    },
+  },
+  {
+    "p00f/clangd_extensions.nvim",
+    dependencies = "neovim/nvim-lspconfig",
+    event = "User CustomLoadCLSP",
+    config = function()
+      require("lspconfig")["clangd"].setup({
+        on_init = on_init,
+        capabilities = vim.tbl_deep_extend("force", capabilities, { offsetEncoding = "utf-16" }),
+        on_attach = on_attach,
+      })
+    end,
+  },
+  {
+    "b0o/SchemaStore.nvim",
+    dependencies = "neovim/nvim-lspconfig",
+    event = "User CustomLoadJsonLSP",
+    config = function()
+      require("lspconfig")["jsonls"].setup({
+        on_init = on_init,
+        on_attach = on_attach,
+        capabilities = capabilities,
+        settings = {
+          json = { schemas = require("schemastore").json.schemas(), validate = { enable = true } },
+        },
+      })
+    end,
+  },
   {
     "neovim/nvim-lspconfig",
     cmd = { "LspInfo", "LspInstall", "LspStart" },
     event = "User CustomFile",
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
-      "p00f/clangd_extensions.nvim",
-      "b0o/SchemaStore.nvim",
       "nvim-telescope/telescope.nvim",
     },
     init = function()
@@ -44,13 +99,13 @@ return {
       local cmp_nvim_lsp = require("cmp_nvim_lsp")
       vim.lsp.set_log_level(vim.env.LSP_LOG_LEVEL or "INFO")
 
-      local on_init = function(client)
+      on_init = function(client)
         -- Disable semanticTokensProvider
         -- https://gist.github.com/swarn/fb37d9eefe1bc616c2a7e476c0bc0316
         client.server_capabilities.semanticTokensProvider = nil
       end
 
-      local on_attach = function(client, bufnr)
+      on_attach = function(client, bufnr)
         local opts = { noremap = true, silent = true, buffer = bufnr }
 
         if utils.is_available("telescope.nvim") then
@@ -177,62 +232,12 @@ return {
         end
       end
 
-      local capabilities =
-        vim.tbl_deep_extend("force", lspconfig.util.default_config, cmp_nvim_lsp.default_capabilities())
+      capabilities = vim.tbl_deep_extend("force", lspconfig.util.default_config, cmp_nvim_lsp.default_capabilities())
 
       local servers = utils.get_from_tools(tools_by_filetype, "lsp", true)
 
+      ---Custom handlers for lsp servers and plugins
       local custom = {
-        ["tsserver"] = function()
-          require("typescript-tools").setup({
-            on_init = on_init,
-            capabilities = capabilities,
-            on_attach = on_attach,
-            single_file_support = false,
-            settings = {
-              code_lens = "all",
-              publish_diagnostic_on = "change",
-              complete_function_calls = false,
-              expose_as_code_action = { "fix_all", "add_missing_imports", "remove_unused" },
-              separate_diagnostic_server = false,
-              tsserver_file_preferences = {
-                includeInlayParameterNameHints = "all",
-                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayVariableTypeHints = true,
-                includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-                includeInlayPropertyDeclarationTypeHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayEnumMemberValueHints = true,
-              },
-            },
-          })
-        end,
-        ["clangd"] = function()
-          lspconfig["clangd"].setup({
-            on_init = on_init,
-            capabilities = vim.tbl_deep_extend("force", capabilities, { offsetEncoding = "utf-16" }),
-            on_attach = on_attach,
-          })
-        end,
-        ["jsonls"] = function()
-          if utils.is_available("SchemaStore.nvim") then
-            lspconfig["jsonls"].setup({
-              on_init = on_init,
-              on_attach = on_attach,
-              capabilities = capabilities,
-              settings = {
-                json = { schemas = require("schemastore").json.schemas(), validate = { enable = true } },
-              },
-            })
-          else
-            lspconfig["jsonls"].setup({
-              on_init = on_init,
-              on_attach = on_attach,
-              capabilities = capabilities,
-            })
-          end
-        end,
         ["ruff_lsp"] = function()
           lspconfig["ruff_lsp"].setup({
             on_init = on_init,
@@ -262,7 +267,8 @@ return {
                 },
                 workspace = {
                   library = {
-                    vim.env.VIMRUNTIME,
+                    ---https://github.com/neovim/nvim-lspconfig/issues/2948#issuecomment-1871455900
+                    vim.env.VIMRUNTIME .. "/lua",
                   },
                 },
                 codeLens = {
@@ -285,36 +291,28 @@ return {
         end,
       }
 
-      for _, server in ipairs(servers) do
-        if not vim.tbl_contains(vim.tbl_keys(custom), server) then
-          lspconfig[server].setup({
-            on_init = on_init,
-            on_attach = on_attach,
-            capabilities = capabilities,
-          })
-        else
-          custom[server]()
+      ---Prevent lsp server setup only when plugin is available
+      if utils.is_available("typescript-tools.nvim") then custom["tsserver"] = function() end end
+      if utils.is_available("clangd_extensions.nvim") then custom["clangd"] = function() end end
+      if utils.is_available("SchemaStore.nvim") then custom["jsonls"] = function() end end
+
+      ---Setup servers that don't require any extra plugins
+      ---Lsp servers that require plugins are lazy loaded
+      local function setup_base_servers()
+        for _, server in ipairs(servers) do
+          if not vim.tbl_contains(vim.tbl_keys(custom), server) then
+            lspconfig[server].setup({
+              on_init = on_init,
+              on_attach = on_attach,
+              capabilities = capabilities,
+            })
+          else
+            custom[server]()
+          end
         end
       end
 
-      ---Forces nvim-lspconfig to launch the language server
-      ---See `:h lspconfig-setup` "autostart"
-      local function setup_servers()
-        vim.api.nvim_exec_autocmds("FileType", {
-          buffer = vim.api.nvim_get_current_buf(),
-        })
-      end
-
-      if utils.is_available("mason-tool-installer.nvim") then
-        vim.api.nvim_create_autocmd("User", {
-          desc = "Set up LSP servers after mason-tool-installer",
-          pattern = "MasonToolsUpdateCompleted",
-          once = true,
-          callback = function() setup_servers() end,
-        })
-      end
-
-      setup_servers()
+      setup_base_servers()
     end,
   },
 }
