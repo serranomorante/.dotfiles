@@ -13,29 +13,31 @@ return {
     "pmizio/typescript-tools.nvim",
     dependencies = "neovim/nvim-lspconfig",
     event = "User CustomLoadJavascriptLSP",
-    opts = {
-      on_init = on_init,
-      capabilities = capabilities,
-      on_attach = on_attach,
-      single_file_support = false,
-      settings = {
-        code_lens = "all",
-        publish_diagnostic_on = "change",
-        complete_function_calls = false,
-        expose_as_code_action = { "fix_all", "add_missing_imports", "remove_unused" },
-        separate_diagnostic_server = false,
-        tsserver_file_preferences = {
-          includeInlayParameterNameHints = "all",
-          includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-          includeInlayFunctionParameterTypeHints = true,
-          includeInlayVariableTypeHints = true,
-          includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-          includeInlayPropertyDeclarationTypeHints = true,
-          includeInlayFunctionLikeReturnTypeHints = true,
-          includeInlayEnumMemberValueHints = true,
+    opts = function()
+      return {
+        on_init = on_init,
+        capabilities = capabilities,
+        on_attach = on_attach,
+        single_file_support = false,
+        settings = {
+          code_lens = "all",
+          publish_diagnostic_on = "change",
+          complete_function_calls = false,
+          expose_as_code_action = { "fix_all", "add_missing_imports", "remove_unused" },
+          separate_diagnostic_server = false,
+          tsserver_file_preferences = {
+            includeInlayParameterNameHints = "all",
+            includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+            includeInlayFunctionParameterTypeHints = true,
+            includeInlayVariableTypeHints = true,
+            includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+            includeInlayPropertyDeclarationTypeHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayEnumMemberValueHints = true,
+          },
         },
-      },
-    },
+      }
+    end,
   },
   {
     "p00f/clangd_extensions.nvim",
