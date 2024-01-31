@@ -50,6 +50,11 @@ return {
       mode = "v",
     },
     {
+      "<leader>gH",
+      function() require("gitsigns").reset_buffer() end,
+      desc = "Reset buffer",
+    },
+    {
       "<leader>gS",
       function() require("gitsigns").stage_buffer() end,
       desc = "Stage buffer",
