@@ -153,36 +153,11 @@ return {
           name = "DAP: Debug with PWA Chrome",
           type = "pwa-chrome",
           request = "launch",
-          sourceMaps = true,
           url = url_prompt,
-          ---These 2 options are important for nextjs apps
-          webRoot = vim.fn.getcwd(),
-          userDataDir = false,
         },
-        ---While vscode supports typescript files as entrypoints to your debugger
-        ---`nvim-dap-vscode-js` needs a loader like `ts-node`. A different approach
-        ---could be using `vscode-node-debug2` but it is deprecated.
-        {
-          name = "DAP: Debug with Node (ts-node)",
-          type = "pwa-node",
-          request = "launch",
-          cwd = "${workspaceFolder}",
-          runtimeExecutable = "node",
-          runtimeArgs = { "--loader", "ts-node/esm" },
-          args = { "${file}" },
-          sourceMaps = true,
-          protocol = "inspector",
-          skipFiles = { "<node_internals>/**", "node_modules/**" },
-        },
-        {
-          name = "Next.js: debug server-side",
-          type = "pwa-node",
-          request = "launch",
-          cwd = "${workspaceFolder}",
-          runtimeExecutable = "npm",
-          runtimeArgs = { "run-script", "dev" },
-          sourceMaps = true,
-        },
+        ---Most of my dap configurations are too specific to add them here.
+        ---I'm writing some nvim-dap guides in here:
+        ---https://github.com/serranomorante/.dotfiles?tab=readme-ov-file#some-guides-to-my-self
       }
     end
 
