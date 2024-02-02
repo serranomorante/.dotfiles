@@ -11,6 +11,7 @@ Just use the dap debug server directly without this plugin.
 [example from my dotfiles](https://github.com/serranomorante/.dotfiles/blob/main/.config%2Fnvim%2Flua%2Fserranomorante%2Fplugins%2Fdap%2Fnvim-dap.lua#L94-L119)
 
 More context:
+
 vscode-js-debug is a package that provides 2 debug servers: vsDebugServer and dapDebugServer. If you go with vsDebugServer, then you need to use this plugin. If you go with dapDebugServer then you can use it directly without this plugin as showed in my config. I prefer the latter.
 
 Make sure to always install latest version of vscode-js-debug. Right now that is 1.86.1 and that version is working fine for me even on Nextjs14 (server side and client side) projects with typescript and app router.
@@ -46,19 +47,20 @@ This launch.json works:
 
 Lets explain each of this options:
 
-**name**: This can be any string, it doesn't matter.
-**type**: Use `pwa-node` as much as you can (when debugging node). Don't worry too much about this naming.
-**request**: There are only 2 possible requests: "attach" or "launch". Just those and no more. `launch` means that nvim-dap is going to start your app. This means that you don't have to worry about connecting the debugger to your running app process port, it happens automatically for you. `attach` means that you will handle starting your app in debug mode (usually with node --inspect option) and also picking the right process of your running app. I prefer the first option.
-**preLaunchTask**: (only works in vscode, if you're not using vscode or you're not using [overseer.nvim](https://github.com/stevearc/overseer.nvim) on neovim, just compile your app manually, I'm using this to avoid doing that) as we are using typescript, we need to compile the source code into javascript files. Why? because neither node nor your browser understand typescript, those execution environments only understand javascript. Typescript is for your editor only. Javascript is for the runtime execution of your code. [Here's an example of my preLaunchTask](https://github.com/serranomorante/.dotfiles/blob/a66128533113263dc6569471eeb1d4172dbe83c6/.config/nvim/lua/overseer/template/vscode/tsc_build.lua)
-**cwd**: I hate that [this option](https://github.com/microsoft/vscode-js-debug/blob/main/OPTIONS.md#cwd-1) is supposed to come as default but you still have to set it manually!! otherwise it will not work. I understand this can give you less confidence on the other defaults that `vscode-js-debug` provides, but I still recommend you not to override any options that already have a good default.
-**args**: the javascript entry point of your cli app. Don't try to put a typescript file here.
-**stopOnEntry**: very important option, otherwise your app might finish running without stopping at any of your breakpoints, I believe that is because `vscode-js-debug` breakpoints are set asynchronously and somehow you need to force your app to stop at the entry.
+- **name**: This can be any string, it doesn't matter.
+- **type**: Use `pwa-node` as much as you can (when debugging node). Don't worry too much about this naming.
+- **request**: There are only 2 possible requests: "attach" or "launch". Just those and no more. `launch` means that nvim-dap is going to start your app. This means that you don't have to worry about connecting the debugger to your running app process port, it happens automatically for you. `attach` means that you will handle starting your app in debug mode (usually with node --inspect option) and also picking the right process of your running app. I prefer the first option.
+- **preLaunchTask**: (only works in vscode, if you're not using vscode or you're not using [overseer.nvim](https://github.com/stevearc/overseer.nvim) on neovim, just compile your app manually, I'm using this to avoid doing that) as we are using typescript, we need to compile the source code into javascript files. Why? because neither node nor your browser understand typescript, those execution environments only understand javascript. Typescript is for your editor only. Javascript is for the runtime execution of your code. [Here's an example of my preLaunchTask](https://github.com/serranomorante/.dotfiles/blob/a66128533113263dc6569471eeb1d4172dbe83c6/.config/nvim/lua/overseer/template/vscode/tsc_build.lua)
+- **cwd**: I hate that [this option](https://github.com/microsoft/vscode-js-debug/blob/main/OPTIONS.md#cwd-1) is supposed to come as default but you still have to set it manually!! otherwise it will not work. I understand this can give you less confidence on the other defaults that `vscode-js-debug` provides, but I still recommend you not to override any options that already have a good default.
+- **args**: the javascript entry point of your cli app. Don't try to put a typescript file here.
+- **stopOnEntry**: very important option, otherwise your app might finish running without stopping at any of your breakpoints, I believe that is because `vscode-js-debug` breakpoints are set asynchronously and somehow you need to force your app to stop at the entry.
 
 ## How to better debug?
 
 `nvim-dap` and `vscode-js-debug` logs are your friend. Doesn't `nvim-dap` show the `vscode-js-debug` logs already? not really, `vscode-js-debug` generates more verbose logging compressed files that are very very useful for understanding what is going wrong with your config.
 
 How to enable `nvim-dap` logging? read the docs.
+
 How to enable `vscode-js-debug`, add the `trace: true` option to the previous config file:
 
 ```javascript
