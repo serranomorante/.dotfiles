@@ -88,3 +88,13 @@ How to uncompress that? Use this to avoid any silly mistakes:
 ### Tips for debugging
 
 On this verbose logging file, search for any of your typescript files to make sure they are correctly mapped. For example, I searched `PostmanAPIService.ts` and realized that the full path that `vscode-js-debug` was resolving was wrong. Search specific typescript files not those generic ones like `index.ts`.
+
+### How sourcemaps work?
+
+It might seem intuitive to think that source maps work by mapping your typescript files (where you set your breakpoints) to your javascript files but is actually the otherway around. Your javascript files (`index.js`) will contain a link (in a comment) to your source map files (`index.js.map`) which in consequence will contain a link to your typescript file (`index.ts`). Your debugger uses this information to stop on the breakpoint you set on the typescript file in your source code.
+
+### What can go wrong?
+
+- If you're new to nvim-dap, first try to make it work with minimal projects (like those from framework examples like: vite, parcel, nextjs, etc). Don't use projects that are bloated with dependencies that can mess things up.
+- `vscode-js-debug` not resolving your paths correctly are one of the most common problems. Use the techniques presented above to make sure your paths are correct.
+- [next-translate](https://github.com/aralroca/next-translate?tab=readme-ov-file#3-configuration) uses a custom webpack loader that mess up with the source map locations of your next.js project. Use `loader: false` on next-translate to fix this.
