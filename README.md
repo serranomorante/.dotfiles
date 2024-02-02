@@ -50,6 +50,7 @@ As I don't want to duplicate the same env variables and aliases from my `.bashrc
 - [keyd special chars setup](./docs/keyd-setup.md)
 - [disable internal keyboard with libinput and keyd](./docs/disable-internal-keyboard.md)
 - [migrate from optimus-manager to official NVIDIA prime](./docs/nvidia-setup.md)
+- [nvim-dap and node cli app written in typescript](./docs/nvim-dap-node-cli.md)
 
 ## Past tools
 
