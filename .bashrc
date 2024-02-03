@@ -65,5 +65,6 @@ alias conf="~/.config/tmux/scripts/config.sh"
 # INFO
 # WARN
 # ERROR
-export DAP_LOG_LEVEL=ERROR
-export LSP_LOG_LEVEL=ERROR
+export DAP_LOG_LEVEL=INFO
+export LSP_LOG_LEVEL=INFO
+export CONFORM_LOG_LEVEL=INFO
