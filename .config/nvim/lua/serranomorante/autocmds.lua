@@ -7,19 +7,10 @@ local general = augroup("General Settings", { clear = true })
 
 autocmd("TextYankPost", {
   desc = "Highlight yanked text",
-  group = augroup("highlightyank", { clear = true }),
-  callback = function(event)
-    local highlight_timeout = 1000
-    local illuminate_available = utils.is_available("vim-illuminate")
-
-    if illuminate_available then
-      require("illuminate").invisible_buf(event.buf)
-      vim.defer_fn(function() require("illuminate").visible_buf(event.buf) end, highlight_timeout)
-    end
-
+  group = augroup("highlight_yank", { clear = true }),
+  callback = function()
     vim.highlight.on_yank({
-      higroup = "Substitute",
-      timeout = highlight_timeout,
+      timeout = 300,
       on_macro = true,
     })
   end,
