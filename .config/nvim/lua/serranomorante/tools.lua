@@ -1,6 +1,8 @@
----Names should be mason.nvim compatible
+local M = {}
+
+---Names should be mason and treesitter compatible
 ---@type table<string, ToolEnsureInstall>
-local tools_by_filetype = {
+M.by_filetype = {
   javascript = {
     formatters = { "eslint_d", "prettierd" },
     linters = { "eslint_d" },
@@ -34,8 +36,8 @@ local tools_by_filetype = {
   toml = { lsp = { "taplo" }, parsers = { "toml" } },
 }
 
-if vim.fn.executable("npm") == 0 then tools_by_filetype.javascript = {} end
-if vim.fn.executable("go") == 0 then tools_by_filetype.go = {} end
-if vim.fn.executable("pip") == 0 then tools_by_filetype.python = {} end
+if vim.fn.executable("npm") == 0 then M.by_filetype.javascript = {} end
+if vim.fn.executable("go") == 0 then M.by_filetype.go = {} end
+if vim.fn.executable("pip") == 0 then M.by_filetype.python = {} end
 
-return tools_by_filetype
+return M

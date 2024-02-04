@@ -1,6 +1,6 @@
 local utils = require("serranomorante.utils")
 local constants = require("serranomorante.constants")
-local tools_by_filetype = require("serranomorante.plugins.lsp.mason-tools.by_filetype")
+local tools = require("serranomorante.tools")
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
@@ -237,7 +237,7 @@ return {
 
       capabilities = vim.tbl_deep_extend("force", lspconfig.util.default_config, cmp_nvim_lsp.default_capabilities())
 
-      local servers = utils.get_from_tools(tools_by_filetype, "lsp", true)
+      local servers = utils.get_from_tools(tools.by_filetype, "lsp", true)
 
       ---Custom handlers for lsp servers and plugins
       local custom = {

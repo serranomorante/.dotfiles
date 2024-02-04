@@ -1,5 +1,5 @@
 local utils = require("serranomorante.utils")
-local tools_by_filetype = require("serranomorante.plugins.lsp.mason-tools.by_filetype")
+local tools = require("serranomorante.tools")
 
 return {
   -- mason-tool-installer.nvim should be in charge of installs/updates and not mason.nvim
@@ -36,16 +36,16 @@ return {
       run_on_start = false,
       ensure_installed = utils.merge_tools(
         "mason",
-        tools_by_filetype.c,
-        tools_by_filetype.go,
-        tools_by_filetype.lua,
-        tools_by_filetype.bash,
-        tools_by_filetype.json,
-        tools_by_filetype.rust,
-        tools_by_filetype.toml,
-        tools_by_filetype.python,
-        tools_by_filetype.markdown,
-        tools_by_filetype.javascript
+        tools.by_filetype.c,
+        tools.by_filetype.go,
+        tools.by_filetype.lua,
+        tools.by_filetype.bash,
+        tools.by_filetype.json,
+        tools.by_filetype.rust,
+        tools.by_filetype.toml,
+        tools.by_filetype.python,
+        tools.by_filetype.markdown,
+        tools.by_filetype.javascript
       ),
     },
   },

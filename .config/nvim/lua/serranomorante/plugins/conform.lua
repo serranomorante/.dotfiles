@@ -1,4 +1,4 @@
-local tools_by_filetype = require("serranomorante.plugins.lsp.mason-tools.by_filetype")
+local tools = require("serranomorante.tools")
 
 return {
   "stevearc/conform.nvim",
@@ -19,17 +19,17 @@ return {
   },
   opts = {
     formatters_by_ft = {
-      lua = tools_by_filetype.lua.formatters,
-      javascript = { tools_by_filetype.javascript.formatters },
-      typescript = { tools_by_filetype.javascript.formatters },
-      javascriptreact = { tools_by_filetype.javascript.formatters },
-      typescriptreact = { tools_by_filetype.javascript.formatters },
-      python = tools_by_filetype.python.formatters,
-      go = tools_by_filetype.go.formatters,
-      json = { tools_by_filetype.json.formatters },
-      jsonc = { tools_by_filetype.json.formatters },
-      markdown = { tools_by_filetype.markdown.formatters },
-      fish = { tools_by_filetype.fish.formatters },
+      lua = tools.by_filetype.lua.formatters,
+      javascript = { tools.by_filetype.javascript.formatters },
+      typescript = { tools.by_filetype.javascript.formatters },
+      javascriptreact = { tools.by_filetype.javascript.formatters },
+      typescriptreact = { tools.by_filetype.javascript.formatters },
+      python = tools.by_filetype.python.formatters,
+      go = tools.by_filetype.go.formatters,
+      json = { tools.by_filetype.json.formatters },
+      jsonc = { tools.by_filetype.json.formatters },
+      markdown = { tools.by_filetype.markdown.formatters },
+      fish = { tools.by_filetype.fish.formatters },
     },
     log_level = vim.log.levels[vim.env.CONFORM_LOG_LEVEL or "ERROR"],
   },

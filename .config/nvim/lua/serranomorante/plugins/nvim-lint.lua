@@ -1,4 +1,4 @@
-local tools_by_filetype = require("serranomorante.plugins.lsp.mason-tools.by_filetype")
+local tools = require("serranomorante.tools")
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
@@ -16,11 +16,11 @@ return {
     local lint = require("lint")
 
     lint.linters_by_ft = {
-      javascript = tools_by_filetype.javascript.linters,
-      typescript = tools_by_filetype.javascript.linters,
-      javascriptreact = tools_by_filetype.javascript.linters,
-      typescriptreact = tools_by_filetype.javascript.linters,
-      python = tools_by_filetype.python.linters,
+      javascript = tools.by_filetype.javascript.linters,
+      typescript = tools.by_filetype.javascript.linters,
+      javascriptreact = tools.by_filetype.javascript.linters,
+      typescriptreact = tools.by_filetype.javascript.linters,
+      python = tools.by_filetype.python.linters,
     }
 
     autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {

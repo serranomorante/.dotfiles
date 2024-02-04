@@ -1,6 +1,6 @@
 local utils = require("serranomorante.utils")
 local constants = require("serranomorante.constants")
-local tools_by_filetype = require("serranomorante.plugins.lsp.mason-tools.by_filetype")
+local tools = require("serranomorante.tools")
 
 return {
   {
@@ -33,12 +33,12 @@ return {
     opts = {
       ensure_installed = utils.merge_tools(
         "treesitter",
-        tools_by_filetype.javascript,
-        tools_by_filetype.go,
-        tools_by_filetype.c,
-        tools_by_filetype.rust,
-        tools_by_filetype.fish,
-        tools_by_filetype.toml
+        tools.by_filetype.javascript,
+        tools.by_filetype.go,
+        tools.by_filetype.c,
+        tools.by_filetype.rust,
+        tools.by_filetype.fish,
+        tools.by_filetype.toml
       ),
       highlight = {
         enable = true,
