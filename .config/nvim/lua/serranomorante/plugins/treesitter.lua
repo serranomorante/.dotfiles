@@ -4,6 +4,15 @@ local tools = require("serranomorante.tools")
 
 return {
   {
+    "JoosepAlviste/nvim-ts-context-commentstring",
+    lazy = true,
+    dependencies = "nvim-treesitter/nvim-treesitter",
+    opts = {
+      enable_autocmd = false,
+    },
+    init = function() vim.g.skip_ts_context_commentstring_module = true end,
+  },
+  {
     "windwp/nvim-ts-autotag",
     ft = constants.javascript_filetypes,
     dependencies = "nvim-treesitter/nvim-treesitter",
