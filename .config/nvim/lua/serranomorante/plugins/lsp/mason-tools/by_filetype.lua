@@ -1,5 +1,5 @@
 ---Names should be mason.nvim compatible
----@type table<string, MasonEnsureInstall>
+---@type table<string, ToolEnsureInstall>
 local tools_by_filetype = {
   javascript = {
     formatters = { "eslint_d", "prettierd" },
@@ -10,25 +10,32 @@ local tools_by_filetype = {
       -- { "js-debug-adapter", version = "v1.82.0" },
       "js-debug-adapter",
     },
+    parsers = { "javascript", "typescript", "jsdoc", "tsx" },
   },
   lua = { formatters = { "stylua" }, lsp = { "lua-language-server" } },
   go = {
     formatters = { "gofumpt", "goimports", "gomodifytags" },
     lsp = { "gopls" },
     extra = { "iferr", "impl" },
+    parsers = { "go" },
   },
   json = { lsp = { "json-lsp" }, formatters = { "prettierd" } },
-  c = { lsp = { "clangd" } },
+  c = { lsp = { "clangd" }, parsers = { "cpp" } },
   python = {
     formatters = { "isort", "black" },
     linters = { "mypy", "pylint" },
     lsp = { "pyright", "ruff-lsp" },
     dap = { "debugpy" },
   },
-  rust = { lsp = { "rust-analyzer" } },
+  rust = { lsp = { "rust-analyzer" }, parsers = { "rust" } },
   bash = { lsp = { "bash-language-server" } },
+  fish = { formatters = { "fish_indent" }, parsers = { "fish" } },
   markdown = { lsp = { "marksman" }, formatters = { "prettierd" } },
-  toml = { lsp = { "taplo" } },
+  toml = { lsp = { "taplo" }, parsers = { "toml" } },
 }
+
+if vim.fn.executable("npm") == 0 then tools_by_filetype.javascript = {} end
+if vim.fn.executable("go") == 0 then tools_by_filetype.go = {} end
+if vim.fn.executable("pip") == 0 then tools_by_filetype.python = {} end
 
 return tools_by_filetype

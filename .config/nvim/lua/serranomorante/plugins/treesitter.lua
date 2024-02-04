@@ -1,4 +1,6 @@
+local utils = require("serranomorante.utils")
 local constants = require("serranomorante.constants")
+local tools_by_filetype = require("serranomorante.plugins.lsp.mason-tools.by_filetype")
 
 return {
   {
@@ -29,18 +31,15 @@ return {
     },
     build = ":TSUpdate",
     opts = {
-      ensure_installed = {
-        "fish", -- shell
-        "javascript", -- typescript
-        "jsdoc", -- typescript
-        "tsx", -- typescript
-        "typescript", -- typescript
-        "toml", -- python
-        "go", -- golang
-        "rust", -- rust
-        "cpp", -- c/c++
-        "kdl", -- kdl
-      },
+      ensure_installed = utils.merge_tools(
+        "treesitter",
+        tools_by_filetype.javascript,
+        tools_by_filetype.go,
+        tools_by_filetype.c,
+        tools_by_filetype.rust,
+        tools_by_filetype.fish,
+        tools_by_filetype.toml
+      ),
       highlight = {
         enable = true,
         disable = function(_, bufnr) return vim.b[bufnr].large_buf end,

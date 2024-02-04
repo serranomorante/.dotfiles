@@ -186,18 +186,23 @@ function M.del_buffer_autocmd(augroup, bufnr)
   if cmds_found then vim.tbl_map(function(cmd) vim.api.nvim_del_autocmd(cmd.id) end, cmds) end
 end
 
----@alias MasonEnsureInstall table<"formatters"|"lsp"|"linters"|"dap"|"extra", string[]|table[]>
+---@alias ToolEnsureInstall table<"formatters"|"lsp"|"linters"|"dap"|"extra"|"parsers", string[]|table[]>
 
----Merge several arrays into 1 array for `mason-tool-installer.nvim`
----@param ... MasonEnsureInstall
-function M.mason_merge_tools(...)
+---Merge several arrays into 1 array
+---@param installer_type "treesitter"|"mason"?
+---@param ... ToolEnsureInstall
+function M.merge_tools(installer_type, ...)
   local merge = {}
   for _, v in ipairs({ ... }) do
-    if vim.tbl_isarray(v.formatters) then vim.list_extend(merge, v.formatters) end
-    if vim.tbl_isarray(v.lsp) then vim.list_extend(merge, v.lsp) end
-    if vim.tbl_isarray(v.linters) then vim.list_extend(merge, v.linters) end
-    if vim.tbl_isarray(v.dap) then vim.list_extend(merge, v.dap) end
-    if vim.tbl_isarray(v.extra) then vim.list_extend(merge, v.extra) end
+    if installer_type == "mason" then
+      if vim.tbl_isarray(v.formatters) then vim.list_extend(merge, v.formatters) end
+      if vim.tbl_isarray(v.lsp) then vim.list_extend(merge, v.lsp) end
+      if vim.tbl_isarray(v.linters) then vim.list_extend(merge, v.linters) end
+      if vim.tbl_isarray(v.dap) then vim.list_extend(merge, v.dap) end
+      if vim.tbl_isarray(v.extra) then vim.list_extend(merge, v.extra) end
+    elseif installer_type == "treesitter" then
+      if vim.tbl_isarray(v.parsers) then vim.list_extend(merge, v.parsers) end
+    end
   end
 
   local unique_merge = {}
@@ -208,7 +213,7 @@ function M.mason_merge_tools(...)
 end
 
 ---Get a list of tools from a specific tool type: lsp, dap, etc.
----@param base table<string, MasonEnsureInstall> The base list of tools
+---@param base table<string, ToolEnsureInstall> The base list of tools
 ---@param tool_type string The type to extract tools from
 ---@param with_map boolean? If the name of the tool should be map (lua-language-server -> lua_ls)
 ---@return string[]

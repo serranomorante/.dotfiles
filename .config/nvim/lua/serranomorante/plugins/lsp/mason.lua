@@ -34,7 +34,8 @@ return {
     end,
     opts = {
       run_on_start = false,
-      ensure_installed = utils.mason_merge_tools(
+      ensure_installed = utils.merge_tools(
+        "mason",
         tools_by_filetype.c,
         tools_by_filetype.go,
         tools_by_filetype.lua,
