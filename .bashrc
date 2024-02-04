@@ -12,6 +12,13 @@
 # [[ $- != *i* ]] && return
 
 # alias ls='ls --color=auto'
+#
+brew_ubuntu_path=/home/linuxbrew/.linuxbrew/bin/brew
+
+if [ -x "$brew_ubuntu_path" ]; then
+    eval "$($brew_ubuntu_path shellenv)"
+fi
+
 
 if [ -x "$(command -v eza)" ]; then
     alias ls='eza -1 -l --icons always --color always'

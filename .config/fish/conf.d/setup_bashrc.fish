@@ -1,5 +1,11 @@
 # A duplication of ~/.bashrc for fish
 
+set -l brew_ubuntu_path /home/linuxbrew/.linuxbrew/bin/brew
+
+if test -e "$brew_ubuntu_path"; and test -x "$brew_ubuntu_path"
+    eval "$($brew_ubuntu_path shellenv)"
+end
+
 command -q eza; and abbr --add ls eza -1 -l --icons always --color always
 abbr --add grep grep --color=auto
 
