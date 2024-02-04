@@ -88,4 +88,6 @@ export CONFORM_LOG_LEVEL=INFO
 
 if [ -x "$(command -v fish)" ]; then
     export TMUX_SHELL="$(command -v fish)"
+else
+    export TMUX_SHELL="$(command -v bash)"
 fi
