@@ -1,6 +1,6 @@
 local events = require("serranomorante.events")
 local constants = require("serranomorante.constants")
-local lspconfig_names_map = require("serranomorante.plugins.lsp.mason-tools.lspconfig_names_map")
+local tools = require("serranomorante.tools")
 
 local M = {}
 
@@ -223,7 +223,7 @@ function M.get_from_tools(base, tool_type, with_map)
   for _, v in pairs(base) do
     if vim.tbl_isarray(v[tool_type]) then
       for _, tool in ipairs(v[tool_type]) do
-        local tool_name = should_map and lspconfig_names_map[tool] or tool
+        local tool_name = should_map and tools.mason_to_lspconfig[tool] or tool
         if tool_name and not vim.list_contains(types, tool_name) then table.insert(types, tool_name) end
       end
     end
