@@ -64,3 +64,5 @@ end
 set -gx DAP_LOG_LEVEL INFO
 set -gx LSP_LOG_LEVEL INFO
 set -gx CONFORM_LOG_LEVEL INFO
+
+command -q fish; and set -gx TMUX_SHELL "$(command -v fish)"
