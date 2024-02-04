@@ -12,7 +12,11 @@
 # [[ $- != *i* ]] && return
 
 # alias ls='ls --color=auto'
-alias ls='eza -1 -l --icons always --color always'
+
+if [ -x $(command -v eza) ]; then
+    alias ls='eza -1 -l --icons always --color always'
+fi
+
 alias grep='grep --color=auto'
 
 # Clear a terminal screen for real
@@ -28,7 +32,9 @@ export PATH="$HOME/.local/bin:$PATH"
 # Add pynvim to path
 export PATH="/usr/lib/python3.11/site-packages:$PATH"
 # For go packages
-export PATH="$PATH:$(go env GOBIN):$(go env GOPATH)/bin"
+if [ -x $(command -v go) ]; then
+    export PATH="$PATH:$(go env GOBIN):$(go env GOPATH)/bin"
+fi
 
 # system env variables
 export SYSTEMD_PAGER=""
@@ -51,9 +57,13 @@ export WIREPLUMBER_DEBUG=3
 # aliases
 alias config='/usr/bin/git --git-dir=/home/serranomorante/.dotfiles/ --work-tree=/home/serranomorante'
 
-alias vim='nvim'
+if [ -x $(command -v nvim) ]; then
+    alias vim='nvim'
+fi
 
-export SYSTEM_DEFAULT_NODE_VERSION=$(volta list node | grep "default" | cut -d "@" -f 2 | cut -d " " -f 1)
+if [ -x $(command -v volta) ]; then
+    export SYSTEM_DEFAULT_NODE_VERSION=$(volta list node | grep "default" | cut -d "@" -f 2 | cut -d " " -f 1)
+fi
 
 alias work="~/.config/tmux/scripts/work.sh"
 alias conf="~/.config/tmux/scripts/config.sh"
