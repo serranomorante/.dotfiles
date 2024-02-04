@@ -13,7 +13,7 @@
 
 # alias ls='ls --color=auto'
 
-if [ -x $(command -v eza) ]; then
+if [ -x "$(command -v eza)" ]; then
     alias ls='eza -1 -l --icons always --color always'
 fi
 
@@ -32,7 +32,7 @@ export PATH="$HOME/.local/bin:$PATH"
 # Add pynvim to path
 export PATH="/usr/lib/python3.11/site-packages:$PATH"
 # For go packages
-if [ -x $(command -v go) ]; then
+if [ -x "$(command -v go)" ]; then
     export PATH="$PATH:$(go env GOBIN):$(go env GOPATH)/bin"
 fi
 
@@ -57,11 +57,11 @@ export WIREPLUMBER_DEBUG=3
 # aliases
 alias config='/usr/bin/git --git-dir=/home/serranomorante/.dotfiles/ --work-tree=/home/serranomorante'
 
-if [ -x $(command -v nvim) ]; then
+if [ -x "$(command -v nvim)" ]; then
     alias vim='nvim'
 fi
 
-if [ -x $(command -v volta) ]; then
+if [ -x "$(command -v volta)" ]; then
     export SYSTEM_DEFAULT_NODE_VERSION=$(volta list node | grep "default" | cut -d "@" -f 2 | cut -d " " -f 1)
 fi
 
