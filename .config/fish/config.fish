@@ -1,8 +1,6 @@
 if status is-interactive
-    source ~/.bashrc
-
     # Commands to run in interactive sessions can go here
-    set fish_greeting ""
+    set -g fish_greeting ""
 
     # Set vi key bindings
     set fish_key_bindings fish_vi_key_bindings
@@ -12,34 +10,15 @@ if status is-interactive
     # https://github.com/fish-shell/fish-shell/issues/5894
     set -g fish_escape_delay_ms 10
 
-    # Use fzf to search history
-    function reverse_history_search
-      history | fzf --no-sort -q "$(commandline -b)" | read -l command
-      if test $command
-        commandline -rb $command
-      end
-    end
-
-    function fish_user_key_bindings
-      bind -M default / reverse_history_search
-    end
-
     # Add ruby gems
-    rbenv init - fish | source
+    command -q rbenv; and rbenv init - fish | source
 
-    # Setup pyenv for fish
     # See https://github.com/pyenv/pyenv#set-up-your-shell-environment-for-pyenv
-    pyenv init - | source
-
-    # Enable auto-activation of virtualenvs
-    # See https://github.com/pyenv/pyenv-virtualenv#installing-as-a-pyenv-plugin
-    # I'm commenting this line for now because I stopped liking pyenv-virtualenv
-    # and now I just use poetry.
-    # pyenv virtualenv-init - | source
+    command -q pyenv; and pyenv init - | source
 
     # https://github.com/ajeetdsouza/zoxide?tab=readme-ov-file#installation
-    zoxide init fish | source
+    command -q zoxide; and zoxide init fish | source
 
     # https://github.com/direnv/direnv/blob/master/docs/hook.md#fish
-    direnv hook fish | source
+    command -q direnv; and direnv hook fish | source
 end
