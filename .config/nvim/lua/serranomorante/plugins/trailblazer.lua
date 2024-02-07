@@ -70,24 +70,22 @@ return {
 
     local hl_groups = {}
     if utils.is_available("nightfox.nvim") then
-      if vim.g.colors_name == "nightfox" then
-        local palette = require("nightfox.palette").load("nightfox")
+      local palette = require("nightfox.palette").load(vim.g.colors_name)
 
-        hl_groups = vim.tbl_deep_extend("force", hl_groups, {
-          TrailBlazerTrailMark = {
-            guifg = palette.fg2,
-          },
-          TrailBlazerTrailMarkNext = {
-            guifg = palette.fg2,
-          },
-          TrailBlazerTrailMarkPrevious = {
-            guifg = palette.fg2,
-          },
-          TrailBlazerTrailMarkNewest = {
-            guibg = palette.fg2,
-          },
-        })
-      end
+      hl_groups = vim.tbl_deep_extend("force", hl_groups, {
+        TrailBlazerTrailMark = {
+          guifg = palette.fg2,
+        },
+        TrailBlazerTrailMarkNext = {
+          guifg = palette.fg2,
+        },
+        TrailBlazerTrailMarkPrevious = {
+          guifg = palette.fg2,
+        },
+        TrailBlazerTrailMarkNewest = {
+          guibg = palette.fg2,
+        },
+      })
     end
     opts.hl_groups = hl_groups
 

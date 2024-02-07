@@ -9,6 +9,12 @@ return {
         dim_inactive = false,
       },
       groups = {
+        all = {
+          ---Improve nvim-dap highlights for breakpoints
+          DapBreakpoint = { fg = "red" },
+          DapLogPoint = { fg = "magenta" },
+          DapStopped = { fg = "cyan" },
+        },
         nightfox = {
           ---Make window splits more obvious
           WinSeparator = { fg = "bg2" },
@@ -16,10 +22,6 @@ return {
           Folded = { bg = "bg0" },
           ---Differentiate CodeLens from comments
           LspCodeLens = { bg = "bg0" },
-          ---Improve nvim-dap highlights for breakpoints
-          DapBreakpoint = { fg = "red" },
-          DapLogPoint = { fg = "magenta" },
-          DapStopped = { fg = "cyan" },
         },
       },
     }
@@ -43,7 +45,7 @@ return {
     }
 
     local groups = {
-      nightfox = {
+      all = {
         TelescopeResultsDiffAdd = { fg = spec.git.add },
         TelescopeResultsDiffChange = { fg = spec.git.changed },
         TelescopeResultsDiffDelete = { fg = spec.git.removed },
@@ -68,6 +70,6 @@ return {
       carbonfox = "carbonfox",
     }
 
-    vim.cmd("colorscheme " .. colors_name.nightfox)
+    vim.cmd("colorscheme " .. colors_name.terafox)
   end,
 }
