@@ -352,6 +352,9 @@ return {
           },
         },
         pickers = {
+          lsp_references = {
+            path_display = filename_first,
+          },
           grep_string = {
             path_display = filename_first,
           },
