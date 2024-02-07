@@ -73,3 +73,5 @@ vim.g.git_worktrees = {
     gitdir = vim.env.HOME .. "/.dotfiles",
   },
 }
+
+vim.opt.updatetime = 50
