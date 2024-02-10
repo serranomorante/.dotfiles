@@ -115,11 +115,14 @@ return {
       local telescope_opts = {
         extensions = {
           live_grep_args = {
+            path_display = filename_first,
             mappings = {
               i = {
                 ["<C-k>"] = actions.quote_prompt(),
                 ["<C-i>"] = actions.quote_prompt({ postfix = " --iglob " }),
                 ["<C-Space>"] = telescope_actions.to_fuzzy_refine,
+                ["<C-l>"] = actions.cycle_history_next,
+                ["<C-h>"] = actions.cycle_history_prev,
               },
             },
           },
