@@ -52,6 +52,8 @@ export SYSTEMD_PAGER=""
 export FZF_DEFAULT_COMMAND="fd --type f"
 export FZF_DEFAULT_OPTS="--layout=reverse --border"
 
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+
 # Wireplumber logging
 # 0. critical warnings and fatal errors (C & E in the log)
 # 1. warnings (W)

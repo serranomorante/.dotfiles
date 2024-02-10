@@ -34,6 +34,8 @@ set -gx SYSTEMD_PAGER ""
 set -gx FZF_DEFAULT_COMMAND "fd --type f"
 set -gx FZF_DEFAULT_OPTS "--layout=reverse --border"
 
+set -gx RIPGREP_CONFIG_PATH "$HOME/.ripgreprc"
+
 # Wireplumber logging
 # 0. critical warnings and fatal errors (C & E in the log)
 # 1. warnings (W)
