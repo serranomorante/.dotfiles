@@ -2,68 +2,68 @@ return {
   {
     "mrjones2014/smart-splits.nvim",
     keys = {
-      -- Moving between splits
+      ---Moving between splits
       {
         "<C-h>",
         function() require("smart-splits").move_cursor_left() end,
-        desc = "Move cursor left",
+        desc = "Splits: Move cursor left",
       },
       {
         "<C-j>",
         function() require("smart-splits").move_cursor_down() end,
-        desc = "Move cursor down",
+        desc = "Splits: Move cursor down",
       },
       {
         "<C-k>",
         function() require("smart-splits").move_cursor_up() end,
-        desc = "Move cursor up",
+        desc = "Splits: Move cursor up",
       },
       {
         "<C-l>",
         function() require("smart-splits").move_cursor_right() end,
-        desc = "Move cursor right",
+        desc = "Splits: Move cursor right",
       },
-      -- Resize splits keymaps
+      ---Resize splits keymaps
       {
         "<C-Left>",
         function() require("smart-splits").resize_left() end,
-        desc = "Resize left",
+        desc = "Splits: Resize left",
       },
       {
         "<C-Down>",
         function() require("smart-splits").resize_down() end,
-        desc = "Resize down",
+        desc = "Splits: Resize down",
       },
       {
         "<C-Up>",
         function() require("smart-splits").resize_up() end,
-        desc = "Resize up",
+        desc = "Splits: Resize up",
       },
       {
         "<C-Right>",
         function() require("smart-splits").resize_right() end,
-        desc = "Resize right",
+        desc = "Splits: Resize right",
       },
-      -- Swap splits keymaps
+      ---Swap splits keymaps
       {
         "<leader><leader>h",
         function() require("smart-splits").swap_buf_left() end,
-        desc = "Swap left",
+        desc = "Splits: Swap left",
       },
       {
         "<leader><leader>j",
         function() require("smart-splits").swap_buf_down() end,
-        desc = "Swap down",
+        desc = "Splits: Swap down",
       },
       {
         "<leader><leader>k",
         function() require("smart-splits").swap_buf_up() end,
-        desc = "Swap up",
+        desc = "Splits: Swap up",
       },
       {
         "<leader><leader>l",
         function() require("smart-splits").swap_buf_right() end,
-        desc = "Swap right",
+        desc = "Splits: Swap right",
       },
     },
     opts = {

@@ -9,7 +9,7 @@ return {
     {
       "<leader>lt",
       function() require("lint").try_lint() end,
-      desc = "Trigger linting for current file",
+      desc = "Linting: Lint current file",
     },
   },
   config = function()

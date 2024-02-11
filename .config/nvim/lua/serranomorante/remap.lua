@@ -7,13 +7,13 @@ vim.keymap.set("n", "<leader>uw", function()
 end, { desc = "Toggle wrap" })
 
 -- New file
-vim.keymap.set("n", "<leader>n", "<cmd>enew<cr>", { desc = "New buffer" })
+vim.keymap.set("n", "<leader>nb", "<cmd>enew<cr>", { desc = "New buffer" })
 
 -- Move selected lines around
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
-vim.keymap.set("v", "H", "<gv")
-vim.keymap.set("v", "L", ">gv")
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move lines down" })
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move lines up" })
+vim.keymap.set("v", "H", "<gv", { desc = "Indent lines left" })
+vim.keymap.set("v", "L", ">gv", { desc = "Indent lines right" })
 
 -- Delete highlighted word into the void
 -- register and paste over it.
@@ -43,16 +43,16 @@ vim.keymap.set("n", "<leader>zf", function()
     return
   end
   vim.cmd("tab split")
-end, { desc = "Focus split on new tab" })
+end, { desc = "Zen: Focus split on new tab" })
 
 -- Tabs move
 vim.keymap.set("n", "<t", "<cmd>tabmove -1<CR>", { desc = "Move tab left" })
 vim.keymap.set("n", ">t", "<cmd>tabmove +1<CR>", { desc = "Move tab right" })
 
-vim.keymap.set("n", "<leader>qf", "<cmd>botright copen<CR>", { desc = "Open quickfix list" })
-vim.keymap.set("n", "<leader>ql", "<cmd>botright lopen<CR>", { desc = "Open location list" })
-vim.keymap.set("n", "<leader>qn", "<cmd>cnewer<CR>", { desc = "Go to next quickfix list" })
-vim.keymap.set("n", "<leader>qp", "<cmd>colder<CR>", { desc = "Go to previous quickfix list" })
+vim.keymap.set("n", "<leader>qf", "<cmd>botright copen<CR>", { desc = "Quickfix: Open list" })
+vim.keymap.set("n", "<leader>ql", "<cmd>botright lopen<CR>", { desc = "Quickfix: Open location list" })
+vim.keymap.set("n", "<leader>qn", "<cmd>cnewer<CR>", { desc = "Quickfix: Go to next list" })
+vim.keymap.set("n", "<leader>qp", "<cmd>colder<CR>", { desc = "Quickfix: Go to previous list" })
 
 vim.keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
 
@@ -69,7 +69,7 @@ vim.keymap.set("n", "<leader>zl", function()
     local foldopen_hidden = vim.wo[winid].fillchars:gsub("foldopen:", "foldopen: ")
     vim.wo[winid].fillchars = foldopen_hidden
   end, timeout)
-end, { desc = "Temporary show available folds" })
+end, { desc = "Ufo: Temporarily show available folds" })
 
 if vim.env.TMUX and utils.is_available("plenary.nvim") then
   local Job = require("plenary.job")
@@ -129,7 +129,7 @@ if vim.env.TMUX and utils.is_available("plenary.nvim") then
         cwd = project_directory,
       }):start()
     end
-  end, { desc = "Open project directory" })
+  end, { desc = "Tmux: Open project directory" })
 
   vim.keymap.set("n", "<leader>pF", function()
     local current_file = vim.fn.resolve(vim.fn.expand("%"))
@@ -155,5 +155,5 @@ if vim.env.TMUX and utils.is_available("plenary.nvim") then
         cwd = file_directory,
       }):start()
     end
-  end, { desc = "Open file directory" })
+  end, { desc = "Tmux: Open file directory" })
 end

@@ -12,8 +12,8 @@ local vscode_type_to_ft
 return {
   "mfussenegger/nvim-dap",
   keys = {
-    { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint (F9)" },
-    { "<leader>dB", function() require("dap").clear_breakpoints() end, desc = "Clear Breakpoints" },
+    { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "DAP: Toggle Breakpoint (F9)" },
+    { "<leader>dB", function() require("dap").clear_breakpoints() end, desc = "DAP: Clear Breakpoints" },
     {
       "<leader>dc",
       function()
@@ -22,7 +22,7 @@ return {
         require("dap.ext.vscode").load_launchjs(nil, vscode_type_to_ft)
         require("dap").continue()
       end,
-      desc = "Start/Continue (F5)",
+      desc = "DAP: Start/Continue (F5)",
     },
     {
       "<leader>dC",
@@ -31,7 +31,7 @@ return {
           if condition then require("dap").set_breakpoint(condition) end
         end)
       end,
-      desc = "Conditional Breakpoint (S-F9)",
+      desc = "DAP: Conditional Breakpoint (S-F9)",
     },
     {
       "<leader>d0",
@@ -42,7 +42,7 @@ return {
           if hit_condition then require("dap").set_breakpoint(nil, hit_condition) end
         end)
       end,
-      desc = "Hit condition",
+      desc = "DAP: Hit condition",
     },
     {
       "<leader>dl",
@@ -51,18 +51,18 @@ return {
           if message then require("dap").set_breakpoint(nil, nil, message) end
         end)
       end,
-      desc = "Log Point",
+      desc = "DAP: Log Point",
     },
-    { "<leader>di", function() require("dap").step_into() end, desc = "Step Into (F11)" },
-    { "<leader>do", function() require("dap").step_over() end, desc = "Step Over (F10)" },
-    { "<leader>dO", function() require("dap").step_out() end, desc = "Step Out (S-F11)" },
-    { "<leader>dq", function() require("dap").close() end, desc = "Close Session" },
-    { "<leader>dQ", function() require("dap").terminate() end, desc = "Terminate Session (S-F5)" },
-    { "<leader>dp", function() require("dap").pause() end, desc = "Pause (F6)" },
-    { "<leader>dr", function() require("dap").restart_frame() end, desc = "Restart (C-F5)" },
-    { "<leader>dR", function() require("dap").repl.toggle() end, desc = "Toggle REPL" },
-    { "<leader>ds", function() require("dap").run_to_cursor() end, desc = "Run To Cursor" },
-    { "<leader>dh", function() require("dap.ui.widgets").hover() end, desc = "Debugger Hover" },
+    { "<leader>di", function() require("dap").step_into() end, desc = "DAP: Step Into (F11)" },
+    { "<leader>do", function() require("dap").step_over() end, desc = "DAP: Step Over (F10)" },
+    { "<leader>dO", function() require("dap").step_out() end, desc = "DAP: Step Out (S-F11)" },
+    { "<leader>dq", function() require("dap").close() end, desc = "DAP: Close Session" },
+    { "<leader>dQ", function() require("dap").terminate() end, desc = "DAP: Terminate Session (S-F5)" },
+    { "<leader>dp", function() require("dap").pause() end, desc = "DAP: Pause (F6)" },
+    { "<leader>dr", function() require("dap").restart_frame() end, desc = "DAP: Restart (C-F5)" },
+    { "<leader>dR", function() require("dap").repl.toggle() end, desc = "DAP: Toggle REPL" },
+    { "<leader>ds", function() require("dap").run_to_cursor() end, desc = "DAP: Run To Cursor" },
+    { "<leader>dh", function() require("dap.ui.widgets").hover() end, desc = "DAP: Debugger Hover" },
   },
   init = function()
     vim.fn.sign_define("DapBreakpoint", { text = "⬤", texthl = "DapBreakpoint" })

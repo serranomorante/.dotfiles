@@ -7,27 +7,27 @@ return {
     {
       "zR",
       function() require("ufo").openAllFolds() end,
-      desc = "Open all folds",
+      desc = "Ufo: Open all folds",
     },
     {
       "zM",
       function() require("ufo").closeAllFolds() end,
-      desc = "Close all folds",
+      desc = "Ufo: Close all folds",
     },
     {
       "zr",
       function() require("ufo").openFoldsExceptKinds() end,
-      desc = "Open folds except kinds",
+      desc = "Ufo: Open folds except kinds",
     },
     {
       "zm",
       function() require("ufo").closeFoldsWith() end,
-      desc = "Close folds with level",
+      desc = "Ufo: Close folds with level",
     },
     {
       "zp",
       function() require("ufo").peekFoldedLinesUnderCursor() end,
-      desc = "Peek folded lines under cursor",
+      desc = "Ufo: Peek folded lines under cursor",
     },
   },
   opts = {

@@ -100,12 +100,12 @@ return {
         "<leader>fv",
         function() require("telescope-live-grep-args.shortcuts").grep_visual_selection() end,
         mode = "v",
-        desc = "Find visual selection (C-Space fuzzy)",
+        desc = "Telescope: Find visual selection (C-Space fuzzy)",
       },
       {
         "<leader>fg",
         function() require("telescope").extensions.live_grep_args.live_grep_args() end,
-        desc = "Live grep (rg, C-Space fuzzy)",
+        desc = "Telescope: Live grep (rg, C-Space fuzzy)",
       },
     },
     config = function()
@@ -139,7 +139,7 @@ return {
       {
         "<leader>uu",
         function() require("telescope").extensions.undo.undo() end,
-        desc = "Undo history",
+        desc = "Telescope: Undo history",
       },
     },
     config = function()
@@ -184,47 +184,47 @@ return {
       {
         "<leader>f<CR>",
         function() require("telescope.builtin").resume() end,
-        desc = "Resume last telescope session",
+        desc = "Telescope: Resume last telescope session",
       },
       {
         "<leader>fb",
         function() require("telescope.builtin").buffers() end,
-        desc = "Buffers",
+        desc = "Telescope: Buffers",
       },
       {
         "<leader>fh",
         function() require("telescope.builtin").help_tags() end,
-        desc = "Help tags",
+        desc = "Telescope: Help tags",
       },
       {
         "<leader>fk",
         function() require("telescope.builtin").keymaps() end,
-        desc = "Keymaps",
+        desc = "Telescope: Keymaps",
       },
       {
         "<leader>fm",
         function() require("telescope.builtin").man_pages() end,
-        desc = "Man pages",
+        desc = "Telescope: Man pages",
       },
       {
         "<leader>fr",
         function() require("telescope.builtin").registers() end,
-        desc = "Registers",
+        desc = "Telescope: Registers",
       },
       {
         "<leader>f'",
         function() require("telescope.builtin").marks() end,
-        desc = "Find marks",
+        desc = "Telescope: Find marks",
       },
       {
         "<leader>fc",
         function() require("telescope.builtin").grep_string() end,
-        desc = "Find word under cursor (C-Space fuzzy)",
+        desc = "Telescope: Find word under cursor (C-Space fuzzy)",
       },
       {
         "<leader>ff",
         function() require("telescope.builtin").find_files() end,
-        desc = "Find files (fuzzy)",
+        desc = "Telescope: Find files (fuzzy)",
       },
       {
         "<leader>fF",
@@ -234,12 +234,12 @@ return {
             no_ignore = true,
           })
         end,
-        desc = "Find files (hidden, fuzzy)",
+        desc = "Telescope: Find files (hidden, fuzzy)",
       },
       {
         "<leader>fw",
         function() require("telescope.builtin").live_grep() end,
-        desc = "Live grep (C-Space fuzzy)",
+        desc = "Telescope: Live grep (C-Space fuzzy)",
       },
       {
         "<leader>fW",
@@ -248,7 +248,7 @@ return {
             additional_args = function(args) return vim.list_extend(args, { "--hidden", "--no-ignore" }) end,
           })
         end,
-        desc = "Live grep (hidden, C-Space fuzzy)",
+        desc = "Telescope: Live grep (hidden, C-Space fuzzy)",
       },
       {
         "<leader>gc",
@@ -259,7 +259,7 @@ return {
           local options = { previewer = delta }
           require("telescope.builtin").git_bcommits(options)
         end,
-        desc = "List commits for current buffer (bcommits)",
+        desc = "Telescope: List commits for current buffer (bcommits)",
       },
       {
         "<leader>gC",
@@ -270,7 +270,7 @@ return {
           local options = { previewer = delta }
           require("telescope.builtin").git_commits(options)
         end,
-        desc = "List commits for current directory",
+        desc = "Telescope: List commits for current directory",
       },
       {
         "<leader>gt",
@@ -314,7 +314,7 @@ return {
 
           require("telescope.builtin").git_status(options)
         end,
-        desc = "Git status",
+        desc = "Git: Show status in Telescope",
       },
     },
     opts = function()

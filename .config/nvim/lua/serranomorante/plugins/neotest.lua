@@ -4,7 +4,7 @@ return {
     "nvim-lua/plenary.nvim",
     "nvim-treesitter/nvim-treesitter",
     ---Test adapters
-    "marilari88/neotest-vitest",
+    { "marilari88/neotest-vitest", dev = false },
     "nvim-neotest/neotest-python",
   },
   ---https://github.com/rcarriga/dotfiles/blob/8bf909cc6ee323134b4225f762fa381a47986d15/.config/nvim/lua/config/neotest.lua
@@ -12,7 +12,7 @@ return {
     {
       "<leader>nr",
       function() require("neotest").run.run({ vim.fn.expand("%:p") }) end,
-      desc = "Run the current file",
+      desc = "Neotest: Run the current file",
     },
     {
       "<leader>ns",
@@ -22,72 +22,72 @@ return {
           neotest.run.run({ suite = true, adapter = adapter_id })
         end
       end,
-      desc = "Run the entire suite across adapters",
+      desc = "Neotest: Run the entire suite across adapters",
     },
     {
       "<leader>nx",
       function() require("neotest").run.stop() end,
-      desc = "Stop a running process",
+      desc = "Neotest: Stop a running process",
     },
     {
       "<leader>nn",
       function() require("neotest").run.run() end,
-      desc = "Run the nearest test",
+      desc = "Neotest: Run the nearest test",
     },
     {
       "<leader>nl",
       function() require("neotest").run.run_last() end,
-      desc = "Run the last position that was run with the same arguments",
+      desc = "Neotest: Run the last position that was run with the same arguments",
     },
     {
       "<leader>nD",
       function() require("neotest").run.run_last({ strategy = "dap" }) end,
-      desc = "Debug the nearest test with nvim-dap",
+      desc = "Neotest: Debug the nearest test with nvim-dap",
     },
     {
       "<leader>na",
       function() require("neotest").run.attach() end,
-      desc = "Attach to a running process for the given position.",
+      desc = "Neotest: Attach to a running process for the given position.",
     },
     {
       "<leader>no",
       function() require("neotest").output.open({ enter = true, last_run = true }) end,
-      desc = "Open output for last test run",
+      desc = "Neotest: Open output for last test run",
     },
     {
       "<leader>ni",
       function() require("neotest").output.open({ enter = true }) end,
-      desc = "Open the output of a test result",
+      desc = "Neotest: Open the output of a test result",
     },
     {
       "<leader>nO",
       function() require("neotest").output.open({ enter = true, short = true }) end,
-      desc = "Show shortened output",
+      desc = "Neotest: Show shortened output",
     },
     {
       "<leader>np",
       function() require("neotest").summary.toggle() end,
-      desc = "Toggle the summary window",
+      desc = "Neotest: Toggle the summary window",
     },
     {
       "<leader>nm",
       function() require("neotest").summary.run_marked() end,
-      desc = "Run all marked positions",
+      desc = "Neotest: Run all marked positions",
     },
     {
       "<leader>ne",
       function() require("neotest").output_panel.toggle() end,
-      desc = "Toggle the output panel",
+      desc = "Neotest: Toggle the output panel",
     },
     {
       "[n",
       function() require("neotest").jump.prev({ status = "failed" }) end,
-      desc = "Jump to prev failed test",
+      desc = "Neotest: Jump to prev failed test",
     },
     {
       "]n",
       function() require("neotest").jump.next({ status = "failed" }) end,
-      desc = "Jump to next failed test",
+      desc = "Neotest: Jump to next failed test",
     },
   },
   opts = function()

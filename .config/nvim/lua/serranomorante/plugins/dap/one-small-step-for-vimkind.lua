@@ -6,7 +6,7 @@ return {
     {
       "<leader>cc",
       [[:lua require"osv".launch({port = 8086})<CR>]],
-      desc = "Launch one small step for vimkind",
+      desc = "DAP: Launch one small step for vimkind",
     },
   },
   config = function()

@@ -7,18 +7,19 @@ return {
     {
       "<leader>ss",
       function() require("resession").save_tab(vim.fn.getcwd(), { dir = "dirsession", notify = true }) end,
-      desc = "Session save",
+      desc = "Resession: Save session",
     },
     {
       "<leader>sl",
       function()
         require("resession").load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true, reset = true })
       end,
-      desc = "Session load",
+      desc = "Resession: Load session",
     },
     {
       "<leader>sd",
       function() require("resession").delete(vim.fn.getcwd(), { dir = "dirsession" }) end,
+      desc = "Resession: Delete session",
     },
   },
   opts = {

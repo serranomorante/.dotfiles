@@ -19,5 +19,5 @@ require("lazy").setup({
   change_detection = {
     notify = false,
   },
-  dev = { path = "~/repos" },
+  dev = { path = "~/repos", fallback = true },
 })

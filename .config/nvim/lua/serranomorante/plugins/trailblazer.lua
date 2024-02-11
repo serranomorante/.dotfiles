@@ -6,6 +6,54 @@ return {
   dependencies = "nvim-treesitter/nvim-treesitter",
   keys = {
     {
+      "<A-l>",
+      function() require("trailblazer").new_trail_mark() end,
+      desc = "Trailblazer: Create a new / toggle existing trail mark",
+      mode = { "n", "v" },
+    },
+    {
+      "<A-b>",
+      function() require("trailblazer").track_back() end,
+      desc = "Trailblazer: Move to the last global trail mark and remove it from the trail mark stack",
+      mode = { "n", "v" },
+    },
+    {
+      "<A-J>",
+      function() require("trailblazer").peek_move_next_down() end,
+      desc = "Trailblazer: Move to the next global trail mark",
+      mode = { "n", "v" },
+    },
+    {
+      "<A-K>",
+      function() require("trailblazer").peek_move_previous_up() end,
+      desc = "Trailblazer: Move to the previous global trail mark",
+      mode = { "n", "v" },
+    },
+    {
+      "<A-m>",
+      function() require("trailblazer").toggle_trail_mark_list() end,
+      desc = "Trailblazer: Toggle a global list of all trail marks",
+      mode = { "n", "v" },
+    },
+    {
+      "<A-S>",
+      function() require("trailblazer").delete_all_trail_marks() end,
+      desc = "Trailblazer: Delete all trail marks globally",
+      mode = { "n", "v" },
+    },
+    {
+      "<A-.>",
+      function() require("trailblazer").switch_to_next_trail_mark_stack() end,
+      desc = "Trailblazer: Switch to the next trail mark stack",
+      mode = { "n", "v" },
+    },
+    {
+      "<A-,>",
+      function() require("trailblazer").switch_to_previous_trail_mark_stack() end,
+      desc = "Trailblazer: Switch to the previous trail mark stack",
+      mode = { "n", "v" },
+    },
+    {
       "<A-M>",
       function()
         vim.ui.input(
@@ -13,14 +61,17 @@ return {
           function(input) require("trailblazer").switch_trail_mark_stack(input, false) end
         )
       end,
-      desc = "Add trailblazer stack",
+      desc = "Trailblazer: Add new trail mark stack",
     },
   },
   opts = function()
     local opts = {
-      auto_save_trailblazer_state_on_exit = false, -- we are manually doing it on `persistence.nvim`
-      auto_load_trailblazer_state_on_enter = false, -- we are manually doing it on `persistence.nvim`
+      auto_save_trailblazer_state_on_exit = false, -- we are manually doing it on `resession.nvim`
+      auto_load_trailblazer_state_on_enter = false, -- we are manually doing it on `resession.nvim`
       trail_options = {
+        ---Marks are sorted by their buffer id and globally traversed from BOF to EOF
+        current_trail_mark_mode = "global_buf_line_sorted",
+        available_trail_mark_modes = { "global_buf_line_sorted" },
         mark_symbol = "",
         newest_mark_symbol = "",
         cursor_mark_symbol = "",
@@ -31,24 +82,9 @@ return {
         number_line_color_enabled = false,
         trail_mark_in_text_highlights_enabled = false,
         trail_mark_symbol_line_indicators_enabled = true,
+        move_to_nearest_before_peek = true,
       },
-      force_mappings = {
-        nv = {
-          motions = {
-            new_trail_mark = "<A-l>",
-            track_back = "<A-b>",
-            peek_move_next_down = "<A-J>",
-            peek_move_previous_up = "<A-K>",
-            move_to_nearest = "<A-N>",
-            toggle_trail_mark_list = "<A-m>",
-          },
-          actions = {
-            delete_all_trail_marks = "<A-S>",
-            switch_to_next_trail_mark_stack = "<A-.>",
-            switch_to_previous_trail_mark_stack = "<A-,>",
-          },
-        },
-      },
+      force_mappings = {},
       force_quickfix_mappings = {
         nv = {
           actions = {

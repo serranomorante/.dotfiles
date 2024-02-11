@@ -115,70 +115,70 @@ return {
         if utils.is_available("telescope.nvim") then
           local builtin = require("telescope.builtin")
           if client.supports_method("textDocument/references") then
-            opts.desc = "Show LSP references"
+            opts.desc = "LSP: Show references"
             vim.keymap.set("n", "gr", function() builtin.lsp_references({ show_line = false }) end, opts)
           end
 
           if client.supports_method("textDocument/definition") then
-            opts.desc = "Show LSP definitions"
+            opts.desc = "LSP: Show definitions"
             vim.keymap.set("n", "gd", function() builtin.lsp_definitions() end, opts)
           end
 
           if client.supports_method("textDocument/implementation") then
-            opts.desc = "Show LSP implementations"
+            opts.desc = "LSP: Show implementations"
             vim.keymap.set("n", "gI", function() builtin.lsp_implementations() end, opts)
           end
 
           if client.supports_method("textDocument/typeDefinition") then
-            opts.desc = "Show LSP type definitions"
+            opts.desc = "LSP: Show type definitions"
             vim.keymap.set("n", "gy", function() builtin.lsp_type_definitions() end, opts)
           end
 
-          opts.desc = "Show buffer diagnostics"
+          opts.desc = "LSP: Show buffer diagnostics"
           vim.keymap.set("n", "<leader>ld", function() builtin.diagnostics({ bufnr = bufnr }) end, opts)
 
-          opts.desc = "Show workspace diagnostics"
+          opts.desc = "LSP: Show workspace diagnostics"
           vim.keymap.set("n", "<leader>lD", function() builtin.diagnostics() end, opts)
 
-          opts.desc = "Document symbols"
+          opts.desc = "LSP: Document symbols"
           vim.keymap.set("n", "<leader>ls", function() builtin.lsp_document_symbols() end, opts)
         end
 
         if client.supports_method("textDocument/declaration") then
-          opts.desc = "Go to declaration"
+          opts.desc = "LSP: Go to declaration"
           vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
         end
 
         if client.supports_method("textDocument/codeAction") then
-          opts.desc = "See available code actions"
+          opts.desc = "LSP: See available code actions"
           vim.keymap.set({ "n", "v" }, "<leader>la", vim.lsp.buf.code_action, opts)
         end
 
         if client.supports_method("textDocument/rename") then
-          opts.desc = "Smart rename"
+          opts.desc = "LSP: Smart rename"
           vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, opts)
         end
 
         if client.supports_method("textDocument/signatureHelp") then
-          opts.desc = "Signature help"
+          opts.desc = "LSP: Signature help"
           vim.keymap.set("n", "<leader>lh", vim.lsp.buf.signature_help, opts)
         end
 
         if client.supports_method("workspace/symbol") then
-          opts.desc = "Search workspace symbols"
+          opts.desc = "LSP: Search workspace symbols"
           vim.keymap.set("n", "<leader>lG", vim.lsp.buf.workspace_symbol, opts)
         end
 
-        opts.desc = "Show line diagnostics"
+        opts.desc = "LSP: Show line diagnostics"
         vim.keymap.set("n", "gl", vim.diagnostic.open_float, opts)
 
-        opts.desc = "Go to previous diagnostic"
+        opts.desc = "LSP: Go to previous diagnostic"
         vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
 
-        opts.desc = "Go to next diagnostic"
+        opts.desc = "LSP: Go to next diagnostic"
         vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
 
-        opts.desc = "Restart LSP"
+        opts.desc = "LSP: Restart current buffer clients"
         vim.keymap.set("n", "<leader>rs", function()
           local buf = vim.api.nvim_get_current_buf()
           local clients = vim.lsp.get_clients({ bufnr = buf })
@@ -187,7 +187,7 @@ return {
           end
         end, opts)
 
-        vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP information" })
+        vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP: Show info" })
 
         -- Toggle inlay hints with keymap
         if client.supports_method("textDocument/inlayHint") then
@@ -197,7 +197,7 @@ return {
               string.format("Inlay hints %s", utils.bool2str(vim.b[bufnr].inlay_hints_enabled)),
               vim.log.levels.INFO
             )
-          end, { desc = "Toggle inlay hints" })
+          end, { desc = "LSP: Toggle inlay hints" })
         end
 
         -- Refresh codelens if supported
@@ -208,13 +208,13 @@ return {
             utils.toggle_codelens()
             vim.notify(string.format("CodeLens %s", utils.bool2str(vim.g.codelens_enabled)), vim.log.levels.INFO)
             if vim.g.codelens_enabled then vim.lsp.codelens.refresh() end
-          end, { desc = "Toggle codelens" })
+          end, { desc = "LSP: Toggle codelens" })
 
           vim.keymap.set(
             "n",
             "<leader>ll",
             function() vim.lsp.codelens.refresh() end,
-            { desc = "LSP CodeLens refresh" }
+            { desc = "LSP: CodeLens refresh" }
           )
 
           vim.keymap.set("n", "<leader>lL", function() vim.lsp.codelens.run() end, { desc = "LSP CodeLens run" })
