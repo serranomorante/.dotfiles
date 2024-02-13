@@ -25,6 +25,7 @@ return {
       ---https://github.com/stevearc/oil.nvim/issues/201#issuecomment-1771146785
       cleanup_delay_ms = false,
       skip_confirm_for_simple_edits = true,
+      delete_to_trash = true,
       ---Copied here for readability
       keymaps = {
         ["<C-p>"] = false,
