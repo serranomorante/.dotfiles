@@ -74,12 +74,8 @@ return {
   config = function()
     require("cmp_dap")
     local dap = require("dap")
-    local dapui = require("dapui")
     local mason_registry = require("mason-registry")
     dap.set_log_level(vim.env.DAP_LOG_LEVEL or "INFO")
-
-    dap.listeners.before.attach["dapui_config"] = dapui.open
-    dap.listeners.before.launch["dapui_config"] = dapui.open
 
     ---╔══════════════════════════════════════╗
     ---║               Adapters               ║
