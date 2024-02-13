@@ -1,8 +1,6 @@
 local utils = require("serranomorante.utils")
 local constants = require("serranomorante.constants")
 local tools = require("serranomorante.tools")
-local augroup = vim.api.nvim_create_augroup
-local autocmd = vim.api.nvim_create_autocmd
 
 local on_init = nil
 local on_attach = nil
@@ -76,8 +74,8 @@ return {
       "nvim-telescope/telescope.nvim",
     },
     init = function()
-      -- See: https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/guides/under-the-hood.md
-      -- See: https://github.com/mfussenegger/nvim-lint/issues/340#issuecomment-1676438571
+      ---See: https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/guides/under-the-hood.md
+      ---See: https://github.com/mfussenegger/nvim-lint/issues/340#issuecomment-1676438571
       vim.diagnostic.config({
         signs = {
           text = {
@@ -96,6 +94,20 @@ return {
 
       vim.lsp.handlers["textDocument/signatureHelp"] =
         vim.lsp.with(vim.lsp.handlers.signature_help, { border = "single" })
+
+      ---Create autocmd to refresh codelens on BufEnter and InsertLeave
+      local codelens_augroup = vim.api.nvim_create_augroup("lsp_codelens_augroup", { clear = true })
+      vim.api.nvim_create_autocmd({ "InsertLeave", "BufEnter" }, {
+        desc = "Refresh codelens",
+        group = codelens_augroup,
+        callback = function(args)
+          if not utils.has_capability("textDocument/codeLens", { bufnr = args.buf }) then
+            utils.del_buffer_autocmd("lsp_codelens_augroup", args.buf)
+            return
+          end
+          if vim.g.codelens_enabled then vim.lsp.codelens.refresh({ bufnr = args.buf }) end
+        end,
+      })
     end,
     config = function()
       if utils.is_available("neodev.nvim") then require("neodev") end
@@ -104,8 +116,8 @@ return {
       vim.lsp.set_log_level(vim.env.LSP_LOG_LEVEL or "INFO")
 
       on_init = function(client)
-        -- Disable semanticTokensProvider
-        -- https://gist.github.com/swarn/fb37d9eefe1bc616c2a7e476c0bc0316
+        ---Disable semanticTokensProvider
+        ---https://gist.github.com/swarn/fb37d9eefe1bc616c2a7e476c0bc0316
         client.server_capabilities.semanticTokensProvider = nil
       end
 
@@ -180,59 +192,43 @@ return {
 
         opts.desc = "LSP: Restart current buffer clients"
         vim.keymap.set("n", "<leader>rs", function()
-          local buf = vim.api.nvim_get_current_buf()
-          local clients = vim.lsp.get_clients({ bufnr = buf })
+          local clients = vim.lsp.get_clients({ bufnr = bufnr })
           for _, c in pairs(clients) do
             vim.cmd("LspRestart " .. c.id)
           end
         end, opts)
 
-        vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP: Show info" })
+        opts.desc = "LSP: Show info"
+        vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<CR>", opts)
 
-        -- Toggle inlay hints with keymap
+        ---Toggle inlay hints with keymap
         if client.supports_method("textDocument/inlayHint") then
+          opts.desc = "LSP: Toggle inlay hints"
           vim.keymap.set("n", "<leader>uH", function()
             utils.toggle_buffer_inlay_hints(bufnr)
             vim.notify(
               string.format("Inlay hints %s", utils.bool2str(vim.b[bufnr].inlay_hints_enabled)),
               vim.log.levels.INFO
             )
-          end, { desc = "LSP: Toggle inlay hints" })
+          end, opts)
         end
 
-        -- Refresh codelens if supported
+        ---Refresh codelens if supported
         if client.supports_method("textDocument/codeLens") then
-          if vim.g.codelens_enabled then vim.lsp.codelens.refresh() end
+          if vim.g.codelens_enabled then vim.lsp.codelens.refresh({ bufnr = bufnr }) end
 
+          opts.desc = "LSP: Toggle codelens"
           vim.keymap.set("n", "<leader>uL", function()
             utils.toggle_codelens()
             vim.notify(string.format("CodeLens %s", utils.bool2str(vim.g.codelens_enabled)), vim.log.levels.INFO)
-            if vim.g.codelens_enabled then vim.lsp.codelens.refresh() end
-          end, { desc = "LSP: Toggle codelens" })
+            if vim.g.codelens_enabled then vim.lsp.codelens.refresh({ bufnr = bufnr }) end
+          end, opts)
 
-          vim.keymap.set(
-            "n",
-            "<leader>ll",
-            function() vim.lsp.codelens.refresh() end,
-            { desc = "LSP: CodeLens refresh" }
-          )
+          opts.desc = "LSP: CodeLens refresh (buffer)"
+          vim.keymap.set("n", "<leader>ll", function() vim.lsp.codelens.refresh({ bufnr = bufnr }) end, opts)
 
-          vim.keymap.set("n", "<leader>lL", function() vim.lsp.codelens.run() end, { desc = "LSP CodeLens run" })
-
-          -- Create autocmd to refresh codelens on BufEnter and InsertLeave
-          local codelens_augroup = augroup("lsp_codelens_augroup", { clear = true })
-          autocmd({ "InsertLeave", "BufEnter" }, {
-            desc = "Refresh codelens",
-            group = codelens_augroup,
-            buffer = bufnr,
-            callback = function()
-              if not utils.has_capability("textDocument/codeLens", { bufnr = bufnr }) then
-                utils.del_buffer_autocmd("lsp_codelens_augroup", bufnr)
-                return
-              end
-              if vim.g.codelens_enabled then vim.lsp.codelens.refresh() end
-            end,
-          })
+          opts.desc = "LSP CodeLens run"
+          vim.keymap.set("n", "<leader>lL", function() vim.lsp.codelens.run() end, opts)
         end
       end
 
