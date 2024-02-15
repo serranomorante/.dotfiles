@@ -67,7 +67,7 @@ export WIREPLUMBER_DEBUG=3
 alias config='/usr/bin/git --git-dir=/home/serranomorante/.dotfiles/ --work-tree=/home/serranomorante'
 
 if [ -x "$(command -v nvim)" ]; then
-    alias vim='nvim'
+    alias vim="$(command -v nvim)"
 fi
 
 if [ -x "$(command -v volta)" ]; then
