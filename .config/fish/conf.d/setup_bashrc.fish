@@ -45,7 +45,9 @@ set -gx RIPGREP_CONFIG_PATH "$HOME/.ripgreprc"
 # 5. trace messages (T)
 set -gx WIREPLUMBER_DEBUG 3
 
-abbr --add config /usr/bin/git --git-dir=/home/serranomorante/.dotfiles/ --work-tree=/home/serranomorante
+abbr --add config /usr/bin/git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME"
+
+abbr --add lazydots lazygit --git-dir="$HOME/.dotfiles/" --work-tree="$HOME"
 
 command -q nvim; and abbr --add vim nvim
 
