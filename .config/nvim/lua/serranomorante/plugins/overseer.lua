@@ -20,7 +20,6 @@ return {
     dap = false,
     templates = { "builtin", "vscode-tasks", "editor" },
     task_win = {
-      padding = 6,
       border = "single",
       win_opts = {
         winblend = 0,
