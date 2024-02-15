@@ -87,6 +87,7 @@ alias conf="~/.config/tmux/scripts/config.sh"
 export DAP_LOG_LEVEL=INFO
 export LSP_LOG_LEVEL=INFO
 export CONFORM_LOG_LEVEL=INFO
+export NEOTEST_LOG_LEVEL=INFO
 
 if [ -x "$(command -v fish)" ]; then
     export AVAILABLE_SHELL="$(command -v fish)"
