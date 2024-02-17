@@ -42,24 +42,25 @@ M.FileIcon = {
 }
 
 M.FileName = {
+  init = function(self) self.filename = vim.api.nvim_buf_get_name(0) end,
   provider = function(self)
-    local filename = vim.fn.fnamemodify(self.filename or vim.api.nvim_buf_get_name(0), ":.")
+    local filename = vim.fn.fnamemodify(self.filename, ":.")
     if filename == "" then return "[No Name]" end
     if not heirline_conditions.width_percent_below(#filename, 0.25) then filename = vim.fn.pathshorten(filename) end
     return filename
   end,
-  hl = { fg = heirline_utils.get_highlight("Directory").fg },
+  hl = { fg = "directory" },
 }
 
 M.FileFlags = {
   {
     condition = function() return vim.bo.modified end,
-    provider = "[+]",
+    provider = " [+]",
     hl = { fg = "green" },
   },
   {
     condition = function() return not vim.bo.modifiable or vim.bo.readonly end,
-    provider = "",
+    provider = " ",
     hl = { fg = "orange" },
   },
 }
@@ -91,16 +92,22 @@ M.Ruler = {
 M.LSPActive = {
   condition = heirline_conditions.lsp_attached,
   update = { "LspAttach", "LspDetach" },
-
-  -- You can keep it simple,
-  -- provider = " [LSP]",
-
-  -- Or complicate things a bit and get the servers names
   provider = function()
     local names = {}
+
     for _, server in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
       table.insert(names, server.name)
     end
+
+    if package.loaded.lint ~= nil then
+      local buf_lint_clients = require("lint").linters_by_ft[vim.bo.filetype]
+      if buf_lint_clients and #buf_lint_clients > 0 then
+        for _, lint_client in pairs(buf_lint_clients) do
+          table.insert(names, lint_client or "")
+        end
+      end
+    end
+
     return " [" .. table.concat(names, ", ") .. "]"
   end,
   hl = { fg = "green", bold = true },
@@ -195,6 +202,7 @@ M.Git = {
 ---https://github.com/rebelot/heirline.nvim/blob/master/cookbook.md#debugger
 M.DAPMessages = {
   condition = function()
+    if not package.loaded.dap then return false end
     local session = require("dap").session()
     return session ~= nil
   end,

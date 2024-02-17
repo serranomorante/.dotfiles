@@ -28,5 +28,7 @@ return {
       group = augroup("run_linters", { clear = true }),
       callback = function() lint.try_lint() end,
     })
+
+    lint.try_lint() -- Trigger on first load
   end,
 }

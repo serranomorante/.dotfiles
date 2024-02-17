@@ -21,6 +21,7 @@ return {
     local DiffRemoved = heirline_utils.get_highlight("diffRemoved")
     local DiffAdded = heirline_utils.get_highlight("diffAdded")
     local DiffChanged = heirline_utils.get_highlight("diffChanged")
+    local Directory = heirline_utils.get_highlight("Directory")
 
     local colors = {
       normal = Function.fg,
@@ -28,6 +29,7 @@ return {
       command = String.fg,
       terminal = Constant.fg,
       visual = Statement.fg,
+      directory = Directory.fg,
       ---https://github.com/rebelot/heirline.nvim/blob/master/cookbook.md#colors-colors-more-colors
       bright_bg = Folded.bg,
       bright_fg = Folded.fg,
@@ -50,35 +52,50 @@ return {
 
     local Align = { provider = "%=" }
     local Space = { provider = " " }
+    local Mode = heirline_utils.surround({ " ", " " }, nil, { components.Mode })
+    local FileNameBlock = heirline_utils.surround({ " ", " " }, nil, { components.FileNameBlock })
+    local FileName = heirline_utils.surround({ " ", " " }, nil, { components.FileName })
+    local Git = heirline_utils.surround({ " ", " " }, nil, { components.Git })
+    local Diagnostics = heirline_utils.surround({ " ", " " }, nil, { components.Diagnostics })
+    local DAPMessages = heirline_utils.surround({ " ", " " }, nil, { components.DAPMessages })
+    local LSPActive = heirline_utils.surround({ " ", " " }, nil, { components.LSPActive })
+    local Ruler = heirline_utils.surround({ " ", " " }, nil, { components.Ruler })
 
     local DefaultStatusLine = {
-      heirline_utils.surround({ " ", " " }, nil, { components.Mode }),
+      Mode,
       Space,
-      heirline_utils.surround({ " ", " " }, nil, { components.FileNameBlock }),
+      FileNameBlock,
       Space,
-      heirline_utils.surround({ " ", " " }, nil, { components.Git }),
+      Git,
       Space,
-      heirline_utils.surround({ " ", " " }, nil, { components.Diagnostics }),
+      Diagnostics,
       Align,
 
-      heirline_utils.surround({ " ", " " }, nil, { components.DAPMessages }),
+      DAPMessages,
       Align,
 
-      heirline_utils.surround({ " ", " " }, nil, { components.LSPActive }),
+      { flexible = 1, LSPActive, { provider = "" } },
       Space,
-      heirline_utils.surround({ " ", " " }, nil, { components.Ruler }),
+      Ruler,
     }
 
-    local InactiveStatusline = {
+    local InactiveStatusLine = {
       condition = conditions.is_not_active,
-      components.FileName,
+      FileName,
+      Align,
+    }
+
+    local DAPUIStatusLine = {
+      condition = function() return conditions.is_active() and conditions.buffer_matches({ filetype = { "^dapui.*" } }) end,
+      FileNameBlock,
       Align,
     }
 
     local StatusLines = {
       hl = function() return conditions.is_active() and "StatusLine" or "StatusLineNC" end,
       fallthrough = false,
-      InactiveStatusline,
+      DAPUIStatusLine,
+      InactiveStatusLine,
       DefaultStatusLine,
     }
 
