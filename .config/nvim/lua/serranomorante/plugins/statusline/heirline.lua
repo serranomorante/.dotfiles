@@ -50,45 +50,33 @@ return {
       git_change = DiffChanged.fg,
     }
 
-    local Align = { provider = "%=" }
-    local Space = { provider = " " }
-    local Mode = heirline_utils.surround({ " ", " " }, nil, { components.Mode })
-    local FileNameBlock = heirline_utils.surround({ " ", " " }, nil, { components.FileNameBlock })
-    local FileName = heirline_utils.surround({ " ", " " }, nil, { components.FileName })
-    local Git = heirline_utils.surround({ " ", " " }, nil, { components.Git })
-    local Diagnostics = heirline_utils.surround({ " ", " " }, nil, { components.Diagnostics })
-    local DAPMessages = heirline_utils.surround({ " ", " " }, nil, { components.DAPMessages })
-    local LSPActive = heirline_utils.surround({ " ", " " }, nil, { components.LSPActive })
-    local Ruler = heirline_utils.surround({ " ", " " }, nil, { components.Ruler })
-
     local DefaultStatusLine = {
-      Mode,
-      Space,
-      FileNameBlock,
-      Space,
-      Git,
-      Space,
-      Diagnostics,
-      Align,
+      components.Mode,
+      components.Space,
+      components.FileNameBlock,
+      components.Space,
+      components.Git,
+      components.Diagnostics,
+      components.Align,
 
-      DAPMessages,
-      Align,
+      components.DAPMessages,
+      components.Align,
 
-      { flexible = 1, LSPActive, { provider = "" } },
-      Space,
-      Ruler,
+      components.LSPActive,
+      components.Space,
+      components.Ruler,
     }
 
     local InactiveStatusLine = {
       condition = conditions.is_not_active,
-      FileName,
-      Align,
+      components.FileName,
+      components.Align,
     }
 
     local DAPUIStatusLine = {
       condition = function() return conditions.is_active() and conditions.buffer_matches({ filetype = { "^dapui.*" } }) end,
-      FileNameBlock,
-      Align,
+      components.FileNameBlock,
+      components.Align,
     }
 
     local StatusLines = {

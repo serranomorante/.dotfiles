@@ -4,12 +4,18 @@ local heirline_utils = require("heirline.utils")
 
 local M = {}
 
+M.Align = {
+  provider = "%=",
+}
+
+M.Space = {
+  provider = " ",
+}
+
 ---https://github.com/rebelot/heirline.nvim/blob/master/cookbook.md#crash-course-the-vimode
 M.Mode = {
   init = function(self) self.mode = vim.fn.mode() end,
-  static = {
-    modes = constants.modes,
-  },
+  static = { modes = constants.modes },
   provider = function(self)
     ---Control the padding and make sure our string is always at least 2
     ---characters long.
@@ -42,25 +48,29 @@ M.FileIcon = {
 }
 
 M.FileName = {
-  init = function(self) self.filename = vim.api.nvim_buf_get_name(0) end,
-  provider = function(self)
-    local filename = vim.fn.fnamemodify(self.filename, ":.")
-    if filename == "" then return "[No Name]" end
-    if not heirline_conditions.width_percent_below(#filename, 0.25) then filename = vim.fn.pathshorten(filename) end
-    return filename
+  init = function(self)
+    self.filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
+    if self.filename == "" then self.filename = "[No Name]" end
   end,
   hl = { fg = "directory" },
+  flexible = true,
+  {
+    provider = function(self) return self.filename end,
+  },
+  {
+    provider = function(self) return vim.fn.fnamemodify(self.filename, ":t") end,
+  },
 }
 
 M.FileFlags = {
   {
     condition = function() return vim.bo.modified end,
-    provider = " [+]",
+    provider = "[+]",
     hl = { fg = "green" },
   },
   {
     condition = function() return not vim.bo.modifiable or vim.bo.readonly end,
-    provider = " ",
+    provider = "",
     hl = { fg = "orange" },
   },
 }
@@ -71,13 +81,16 @@ M.FileNameModifier = {
   end,
 }
 
-M.FileNameBlock = heirline_utils.insert(
-  M.FileNameBlock,
-  M.FileIcon,
-  heirline_utils.insert(M.FileNameModifier, M.FileName),
-  M.FileFlags,
-  { provider = "%<" }
-)
+M.FileNameBlock = {
+  flexible = 30,
+  heirline_utils.insert(
+    M.FileNameBlock,
+    M.FileIcon,
+    heirline_utils.insert(M.FileNameModifier, M.FileName),
+    M.FileFlags,
+    { provider = "%<" }
+  ),
+}
 
 ---https://github.com/rebelot/heirline.nvim/blob/master/cookbook.md#cursor-position-ruler-and-scrollbar
 M.Ruler = {
@@ -90,15 +103,11 @@ M.Ruler = {
 
 ---https://github.com/rebelot/heirline.nvim/blob/master/cookbook.md#lsp
 M.LSPActive = {
-  condition = heirline_conditions.lsp_attached,
-  update = { "LspAttach", "LspDetach" },
-  provider = function()
+  init = function(self)
     local names = {}
-
     for _, server in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
       table.insert(names, server.name)
     end
-
     if package.loaded.lint ~= nil then
       local buf_lint_clients = require("lint").linters_by_ft[vim.bo.filetype]
       if buf_lint_clients and #buf_lint_clients > 0 then
@@ -107,12 +116,31 @@ M.LSPActive = {
         end
       end
     end
-
-    return " [" .. table.concat(names, ", ") .. "]"
+    self.names = names
   end,
+  static = {
+    surround = function(_, names) return " [" .. table.concat(names, ",") .. "]" end,
+  },
+  condition = heirline_conditions.lsp_attached,
   hl = { fg = "green", bold = true },
+  flexible = 30,
+  {
+    provider = function(self) return self:surround(self.names) end,
+  },
+  {
+    condition = function(self) return #self.names > 3 end,
+    provider = function(self) return self:surround({ self.names[1], self.names[2], self.names[3] .. ".." }) end,
+  },
+  {
+    condition = function(self) return #self.names > 2 end,
+    provider = function(self) return self:surround({ self.names[1], self.names[2] .. ".." }) end,
+  },
+  {
+    condition = function(self) return #self.names > 1 end,
+    provider = function(self) return self:surround({ self.names[1] .. ".." }) end,
+  },
+  { provider = "" },
 }
-
 ---https://github.com/rebelot/heirline.nvim/blob/master/cookbook.md#diagnostics
 ---https://github.com/neovim/neovim/commit/4ee656e4f35766bef4e27c5afbfa8e3d8d74a76c
 M.Diagnostics = {
@@ -123,34 +151,44 @@ M.Diagnostics = {
     hint_icon = "󰌵 ",
     info_icon = "󰋼 ",
   },
-  init = function(self) self.diagnostics = vim.diagnostic.count(0) or {} end,
-  update = { "DiagnosticChanged", "LspAttach", "LspDetach", "BufEnter" },
+  init = function(self)
+    local diagnostics = vim.diagnostic.count(0) or {}
+    self.errors = diagnostics[vim.diagnostic.severity.ERROR]
+    self.warns = diagnostics[vim.diagnostic.severity.WARN]
+    self.info = diagnostics[vim.diagnostic.severity.INFO]
+    self.hints = diagnostics[vim.diagnostic.severity.HINT]
+    self.diagnostics = diagnostics
+  end,
   {
-    provider = function(self)
-      local errors = self.diagnostics[vim.diagnostic.severity.ERROR]
-      return errors and (self.error_icon .. errors .. " ")
-    end,
+    condition = function(self) return #self.diagnostics end,
+    M.Space,
+  },
+  {
+    provider = function(self) return self.errors and (self.error_icon .. self.errors) end,
     hl = { fg = "diag_error" },
   },
   {
-    provider = function(self)
-      local warns = self.diagnostics[vim.diagnostic.severity.WARN]
-      return warns and (self.warn_icon .. warns .. " ")
-    end,
+    condition = function(self) return self.warns end,
+    M.Space,
+  },
+  {
+    provider = function(self) return self.warns and (self.warn_icon .. self.warns) end,
     hl = { fg = "diag_warn" },
   },
   {
-    provider = function(self)
-      local info = self.diagnostics[vim.diagnostic.severity.INFO]
-      return info and (self.info_icon .. info .. " ")
-    end,
+    condition = function(self) return self.info end,
+    M.Space,
+  },
+  {
+    provider = function(self) return self.info and (self.info_icon .. self.info) end,
     hl = { fg = "diag_info" },
   },
   {
-    provider = function(self)
-      local hints = self.diagnostics[vim.diagnostic.severity.HINT]
-      return hints and (self.hint_icon .. hints)
-    end,
+    condition = function(self) return self.hints end,
+    M.Space,
+  },
+  {
+    provider = function(self) return self.hints and (self.hint_icon .. self.hints) end,
     hl = { fg = "diag_hint" },
   },
 }
@@ -160,14 +198,16 @@ M.Git = {
   condition = heirline_conditions.is_git_repo,
   init = function(self)
     self.status_dict = vim.b.gitsigns_status_dict
-    self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
+    self.has_changes = (self.status_dict.added ~= 0 and self.status_dict.added ~= nil)
+      or (self.status_dict.removed ~= 0 and self.status_dict.removed ~= nil)
+      or (self.status_dict.changed ~= 0 and self.status_dict.changed ~= nil)
+    self.branch = self.status_dict.head
   end,
   hl = { fg = "orange" },
-  { -- git branch name
-    provider = function(self) return " " .. self.status_dict.head end,
+  {
+    provider = function(self) return " " .. (self.branch ~= "" and self.branch or "?") end,
     hl = { bold = true },
   },
-  -- You could handle delimiters, icons and counts similar to Diagnostics
   {
     condition = function(self) return self.has_changes end,
     provider = "(",
