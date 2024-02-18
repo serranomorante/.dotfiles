@@ -4,6 +4,12 @@ local heirline_utils = require("heirline.utils")
 
 local M = {}
 
+M.priority = {
+  lsp = 40,
+  filename = 30,
+  overseer = 20,
+}
+
 M.Align = {
   provider = "%=",
 }
@@ -53,7 +59,7 @@ M.FileName = {
     if self.filename == "" then self.filename = "[No Name]" end
   end,
   hl = { fg = "directory" },
-  flexible = true,
+  flexible = M.priority.filename,
   {
     provider = function(self) return self.filename end,
   },
@@ -82,7 +88,7 @@ M.FileNameModifier = {
 }
 
 M.FileNameBlock = {
-  flexible = 30,
+  flexible = M.priority.filename,
   heirline_utils.insert(
     M.FileNameBlock,
     M.FileIcon,
@@ -119,27 +125,27 @@ M.LSPActive = {
     self.names = names
   end,
   static = {
-    surround = function(_, names) return " [" .. table.concat(names, ",") .. "]" end,
+    surround = function(_, names) return #names and " " .. table.concat(names, ",") or "" end,
+    truncate = function(_, value) return value and (value):sub(1, 5) .. ".." or "" end,
   },
   condition = heirline_conditions.lsp_attached,
   hl = { fg = "green", bold = true },
-  flexible = 30,
+  flexible = M.priority.lsp,
   {
     provider = function(self) return self:surround(self.names) end,
   },
   {
-    condition = function(self) return #self.names > 3 end,
-    provider = function(self) return self:surround({ self.names[1], self.names[2], self.names[3] .. ".." }) end,
+    provider = function(self) return self:surround({ self.names[1], self.names[2], self:truncate(self.names[3]) }) end,
   },
   {
-    condition = function(self) return #self.names > 2 end,
-    provider = function(self) return self:surround({ self.names[1], self.names[2] .. ".." }) end,
+    provider = function(self) return self:surround({ self.names[1], self:truncate(self.names[2]) }) end,
   },
   {
-    condition = function(self) return #self.names > 1 end,
-    provider = function(self) return self:surround({ self.names[1] .. ".." }) end,
+    provider = function(self) return self:surround({ self:truncate(self.names[1]) }) end,
   },
-  { provider = "" },
+  {
+    provider = function(self) return self:surround({ "LSP" }) end,
+  },
 }
 ---https://github.com/rebelot/heirline.nvim/blob/master/cookbook.md#diagnostics
 ---https://github.com/neovim/neovim/commit/4ee656e4f35766bef4e27c5afbfa8e3d8d74a76c
@@ -269,7 +275,7 @@ M.Overseer = {
     local tasks_by_status = require("overseer.util").tbl_group_by(tasks, "status")
     self.tasks = tasks_by_status
   end,
-  flexible = 30,
+  flexible = M.priority.overseer,
   static = {
     status = constants.overseer_status,
   },
