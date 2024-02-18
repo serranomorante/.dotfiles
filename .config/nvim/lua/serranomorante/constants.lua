@@ -46,4 +46,11 @@ M.modes = {
   ["null"] = { "null", "inactive" },
 }
 
+M.overseer_status = {
+  ["FAILURE"] = { "F", "red" },
+  ["CANCELED"] = { "C", "gray" },
+  ["SUCCESS"] = { "S", "green" },
+  ["RUNNING"] = { "R", "cyan" },
+}
+
 return M

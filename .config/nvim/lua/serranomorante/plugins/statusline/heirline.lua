@@ -60,6 +60,8 @@ return {
       components.Align,
 
       components.DAPMessages,
+      components.Space,
+      components.Overseer,
       components.Align,
 
       components.LSPActive,
