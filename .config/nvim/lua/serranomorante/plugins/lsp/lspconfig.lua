@@ -273,6 +273,7 @@ return {
                   library = {
                     ---https://github.com/neovim/nvim-lspconfig/issues/2948#issuecomment-1871455900
                     vim.env.VIMRUNTIME .. "/lua",
+                    "${3rd}/busted/library",
                   },
                 },
                 codeLens = {
