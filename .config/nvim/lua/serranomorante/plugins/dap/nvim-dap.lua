@@ -183,7 +183,7 @@ return {
     vim.api.nvim_create_autocmd("FileType", {
       desc = "Lazy-load DAP plugins by filetype",
       group = vim.api.nvim_create_augroup("dap_filetype_load", { clear = true }),
-      callback = function(args) utils.load_plugin_by_filetype("DAP", args.buf) end,
+      callback = function(args) utils.load_plugin_by_filetype("DAP", { buffer = args.buf }) end,
     })
 
     utils.load_plugin_by_filetype("DAP")

@@ -255,18 +255,17 @@ function M.plugin_opts(plugin)
   return opts
 end
 
----Load plugins by custom filetype event and lazy_type
+---Execute a custom user event constructed by a "lazy_type" and a filetype
 ---@param lazy_type "LSP" | "DAP"
----@param buffer integer?
-M.load_plugin_by_filetype = function(lazy_type, buffer)
-  local buf = buffer or 0
-  local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
-  if vim.tbl_contains(constants.javascript_filetypes, filetype) then events.event("LoadJavascript" .. lazy_type) end
-  if vim.tbl_contains(constants.python_filetypes, filetype) then events.event("LoadPython" .. lazy_type) end
-  if vim.tbl_contains(constants.c_filetypes, filetype) then events.event("LoadC" .. lazy_type) end
-  if vim.tbl_contains(constants.markdown_filetypes, filetype) then events.event("LoadMarkdown" .. lazy_type) end
-  if vim.tbl_contains(constants.lua_filetypes, filetype) then events.event("LoadLua" .. lazy_type) end
-  if vim.tbl_contains(constants.json_filetypes, filetype) then events.event("LoadJson" .. lazy_type) end
+---@param opts? { filetype?: string, buffer?: integer, delay?: boolean }
+function M.load_plugin_by_filetype(lazy_type, opts)
+  opts = opts or {}
+  local filetype = opts.filetype or vim.api.nvim_get_option_value("filetype", { buf = opts.buffer or 0 })
+
+  if filetype and lazy_type then
+    local capitalized_filetype = filetype:gsub("^%l", string.upper) -- https://stackoverflow.com/a/2421746
+    events.event(lazy_type .. "Load" .. capitalized_filetype, opts.delay)
+  end
 end
 
 return M

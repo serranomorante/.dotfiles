@@ -10,7 +10,7 @@ return {
   {
     "pmizio/typescript-tools.nvim",
     dependencies = "neovim/nvim-lspconfig",
-    event = "User CustomLoadJavascriptLSP",
+    event = "User CustomLSPLoadJavascript,CustomLSPLoadTypescript,CustomLSPLoadTypescriptreact,CustomLSPLoadJavascriptreact",
     opts = function()
       return {
         on_init = on_init,
@@ -40,7 +40,7 @@ return {
   {
     "p00f/clangd_extensions.nvim",
     dependencies = "neovim/nvim-lspconfig",
-    event = "User CustomLoadCLSP",
+    event = "User CustomLSPLoadC",
     config = function()
       require("lspconfig")["clangd"].setup({
         on_init = on_init,
@@ -52,7 +52,7 @@ return {
   {
     "b0o/SchemaStore.nvim",
     dependencies = "neovim/nvim-lspconfig",
-    event = "User CustomLoadJsonLSP",
+    event = "User CustomLSPLoadJson",
     config = function()
       require("lspconfig")["jsonls"].setup({
         on_init = on_init,

@@ -1,5 +1,6 @@
 local M = {}
 
+---Useful way of organizing some common filetypes
 M.c_filetypes = { "c" }
 M.python_filetypes = { "python" }
 M.javascript_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact" }

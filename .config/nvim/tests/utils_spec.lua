@@ -1,4 +1,6 @@
 local utils = require("serranomorante.utils")
+local mock = require("luassert.mock")
+local stub = require("luassert.stub")
 
 describe("utils", function()
   describe("tools", function()
@@ -46,5 +48,31 @@ describe("utils", function()
       assert.are.same(6, #result) -- 7 in total but 6 without duplicates!
       assert.are.unique(result)
     end)
+  end)
+end)
+
+describe("lazy load", function()
+  it("plugin by filetype", function()
+    local api = mock(vim.api, true)
+    api.nvim_exec_autocmds.returns(nil)
+    api.nvim_get_option_value.returns("javascript")
+
+    utils.load_plugin_by_filetype("LSP", {
+      delay = false,
+    })
+
+    assert
+      .stub(api.nvim_exec_autocmds)
+      .was_called_with("User", { pattern = "CustomLSPLoadJavascript", modeline = false })
+
+    utils.load_plugin_by_filetype("DAP", {
+      delay = false,
+    })
+
+    assert
+      .stub(api.nvim_exec_autocmds)
+      .was_called_with("User", { pattern = "CustomDAPLoadJavascript", modeline = false })
+
+    mock.revert(api)
   end)
 end)

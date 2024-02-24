@@ -1,7 +1,7 @@
 return {
   "mfussenegger/nvim-dap-python",
   dependencies = "mfussenegger/nvim-dap",
-  event = "User CustomLoadPythonDAP",
+  event = "User CustomDAPLoadPython",
   config = function()
     local mason_registry = require("mason-registry")
     local python_dap = mason_registry.get_package("debugpy")

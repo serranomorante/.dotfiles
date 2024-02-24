@@ -42,7 +42,7 @@ autocmd({ "BufReadPost", "BufNewFile", "BufWritePost" }, {
     end
 
     ---Lazy load LSP plugins
-    utils.load_plugin_by_filetype("LSP", args.buf)
+    utils.load_plugin_by_filetype("LSP", { buffer = args.buf })
 
     ---https://github.com/AstroNvim/AstroNvim/commit/ba0fbdf974eb63639e43d6467f7232929b8b9b4c
     vim.schedule(function()
