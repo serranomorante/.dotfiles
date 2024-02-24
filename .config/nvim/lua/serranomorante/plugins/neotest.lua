@@ -6,6 +6,7 @@ return {
     ---Test adapters
     { "marilari88/neotest-vitest", dev = false },
     "nvim-neotest/neotest-python",
+    "nvim-neotest/neotest-plenary",
   },
   ---https://github.com/rcarriga/dotfiles/blob/8bf909cc6ee323134b4225f762fa381a47986d15/.config/nvim/lua/config/neotest.lua
   keys = {
@@ -117,6 +118,7 @@ return {
       adapters = {
         require("neotest-vitest"),
         require("neotest-python"),
+        require("neotest-plenary"),
       },
     }
   end,
