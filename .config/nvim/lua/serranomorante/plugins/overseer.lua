@@ -34,6 +34,12 @@ return {
               if task then overseer.run_action(task, "open float") end
             end
           end
+
+          ---Auto enter insert mode
+          ---https://github.com/stevearc/overseer.nvim/issues/44#issuecomment-1270198242
+          vim.defer_fn(function()
+            if vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "terminal" then vim.cmd([[startinsert]]) end
+          end, 100)
         end,
         desc = "Overseer: Toggle Lazygit Task",
       })
