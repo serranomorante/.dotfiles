@@ -27,12 +27,18 @@ return {
 
   {
     "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
+    event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
-      { "saadparwaiz1/cmp_luasnip" },
-      { "onsails/lspkind.nvim" },
-      { "hrsh7th/cmp-nvim-lsp-signature-help" },
+      "saadparwaiz1/cmp_luasnip",
+      "onsails/lspkind.nvim",
+      "hrsh7th/cmp-nvim-lsp-signature-help",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-cmdline",
+      "hrsh7th/cmp-buffer",
     },
+    init = function()
+      vim.opt.completeopt = { "menu", "menuone", "noselect" } -- Options for insert mode completion
+    end,
     config = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")
@@ -72,7 +78,7 @@ return {
         snippet = { -- configure how nvim-cmp interacts with snippet engine
           expand = function(args) luasnip.lsp_expand(args.body) end,
         },
-        sources = {
+        sources = cmp.config.sources({
           { name = "luasnip" },
           {
             name = "nvim_lsp",
@@ -81,7 +87,9 @@ return {
             end,
           },
           { name = "nvim_lsp_signature_help" },
-        },
+          { name = "buffer" },
+          { name = "path" },
+        }),
         mapping = {
           ["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
           ["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
@@ -142,6 +150,24 @@ return {
           { name = "path" },
           { name = "buffer" },
         },
+      })
+
+      -- `/` cmdline setup.
+      cmp.setup.cmdline("/", {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+          { name = "buffer" },
+        },
+      })
+
+      -- `:` cmdline setup.
+      cmp.setup.cmdline(":", {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+          { name = "path" },
+        }, {
+          { name = "cmdline" },
+        }),
       })
 
       cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {

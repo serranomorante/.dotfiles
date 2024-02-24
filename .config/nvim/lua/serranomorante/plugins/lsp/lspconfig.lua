@@ -235,7 +235,8 @@ return {
         end
       end
 
-      capabilities = vim.tbl_deep_extend("force", lspconfig.util.default_config, cmp_nvim_lsp.default_capabilities())
+      capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities = vim.tbl_deep_extend("force", capabilities, cmp_nvim_lsp.default_capabilities())
 
       local servers = utils.get_from_tools(tools.by_filetype, "lsp", true)
 
