@@ -4,27 +4,6 @@ local tools = require("serranomorante.tools")
 
 local M = {}
 
-M.Direction = {
-  left = "left",
-  right = "right",
-  up = "up",
-  down = "down",
-}
-
-M.DirectionKeys = {
-  left = "h",
-  right = "l",
-  up = "k",
-  down = "j",
-}
-
-M.DirectionKeysOpposite = {
-  left = "l",
-  right = "h",
-  up = "j",
-  down = "k",
-}
-
 ---Check if a plugin spec exists in lazy config.
 ---This will not load the plugin.
 ---@param plugin string # The plugin to search for
@@ -109,42 +88,6 @@ function M.file_worktree(path, worktrees)
     then
       return worktree
     end
-  end
-end
-
---- Get the focused buffer filetype from a window id
---- @param winid number # The window id to get the filetype from
---- @return string filetype # The filetype of the focused buffer
-function M.buf_filetype_from_winid(winid)
-  local bufnr = vim.api.nvim_win_get_buf(winid)
-  local filetype = vim.bo[bufnr].filetype
-  return filetype
-end
-
---- Get the branch name with git-dir and worktree support
---- @param worktree table<string, string>|nil # a table specifying the `toplevel` and `gitdir` of a worktree
---- @param as_path string|nil # execute the git command from specific path
---- @return string branch # The branch name
-function M.branch_name(worktree, as_path)
-  local branch
-
-  if worktree then
-    branch = vim.fn.system(
-      ("git --git-dir=%s --work-tree=%s branch --show-current 2> /dev/null | tr -d '\n'"):format(
-        worktree.gitdir,
-        worktree.toplevel
-      )
-    )
-  elseif as_path then
-    branch = vim.fn.system(("git -C %s branch --show-current 2> /dev/null | tr -d '\n'"):format(as_path))
-  else
-    branch = vim.fn.system("git branch --show-current 2> /dev/null | tr -d '\n'")
-  end
-
-  if branch ~= "" then
-    return branch
-  else
-    return ""
   end
 end
 
