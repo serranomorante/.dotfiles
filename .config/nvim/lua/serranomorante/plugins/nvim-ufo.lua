@@ -1,3 +1,32 @@
+---Anything not here will use lsp->treesitter->indent
+---Seems like "lsp" offers better performance: https://github.com/kevinhwang91/nvim-ufo/issues/6#issuecomment-1172346709
+---@type table<string, "treesitter" | "indent" | "">
+local provider_by_filetype = {
+  vim = "indent",
+  python = "indent",
+  git = "",
+  nofile = "",
+}
+
+---https://github.com/kevinhwang91/nvim-ufo/blob/553d8a9c611caa9f020556d4a26b760698e5b81b/doc/example.lua#L34C1-L50C8
+---@param bufnr number
+---@diagnostic disable-next-line: undefined-doc-name
+---@return Promise
+local function customize_selector(bufnr)
+  local function handleFallbackException(err, providerName)
+    if type(err) == "string" and err:match("UfoFallbackException") then
+      return require("ufo").getFolds(bufnr, providerName)
+    else
+      return require("promise").reject(err)
+    end
+  end
+
+  return require("ufo")
+    .getFolds(bufnr, "lsp")
+    :catch(function(err) return handleFallbackException(err, "treesitter") end)
+    :catch(function(err) return handleFallbackException(err, "indent") end)
+end
+
 return {
   "kevinhwang91/nvim-ufo",
   event = "User CustomFile",
@@ -44,21 +73,8 @@ return {
       },
     },
     provider_selector = function(_, filetype, buftype)
-      local function handleFallbackException(bufnr, err, providerName)
-        if type(err) == "string" and err:match("UfoFallbackException") then
-          return require("ufo").getFolds(bufnr, providerName)
-        else
-          return require("promise").reject(err)
-        end
-      end
-
-      return (filetype == "" or buftype == "nofile") and "indent" -- only use indent until a file is opened
-        or function(bufnr)
-          return require("ufo")
-            .getFolds(bufnr, "lsp")
-            :catch(function(err) return handleFallbackException(bufnr, err, "treesitter") end)
-            :catch(function(err) return handleFallbackException(bufnr, err, "indent") end)
-        end
+      if filetype == "" or buftype == "nofile" then return provider_by_filetype["nofile"] end
+      return provider_by_filetype[filetype] or customize_selector
     end,
   },
   config = function(_, opts) require("ufo").setup(opts) end,
