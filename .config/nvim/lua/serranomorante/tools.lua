@@ -14,7 +14,7 @@ M.by_filetype = {
     },
     parsers = { "javascript", "typescript", "jsdoc", "tsx" },
   },
-  lua = { formatters = { "stylua" }, lsp = { "lua-language-server" } },
+  lua = { formatters = { "stylua" }, lsp = { "lua-language-server" }, parsers = { "luadoc" } },
   go = {
     formatters = { "gofumpt", "goimports", "gomodifytags" },
     lsp = { "gopls" },

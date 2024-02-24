@@ -47,7 +47,8 @@ return {
         tools.by_filetype.c,
         tools.by_filetype.rust,
         tools.by_filetype.fish,
-        tools.by_filetype.toml
+        tools.by_filetype.toml,
+        tools.by_filetype.lua
       ),
       highlight = {
         enable = true,
