@@ -186,46 +186,46 @@ function M.del_buffer_autocmd(augroup, bufnr)
   if cmds_found then vim.tbl_map(function(cmd) vim.api.nvim_del_autocmd(cmd.id) end, cmds) end
 end
 
----@alias ToolEnsureInstall table<"formatters"|"lsp"|"linters"|"dap"|"extra"|"parsers", string[]|table[]>
+---@alias MasonToolType "formatters"|"lsp"|"linters"|"dap"|"extra"
+---@alias TreesitterToolType "parsers"
+---@alias ToolEnsureInstall table<MasonToolType|TreesitterToolType, string[]|table[]>
 
----Merge several arrays into 1 array
----@param installer_type "treesitter"|"mason"?
+---Merges an array of `ToolEnsureInstall` specs into 1 flat array of strings
+---@param installer_type? "treesitter"|"mason" We will use Mason by default
 ---@param ... ToolEnsureInstall
+---@return string[] # A flat array of tools without duplicates
 function M.merge_tools(installer_type, ...)
-  local merge = {}
-  for _, v in ipairs({ ... }) do
-    if installer_type == "mason" then
-      if vim.tbl_isarray(v.formatters) then vim.list_extend(merge, v.formatters) end
-      if vim.tbl_isarray(v.lsp) then vim.list_extend(merge, v.lsp) end
-      if vim.tbl_isarray(v.linters) then vim.list_extend(merge, v.linters) end
-      if vim.tbl_isarray(v.dap) then vim.list_extend(merge, v.dap) end
-      if vim.tbl_isarray(v.extra) then vim.list_extend(merge, v.extra) end
-    elseif installer_type == "treesitter" then
-      if vim.tbl_isarray(v.parsers) then vim.list_extend(merge, v.parsers) end
+  installer_type = installer_type or "mason"
+  local mason_tool_type = { "formatters", "lsp", "linters", "dap", "extra" }
+  local treesitter_tool_type = { "parsers" }
+  local tool_type_by_installer = { mason = mason_tool_type, treesitter = treesitter_tool_type }
+  local merge_result = {}
+  for _, tools_table in ipairs({ ... }) do
+    for _, tool_type in ipairs(tool_type_by_installer[installer_type]) do
+      for _, tool in ipairs(tools_table[tool_type] or {}) do
+        if not vim.list_contains(merge_result, tool) then table.insert(merge_result, tool) end
+      end
     end
   end
-
-  local unique_merge = {}
-  for _, v in ipairs(merge) do
-    if not vim.list_contains(unique_merge, v) then table.insert(unique_merge, v) end
-  end
-  return unique_merge
+  return merge_result
 end
 
 ---Get a list of tools from a specific tool type: lsp, dap, etc.
 ---@param base table<string, ToolEnsureInstall> The base list of tools
----@param tool_type string The type to extract tools from
----@param with_map boolean? If the name of the tool should be map (lua-language-server -> lua_ls)
+---@param tool_type MasonToolType|TreesitterToolType The type to extract tools from
+---@param use_lspconfig_map? boolean Whether we should use nvim-lspconfig names (lua-language-server -> lua_ls)
+---@param lspconfig_map? table<string, string> Your custom lspconfig mapping
 ---@return string[]
-function M.get_from_tools(base, tool_type, with_map)
-  local should_map = with_map or false
+function M.get_from_tools(base, tool_type, use_lspconfig_map, lspconfig_map)
   local types = {}
   for _, v in pairs(base) do
-    if vim.tbl_isarray(v[tool_type]) then
-      for _, tool in ipairs(v[tool_type]) do
-        local tool_name = should_map and tools.mason_to_lspconfig[tool] or tool
-        if tool_name and not vim.list_contains(types, tool_name) then table.insert(types, tool_name) end
+    for _, tool in ipairs(v[tool_type] or {}) do
+      if type(tool) == "table" then tool = tool[1] end
+      if use_lspconfig_map then
+        local nvim_lspconfig_map = lspconfig_map or tools.mason_to_lspconfig
+        if nvim_lspconfig_map[tool] ~= nil then tool = nvim_lspconfig_map[tool] end
       end
+      if tool and not vim.list_contains(types, tool) then table.insert(types, tool) end
     end
   end
   return types
