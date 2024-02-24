@@ -198,6 +198,9 @@ return {
           end
         end, opts)
 
+        opts.desc = "LSP: Reset diagnostics"
+        vim.keymap.set("n", "<leader>rS", vim.diagnostic.reset, opts)
+
         opts.desc = "LSP: Show info"
         vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<CR>", opts)
 
