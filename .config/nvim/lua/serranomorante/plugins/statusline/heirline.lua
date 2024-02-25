@@ -29,6 +29,7 @@ return {
       command = String.fg,
       terminal = Constant.fg,
       visual = Statement.fg,
+      replace = DiagnosticError.fg,
       directory = Directory.fg,
       ---https://github.com/rebelot/heirline.nvim/blob/master/cookbook.md#colors-colors-more-colors
       bright_bg = Folded.bg,
