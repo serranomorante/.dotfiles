@@ -6,6 +6,7 @@ return {
   lazy = false,
   opts = {
     worktrees = vim.g.git_worktrees,
+    attach_to_untracked = true,
   },
   keys = {
     {
