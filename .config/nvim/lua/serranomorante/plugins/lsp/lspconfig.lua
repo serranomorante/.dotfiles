@@ -287,11 +287,21 @@ return {
           })
         end,
         ["tailwindcss"] = function()
+          local classRegex = {
+            { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+            { "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+          }
+
           lspconfig["tailwindcss"].setup({
             on_init = on_init,
             on_attach = on_attach,
             capabilities = capabilities,
             filetypes = constants.javascript_filetypes,
+            settings = {
+              tailwindCSS = {
+                experimental = { classRegex = classRegex },
+              },
+            },
           })
         end,
       }
