@@ -112,3 +112,25 @@ autocmd("InsertEnter", {
     end
   end,
 })
+
+local indent_line_group = augroup("indent_line", {})
+
+autocmd("OptionSet", {
+  desc = "Update indent line on shiftwidth change",
+  group = indent_line_group,
+  pattern = "shiftwidth",
+  callback = function()
+    if vim.v.option_type == "local" then
+      utils.update_indent_line_curbuf()
+    else
+      vim.go.listchars = utils.update_indent_line(vim.go.listchars, vim.go.shiftwidth)
+    end
+  end,
+})
+
+autocmd("User", {
+  desc = "Update indent line on CustomFile event",
+  pattern = "CustomFile",
+  group = indent_line_group,
+  callback = function() vim.wo.listchars = utils.update_indent_line(vim.wo.listchars, vim.bo.shiftwidth) end,
+})

@@ -211,4 +211,25 @@ function M.load_plugin_by_filetype(lazy_type, opts)
   end
 end
 
+---Get the indent char string for a given shiftwidth
+---@param shiftwidth number
+local function indent_char(shiftwidth) return "▏" .. string.rep(" ", shiftwidth > 0 and shiftwidth - 1 or 0) end
+
+---Update indent line string with the current shiftwidth
+---@param old string old listchars
+---@param shiftwidth number current shiftwidth
+function M.update_indent_line(old, shiftwidth)
+  return old:gsub("leadmultispace:[^,]*", "leadmultispace:" .. indent_char(shiftwidth))
+end
+
+---Update indent line for the current buffer
+---https://github.com/gravndal/shiftwidth_leadmultispace.nvim/blob/master/plugin/shiftwidth_leadmultispace.lua
+function M.update_indent_line_curbuf()
+  for _, winid in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_get_buf(winid) == vim.api.nvim_get_current_buf() then
+      vim.wo[winid].listchars = M.update_indent_line(vim.wo[winid].listchars, vim.bo.shiftwidth)
+    end
+  end
+end
+
 return M
