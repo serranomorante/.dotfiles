@@ -286,10 +286,11 @@ return {
           })
         end,
         ["tailwindcss"] = function()
-          local classRegex = {
-            { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
-            { "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
-          }
+          ---https://github.com/paolotiu/tailwind-intellisense-regex-list?tab=readme-ov-file#plain-javascript-object
+          local javascript_plain_object = { ":\\s*?[\"'`]([^\"'`]*).*?," }
+          ---https://cva.style/docs/getting-started/installation#intellisense
+          local cva = { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" }
+          local cva_cx = { "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" }
 
           lspconfig["tailwindcss"].setup({
             on_init = on_init,
@@ -298,7 +299,7 @@ return {
             filetypes = constants.javascript_filetypes,
             settings = {
               tailwindCSS = {
-                experimental = { classRegex = classRegex },
+                experimental = { classRegex = { cva, cva_cx, javascript_plain_object } },
               },
             },
           })
