@@ -19,7 +19,7 @@ return {
         single_file_support = false,
         settings = {
           code_lens = "all",
-          publish_diagnostic_on = "change",
+          publish_diagnostic_on = "insert_leave",
           complete_function_calls = false,
           expose_as_code_action = { "fix_all", "add_missing_imports", "remove_unused" },
           separate_diagnostic_server = false,
@@ -87,7 +87,6 @@ return {
         },
         virtual_text = { source = true },
         float = { border = "single", source = true },
-        update_in_insert = true,
       })
 
       vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "single" })
