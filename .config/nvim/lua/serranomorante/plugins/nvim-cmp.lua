@@ -38,6 +38,13 @@ return {
     },
     init = function()
       vim.opt.completeopt = { "menu", "menuone", "noselect" } -- Options for insert mode completion
+
+      ---https://github.com/hrsh7th/cmp-cmdline/issues/94
+      vim.api.nvim_create_autocmd("CmdWinEnter", {
+        desc = "Close completion menu when entering cmdwin",
+        group = vim.api.nvim_create_augroup("cmdwin_close_completion", { clear = true }),
+        callback = function() require("cmp").close() end,
+      })
     end,
     config = function()
       local cmp = require("cmp")
