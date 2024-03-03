@@ -8,7 +8,6 @@ return {
     large_file_overrides = { providers = { "lsp" } },
     ---Disable this plugin on these modes: visual, line visual and visual block
     modes_denylist = { "v", "V", "\22" },
-    filetypes_denylist = { "TelescopePrompt" },
   },
   config = function(_, opts) require("illuminate").configure(opts) end,
 }

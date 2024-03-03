@@ -71,7 +71,7 @@ return {
     event = "User CustomFile",
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
-      "nvim-telescope/telescope.nvim",
+      "ibhagwan/fzf-lua",
     },
     init = function()
       ---See: https://github.com/VonHeikemen/lsp-zero.nvim/blob/dev-v3/doc/md/guides/under-the-hood.md
@@ -123,11 +123,11 @@ return {
       on_attach = function(client, bufnr)
         local opts = { noremap = true, silent = true, buffer = bufnr }
 
-        if utils.is_available("telescope.nvim") then
-          local builtin = require("telescope.builtin")
+        if utils.is_available("fzf-lua") then
+          local builtin = require("fzf-lua")
           if client.supports_method("textDocument/references") then
             opts.desc = "LSP: Show references"
-            vim.keymap.set("n", "gr", function() builtin.lsp_references({ show_line = false }) end, opts)
+            vim.keymap.set("n", "gr", function() builtin.lsp_references() end, opts)
           end
 
           if client.supports_method("textDocument/definition") then
@@ -142,17 +142,20 @@ return {
 
           if client.supports_method("textDocument/typeDefinition") then
             opts.desc = "LSP: Show type definitions"
-            vim.keymap.set("n", "gy", function() builtin.lsp_type_definitions() end, opts)
+            vim.keymap.set("n", "gy", function() builtin.lsp_typedefs() end, opts)
           end
 
-          opts.desc = "LSP: Show buffer diagnostics"
-          vim.keymap.set("n", "<leader>ld", function() builtin.diagnostics({ bufnr = bufnr }) end, opts)
+          opts.desc = "LSP: Show document diagnostics"
+          vim.keymap.set("n", "<leader>ld", function() builtin.diagnostics_document() end, opts)
 
           opts.desc = "LSP: Show workspace diagnostics"
-          vim.keymap.set("n", "<leader>lD", function() builtin.diagnostics() end, opts)
+          vim.keymap.set("n", "<leader>lD", function() builtin.diagnostics_workspace() end, opts)
 
           opts.desc = "LSP: Document symbols"
           vim.keymap.set("n", "<leader>ls", function() builtin.lsp_document_symbols() end, opts)
+
+          opts.desc = "LSP: Workspace symbols"
+          vim.keymap.set("n", "<leader>lS", function() builtin.lsp_workspace_symbols() end, opts)
         end
 
         if client.supports_method("textDocument/declaration") then

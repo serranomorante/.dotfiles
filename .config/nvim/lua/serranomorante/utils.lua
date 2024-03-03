@@ -1,5 +1,4 @@
 local events = require("serranomorante.events")
-local constants = require("serranomorante.constants")
 local tools = require("serranomorante.tools")
 
 local M = {}

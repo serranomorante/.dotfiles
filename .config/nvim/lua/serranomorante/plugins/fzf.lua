@@ -1,0 +1,136 @@
+local utils = require("serranomorante.utils")
+
+return {
+  "ibhagwan/fzf-lua",
+  dependencies = { "nvim-tree/nvim-web-devicons" },
+  lazy = false,
+  keys = {
+    {
+      "<leader>f<CR>",
+      function() require("fzf-lua").resume() end,
+      desc = "FZF: Resume last fzf session",
+    },
+    {
+      "<leader>fb",
+      function() require("fzf-lua").buffers() end,
+      desc = "FZF: Buffers",
+    },
+    {
+      "<leader>fh",
+      function() require("fzf-lua").help_tags() end,
+      desc = "FZF: Help tags",
+    },
+    {
+      "<leader>fk",
+      function() require("fzf-lua").keymaps() end,
+      desc = "FZF: Keymaps",
+    },
+    {
+      "<leader>fr",
+      function() require("fzf-lua").registers() end,
+      desc = "FZF: Registers",
+    },
+    {
+      "<leader>f'",
+      function() require("fzf-lua").marks() end,
+      desc = "FZF: Find marks",
+    },
+    {
+      "<leader>fc",
+      function() require("fzf-lua").grep_cword() end,
+      desc = "FZF: Find word under cursor",
+    },
+    {
+      "<leader>fv",
+      function() require("fzf-lua").grep_visual() end,
+      mode = "v",
+      desc = "FZF: Find visual selection",
+    },
+    {
+      "<leader>ff",
+      function() require("fzf-lua").files() end,
+      desc = "FZF: Find files",
+    },
+    {
+      "<leader>fw",
+      function() require("fzf-lua").live_grep_glob() end,
+      desc = "FZF: Live grep",
+    },
+    {
+      "<leader>gc",
+      function() require("fzf-lua").git_bcommits() end,
+      desc = "FZF: List commits for current buffer (bcommits)",
+    },
+    {
+      "<leader>gC",
+      function() require("fzf-lua").git_commits() end,
+      desc = "FZF: List commits for current directory",
+    },
+    {
+      "<leader>gt",
+      function() require("fzf-lua").git_status() end,
+      desc = "FZF: Show git status",
+    },
+  },
+  opts = function()
+    local actions = require("fzf-lua.actions")
+    local fzf_lua = vim.fn.stdpath("data") .. "/fzf-lua"
+    if not utils.is_directory(fzf_lua) then vim.fn.mkdir(fzf_lua, "p") end
+
+    return {
+      winopts = {
+        preview = {
+          default = "bat", -- seems to be faster than builtin (treesitter)
+          hidden = "hidden",
+        },
+      },
+      fzf_opts = {
+        ["--history"] = utils.join_paths(fzf_lua, "fzf-lua-history"),
+      },
+      keymap = {
+        builtin = {
+          ["<C-d>"] = "preview-page-down",
+          ["<C-u>"] = "preview-page-up",
+          ["<C-z>"] = "toggle-fullscreen",
+          ["<F4>"] = "toggle-preview",
+        },
+        fzf = {
+          ["ctrl-f"] = "half-page-down",
+          ["ctrl-b"] = "half-page-up",
+          ["ctrl-a"] = "beginning-of-line",
+          ["ctrl-e"] = "end-of-line",
+          ---Only valid with fzf previewers (bat/cat/git/etc)
+          ["f4"] = "toggle-preview",
+          ["ctrl-d"] = "preview-page-down",
+          ["ctrl-u"] = "preview-page-up",
+          ---https://github.com/ibhagwan/fzf-lua/issues/546#issuecomment-1736076539
+          ["ctrl-q"] = "select-all+accept",
+          ["ctrl-h"] = "previous-history",
+          ["ctrl-l"] = "next-history",
+          ["ctrl-n"] = "down",
+          ["ctrl-p"] = "up",
+        },
+      },
+      actions = {
+        ---https://github.com/ibhagwan/fzf-lua/issues/546#issuecomment-1736076539
+        ["default"] = { actions.file_edit_or_qf },
+      },
+    }
+  end,
+  config = function(_, opts)
+    local fzf_lua = require("fzf-lua")
+    fzf_lua.setup(opts)
+    ---https://github.com/ibhagwan/fzf-lua?tab=readme-ov-file#neovim-api
+    ---https://github.com/ibhagwan/fzf-lua/wiki#automatic-sizing-of-heightwidth-of-vimuiselect
+    fzf_lua.register_ui_select(function(_, items)
+      local min_h, max_h = 0.15, 0.70
+      local h = (#items + 4) / vim.o.lines
+      if h < min_h then
+        h = min_h
+      elseif h > max_h then
+        h = max_h
+      end
+      return { winopts = { height = h, width = 0.60, row = 0.40 } }
+    end)
+  end,
+}

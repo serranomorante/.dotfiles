@@ -102,17 +102,6 @@ autocmd({ "BufWinLeave", "BufWinEnter" }, {
   end,
 })
 
-autocmd("InsertEnter", {
-  desc = "Execute `CustomInsertEnter` user event on valid buffers",
-  group = augroup("custom_insert_enter_event", { clear = true }),
-  callback = function(args)
-    local current_file = vim.fn.resolve(vim.fn.expand("%"))
-    if not (current_file == "" or vim.api.nvim_get_option_value("buftype", { buf = args.buf }) == "nofile") then
-      events.event("InsertEnter", true) -- use schedule to trigger the event
-    end
-  end,
-})
-
 local indent_line_group = augroup("indent_line", {})
 
 autocmd("OptionSet", {

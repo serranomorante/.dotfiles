@@ -1,14 +1,12 @@
 return {
   "github/copilot.vim",
-  ---Copilot's startup time is slow. I cannot use regular 'InsertEnter' event as Telescope also triggers
-  ---that event when switching buffers in insert mode causing a noticeable delay.
-  event = "User CustomInsertEnter",
+  event = "User CustomFile",
   init = function()
     vim.g.copilot_node_command = vim.g.node_system_executable
     vim.g.copilot_no_tab_map = true -- I use `tab` for completion
   end,
   config = function()
-    vim.api.nvim_exec_autocmds("InsertEnter", { buffer = vim.api.nvim_get_current_buf(), modeline = false })
+    -- vim.api.nvim_exec_autocmds("InsertEnter", { buffer = vim.api.nvim_get_current_buf(), modeline = false })
 
     vim.keymap.set("i", "<M-c>", 'copilot#Accept("\\<CR>")', {
       expr = true,
