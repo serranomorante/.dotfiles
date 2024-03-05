@@ -77,7 +77,7 @@ return {
     }
 
     local DAPUIStatusLine = {
-      condition = function() return conditions.is_active() and conditions.buffer_matches({ filetype = { "^dapui.*" } }) end,
+      condition = function() return conditions.is_active() and conditions.buffer_matches({ filetype = { "^dap-.*" } }) end,
       components.FileNameBlock,
       components.Align,
     }

@@ -68,10 +68,7 @@ return {
         enabled = function()
           local buf = vim.api.nvim_get_current_buf()
           local dap_prompt = utils.is_available("cmp-dap") -- add interoperability with cmp-dap
-            and vim.tbl_contains(
-              { "dap-repl", "dapui_watches", "dapui_hover" },
-              vim.api.nvim_get_option_value("filetype", { buf = buf })
-            )
+            and vim.tbl_contains({ "dap-repl" }, vim.api.nvim_get_option_value("filetype", { buf = buf }))
 
           ---Disable for any prompts other than nvim-dap
           if vim.api.nvim_get_option_value("buftype", { buf = buf }) == "prompt" and not dap_prompt then
@@ -177,7 +174,7 @@ return {
         }),
       })
 
-      cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+      cmp.setup.filetype({ "dap-repl" }, {
         sources = {
           { name = "dap" },
         },

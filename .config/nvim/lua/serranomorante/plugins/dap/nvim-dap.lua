@@ -61,7 +61,7 @@ return {
     { "<leader>dp", function() require("dap").pause() end, desc = "DAP: Pause (F6)" },
     { "<leader>dr", function() require("dap").restart_frame() end, desc = "DAP: Restart (C-F5)" },
     { "<leader>dR", function() require("dap").repl.toggle() end, desc = "DAP: Toggle REPL" },
-    { "<leader>ds", function() require("dap").run_to_cursor() end, desc = "DAP: Run To Cursor" },
+    { "<leader>dS", function() require("dap").run_to_cursor() end, desc = "DAP: Run To Cursor" },
     { "<leader>dd", function() require("dap").focus_frame() end, desc = "DAP: Focus frame" },
     { "<leader>dh", function() require("dap.ui.widgets").hover() end, desc = "DAP: Debugger Hover" },
   },
@@ -203,5 +203,9 @@ return {
       ["pwa-extensionHost"] = constants.javascript_filetypes,
       ["cppdbg"] = constants.c_filetypes,
     }
+
+    local widgets = require("dap.ui.widgets")
+    local scopes_sidebar = widgets.sidebar(widgets.scopes, { number = true, wrap = false })
+    vim.keymap.set("n", "<leader>ds", scopes_sidebar.toggle, { desc = 'DAP: Toggle "scopes" in sidebar' })
   end,
 }
