@@ -1,5 +1,4 @@
 local utils = require("serranomorante.utils")
-local constants = require("serranomorante.constants")
 local tools = require("serranomorante.tools")
 
 return {
@@ -11,13 +10,6 @@ return {
       enable_autocmd = false,
     },
     init = function() vim.g.skip_ts_context_commentstring_module = true end,
-  },
-  {
-    "windwp/nvim-ts-autotag",
-    ft = constants.javascript_filetypes,
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    opts = { enable_close_on_slash = true },
-    config = function(_, opts) require("nvim-ts-autotag").setup(opts) end,
   },
   {
     "nvim-treesitter/nvim-treesitter",
