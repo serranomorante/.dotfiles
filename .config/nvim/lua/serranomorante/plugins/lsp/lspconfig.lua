@@ -51,6 +51,7 @@ return {
   },
   {
     "b0o/SchemaStore.nvim",
+    enabled = false,
     dependencies = "neovim/nvim-lspconfig",
     event = "User CustomLSPLoadJson",
     config = function()
@@ -132,7 +133,7 @@ return {
 
           if client.supports_method("textDocument/definition") then
             opts.desc = "LSP: Show definitions"
-            vim.keymap.set("n", "gd", function() builtin.lsp_definitions() end, opts)
+            vim.keymap.set("n", "gd", function() builtin.lsp_definitions({ jump_to_single_result = true }) end, opts)
           end
 
           if client.supports_method("textDocument/implementation") then
@@ -196,7 +197,8 @@ return {
         vim.keymap.set("n", "<leader>rs", function()
           local clients = vim.lsp.get_clients({ bufnr = bufnr })
           for _, c in pairs(clients) do
-            vim.cmd("LspRestart " .. c.id)
+            ---Ignore copilot cause it causes issues
+            if c.name ~= "copilot" then vim.cmd("LspRestart " .. c.id) end
           end
         end, opts)
 
