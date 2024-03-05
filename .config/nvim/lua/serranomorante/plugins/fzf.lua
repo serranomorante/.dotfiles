@@ -71,11 +71,16 @@ return {
       function() require("fzf-lua").git_status() end,
       desc = "FZF: Show git status",
     },
+    {
+      "<leader>df",
+      function() require("fzf-lua").dap_breakpoints() end,
+      desc = "FZF: DAP breakpoints",
+    },
   },
   opts = function()
-    local actions = require("fzf-lua.actions")
-    local fzf_lua = vim.fn.stdpath("data") .. "/fzf-lua"
-    if not utils.is_directory(fzf_lua) then vim.fn.mkdir(fzf_lua, "p") end
+    local fzf_lua = require("fzf-lua")
+    local fzf_lua_path = vim.fn.stdpath("data") .. "/fzf-lua"
+    if not utils.is_directory(fzf_lua_path) then vim.fn.mkdir(fzf_lua_path, "p") end
 
     return {
       winopts = {
@@ -85,7 +90,7 @@ return {
         },
       },
       fzf_opts = {
-        ["--history"] = utils.join_paths(fzf_lua, "fzf-lua-history"),
+        ["--history"] = utils.join_paths(fzf_lua_path, "fzf-lua-history"),
       },
       keymap = {
         builtin = {
@@ -112,8 +117,24 @@ return {
         },
       },
       actions = {
-        ---https://github.com/ibhagwan/fzf-lua/issues/546#issuecomment-1736076539
-        ["default"] = { actions.file_edit_or_qf },
+        files = {
+          ["default"] = fzf_lua.actions.file_edit_or_qf,
+        },
+        buffers = {
+          ["default"] = fzf_lua.actions.buf_edit_or_qf,
+        },
+      },
+      dap = {
+        breakpoints = {
+          actions = {
+            ["ctrl-q"] = function(_, opts)
+              ---Lists all breakpoints and log points in quickfix window.
+              ---https://github.com/ibhagwan/fzf-lua/wiki/Advanced#keybind-handlers
+              require("dap").list_breakpoints()
+              vim.cmd(opts.copen or "botright copen")
+            end,
+          },
+        },
       },
     }
   end,
