@@ -3,7 +3,7 @@ local utils = require("serranomorante.utils")
 return {
   "LeonHeidelbach/trailblazer.nvim",
   event = "User CustomFile",
-  dependencies = "nvim-treesitter/nvim-treesitter",
+  dependencies = "kevinhwang91/nvim-treesitter",
   keys = {
     {
       "<A-l>",

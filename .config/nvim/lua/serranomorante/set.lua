@@ -70,4 +70,4 @@ vim.opt.timeoutlen = 300
 vim.opt.inccommand = "split"
 
 vim.opt.list = true
-vim.opt_global.listchars:append({ leadmultispace = "  " })
+vim.opt_global.listchars:append({ leadmultispace = "  ", trail = " " })

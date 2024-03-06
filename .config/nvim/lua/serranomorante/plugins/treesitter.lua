@@ -5,14 +5,14 @@ return {
   {
     "JoosepAlviste/nvim-ts-context-commentstring",
     lazy = true,
-    dependencies = "nvim-treesitter/nvim-treesitter",
+    dependencies = "kevinhwang91/nvim-treesitter", -- see: https://github.com/kevinhwang91/nvim-bqf/issues/110#issuecomment-1509896444
     opts = {
       enable_autocmd = false,
     },
     init = function() vim.g.skip_ts_context_commentstring_module = true end,
   },
   {
-    "nvim-treesitter/nvim-treesitter",
+    "kevinhwang91/nvim-treesitter",
     dependencies = "nvim-treesitter/nvim-treesitter-textobjects",
     event = "User CustomFile",
     cmd = {

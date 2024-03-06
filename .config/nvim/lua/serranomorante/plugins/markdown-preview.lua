@@ -13,6 +13,7 @@ return {
     local function load_then_exec(cmd)
       return function()
         vim.cmd.delcommand(cmd)
+        ---@diagnostic disable-next-line: different-requires
         require("lazy").load({ plugins = { "markdown-preview.nvim" } })
         vim.api.nvim_exec_autocmds("BufEnter", {}) -- commands appear only after BufEnter
         vim.cmd(cmd)

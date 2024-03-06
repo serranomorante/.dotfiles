@@ -2,7 +2,7 @@ return {
   "nvim-neotest/neotest",
   dependencies = {
     "nvim-lua/plenary.nvim",
-    "nvim-treesitter/nvim-treesitter",
+    "kevinhwang91/nvim-treesitter",
     ---Test adapters
     { "marilari88/neotest-vitest", dev = false },
     "nvim-neotest/neotest-python",
