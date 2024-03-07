@@ -20,5 +20,14 @@ require("lazy").setup({
   change_detection = {
     notify = false,
   },
-  dev = { path = "~/repos", fallback = true },
+  dev = {
+    path = "~/repos",
+    fallback = true,
+    patterns = {
+      "mfussenegger/nvim-dap",
+      -- "neovim/nvim-lspconfig",
+      -- "marilari88/neotest-vitest",
+      -- "ibhagwan/fzf-lua",
+    },
+  },
 })

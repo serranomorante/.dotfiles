@@ -67,7 +67,6 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    dev = false,
     cmd = { "LspInfo", "LspInstall", "LspStart" },
     event = "User CustomFile",
     dependencies = {

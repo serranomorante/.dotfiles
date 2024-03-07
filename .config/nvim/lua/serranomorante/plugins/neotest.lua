@@ -4,7 +4,7 @@ return {
     "nvim-lua/plenary.nvim",
     "kevinhwang91/nvim-treesitter",
     ---Test adapters
-    { "marilari88/neotest-vitest", dev = false },
+    "marilari88/neotest-vitest",
     "nvim-neotest/neotest-python",
     "nvim-neotest/neotest-plenary",
   },
