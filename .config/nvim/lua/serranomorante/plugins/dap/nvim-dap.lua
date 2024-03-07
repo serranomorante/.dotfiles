@@ -60,10 +60,22 @@ return {
     { "<leader>dQ", function() require("dap").terminate() end, desc = "DAP: Terminate Session (S-F5)" },
     { "<leader>dp", function() require("dap").pause() end, desc = "DAP: Pause (F6)" },
     { "<leader>dr", function() require("dap").restart_frame() end, desc = "DAP: Restart (C-F5)" },
-    { "<leader>dR", function() require("dap").repl.toggle() end, desc = "DAP: Toggle REPL" },
+    {
+      "<leader>dR",
+      function() require("dap").repl.toggle({ wrap = false }, "belowright vsplit") end,
+      desc = "DAP: Toggle REPL",
+    },
     { "<leader>dS", function() require("dap").run_to_cursor() end, desc = "DAP: Run To Cursor" },
     { "<leader>dd", function() require("dap").focus_frame() end, desc = "DAP: Focus frame" },
     { "<leader>dh", function() require("dap.ui.widgets").hover() end, desc = "DAP: Debugger Hover" },
+    {
+      "<leader>ds",
+      function()
+        local ui = require("dap.ui.widgets")
+        ui.centered_float(ui.scopes, { number = true, wrap = false })
+      end,
+      desc = 'DAP: Toggle "scopes" in floating window',
+    },
   },
   init = function()
     vim.fn.sign_define("DapBreakpoint", { text = "⬤", texthl = "DapBreakpoint" })
@@ -73,10 +85,19 @@ return {
     vim.fn.sign_define("DapStopped", { text = "󰁕 ", texthl = "DapStopped" })
   end,
   config = function()
-    require("cmp_dap")
     local dap = require("dap")
     local mason_registry = require("mason-registry")
     dap.set_log_level(vim.env.DAP_LOG_LEVEL or "INFO")
+
+    ---Enable cmp dap source after `threads` request to prevent "Unknown request: completions" error
+    dap.listeners.after.threads["source-completions"] = function()
+      require("cmp_dap")
+      require("cmp").setup.filetype({ "dap-repl" }, {
+        sources = { { name = "dap" } },
+      })
+
+      dap.listeners.after.threads["source-completions"] = nil
+    end
 
     ---╔══════════════════════════════════════╗
     ---║               Adapters               ║
@@ -203,9 +224,5 @@ return {
       ["pwa-extensionHost"] = constants.javascript_filetypes,
       ["cppdbg"] = constants.c_filetypes,
     }
-
-    local widgets = require("dap.ui.widgets")
-    local scopes_sidebar = widgets.sidebar(widgets.scopes, { number = true, wrap = false })
-    vim.keymap.set("n", "<leader>ds", scopes_sidebar.toggle, { desc = 'DAP: Toggle "scopes" in sidebar' })
   end,
 }

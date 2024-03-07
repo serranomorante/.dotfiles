@@ -173,12 +173,6 @@ return {
           { name = "cmdline" },
         }),
       })
-
-      cmp.setup.filetype({ "dap-repl" }, {
-        sources = {
-          { name = "dap" },
-        },
-      })
     end,
   },
 }
