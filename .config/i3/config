@@ -285,7 +285,6 @@ for_window [class="org.cryptomator.launcher.Cryptomator.MainApp" title="^Unlock.
 for_window [class="org.cryptomator.launcher.Cryptomator.MainApp" title="^Preferences$"] floating enable
 for_window [title="^DevTools" window_role="pop-up"] floating disable
 for_window [title="^Tabs Outliner" window_role="pop-up"] floating disable
-for_window [class="dolphin"] floating enable
 
 # Fix google meet popup window
 for_window [title="[^.]+\.[^.]+\.[^.]+ is sharing your screen."] move scratchpad
