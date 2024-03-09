@@ -41,8 +41,8 @@ return {
       desc = "Neotest: Run the last position that was run with the same arguments",
     },
     {
-      "<leader>nD",
-      function() require("neotest").run.run_last({ strategy = "dap" }) end,
+      "<leader>nd",
+      function() require("neotest").run.run({ strategy = "dap" }) end,
       desc = "Neotest: Debug the nearest test with nvim-dap",
     },
     {
