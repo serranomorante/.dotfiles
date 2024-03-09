@@ -10,17 +10,13 @@ return {
     local Constant = heirline_utils.get_highlight("Constant")
     local String = heirline_utils.get_highlight("String")
     local Statement = heirline_utils.get_highlight("Statement")
-    local Folded = heirline_utils.get_highlight("Folded")
     local DiagnosticError = heirline_utils.get_highlight("DiagnosticError")
-    local DiffDelete = heirline_utils.get_highlight("DiffDelete")
     local NonText = heirline_utils.get_highlight("NonText")
     local Special = heirline_utils.get_highlight("Special")
+    local DiagnosticOk = heirline_utils.get_highlight("DiagnosticOk")
     local DiagnosticWarn = heirline_utils.get_highlight("DiagnosticWarn")
     local DiagnosticHint = heirline_utils.get_highlight("DiagnosticHint")
     local DiagnosticInfo = heirline_utils.get_highlight("DiagnosticInfo")
-    local DiffRemoved = heirline_utils.get_highlight("diffRemoved")
-    local DiffAdded = heirline_utils.get_highlight("diffAdded")
-    local DiffChanged = heirline_utils.get_highlight("diffChanged")
     local Directory = heirline_utils.get_highlight("Directory")
 
     local colors = {
@@ -32,23 +28,19 @@ return {
       replace = DiagnosticError.fg,
       directory = Directory.fg,
       ---https://github.com/rebelot/heirline.nvim/blob/master/cookbook.md#colors-colors-more-colors
-      bright_bg = Folded.bg,
-      bright_fg = Folded.fg,
       red = DiagnosticError.fg,
-      dark_red = DiffDelete.bg,
       green = String.fg,
       blue = Function.fg,
       gray = NonText.fg,
       orange = Constant.fg,
-      purple = Statement.fg,
       cyan = Special.fg,
       diag_warn = DiagnosticWarn.fg,
       diag_error = DiagnosticError.fg,
       diag_hint = DiagnosticHint.fg,
       diag_info = DiagnosticInfo.fg,
-      git_del = DiffRemoved.fg,
-      git_add = DiffAdded.fg,
-      git_change = DiffChanged.fg,
+      git_add = DiagnosticOk.fg,
+      git_change = DiagnosticWarn.fg,
+      git_del = DiagnosticError.fg,
     }
 
     local DefaultStatusLine = {

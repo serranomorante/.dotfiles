@@ -71,3 +71,6 @@ vim.opt.inccommand = "split"
 
 vim.opt.list = true
 vim.opt_global.listchars:append({ leadmultispace = "  ", trail = " " })
+
+vim.cmd.syntax("off")
+vim.g.colors_name = "default" -- prevent lazy.nvim from setting colorscheme

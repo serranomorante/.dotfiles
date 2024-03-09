@@ -70,6 +70,7 @@ return {
       carbonfox = "carbonfox",
     }
 
+    if vim.g.colors_name == "default" then return end -- use neovim default colorscheme
     vim.cmd("colorscheme " .. colors_name.terafox)
   end,
 }
