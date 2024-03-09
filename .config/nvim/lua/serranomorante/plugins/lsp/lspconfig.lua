@@ -51,18 +51,33 @@ return {
   },
   {
     "b0o/SchemaStore.nvim",
-    enabled = false,
+    enabled = true,
     dependencies = "neovim/nvim-lspconfig",
-    event = "User CustomLSPLoadJson",
+    event = "User CustomLSPLoadJson,CustomLSPLoadYaml",
     config = function()
-      require("lspconfig")["jsonls"].setup({
-        on_init = on_init,
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = {
-          json = { schemas = require("schemastore").json.schemas(), validate = { enable = true } },
+      local schemastore = require("schemastore")
+      local settings = {
+        json = { schemas = schemastore.json.schemas(), validate = { enable = true } },
+        yaml = {
+          schemaStore = {
+            -- You must disable built-in schemaStore support if you want to use
+            -- this plugin and its advanced options like `ignore`.
+            enable = false,
+            -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+            url = "",
+          },
+          schemas = schemastore.yaml.schemas(),
         },
-      })
+      }
+
+      for _, server in ipairs({ "jsonls", "yamlls" }) do
+        require("lspconfig")[server].setup({
+          on_init = on_init,
+          on_attach = on_attach,
+          capabilities = capabilities,
+          settings = settings[server],
+        })
+      end
     end,
   },
   {
@@ -240,6 +255,7 @@ return {
 
       capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend("force", capabilities, cmp_nvim_lsp.default_capabilities())
+      capabilities.textDocument.foldingRange = { dynamicRegistration = false, lineFoldingOnly = true }
 
       local servers = utils.get_from_tools(tools.by_filetype, "lsp", true)
 
@@ -313,7 +329,10 @@ return {
       ---Prevent lsp server setup only when plugin is available
       if utils.is_available("typescript-tools.nvim") then custom["tsserver"] = function() end end
       if utils.is_available("clangd_extensions.nvim") then custom["clangd"] = function() end end
-      if utils.is_available("SchemaStore.nvim") then custom["jsonls"] = function() end end
+      if utils.is_available("SchemaStore.nvim") then
+        custom["yamlls"] = function() end
+        custom["jsonls"] = function() end
+      end
 
       ---Setup servers that don't require any extra plugins
       ---Lsp servers that require plugins are lazy loaded

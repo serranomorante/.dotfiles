@@ -22,6 +22,7 @@ M.by_filetype = {
     parsers = { "go" },
   },
   json = { lsp = { "json-lsp" }, formatters = { "prettierd" } },
+  yaml = { lsp = { "yaml-language-server" } },
   c = { lsp = { "clangd" }, parsers = { "cpp" } },
   python = {
     formatters = { "isort", "black" },
@@ -43,6 +44,7 @@ if vim.fn.executable("pip") == 0 then M.by_filetype.python = {} end
 M.mason_to_lspconfig = {
   ["lua-language-server"] = "lua_ls",
   ["bash-language-server"] = "bashls",
+  ["yaml-language-server"] = "yamlls",
   ["json-lsp"] = "jsonls",
   ["ruff-lsp"] = "ruff_lsp",
   ["typescript-language-server"] = "tsserver",
