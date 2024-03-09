@@ -60,11 +60,11 @@ autocmd("BufEnter", {
   callback = function() vim.opt.formatoptions:remove({ "c", "r", "o" }) end,
 })
 
-autocmd("BufReadPre", {
+autocmd("BufReadPost", {
   desc = "Disable certain functionality on very large files",
   group = augroup("large_buf", { clear = true }),
   callback = function(args)
-    local ok, stats = pcall((vim.uv or vim.loop.fs_stat), vim.api.nvim_buf_get_name(args.buf))
+    local ok, stats = pcall((vim.uv.fs_stat or vim.loop.fs_stat), vim.api.nvim_buf_get_name(args.buf))
     vim.b[args.buf].large_buf = (ok and stats and stats.size > vim.g.max_file.size)
       or vim.api.nvim_buf_line_count(args.buf) > vim.g.max_file.lines
   end,
